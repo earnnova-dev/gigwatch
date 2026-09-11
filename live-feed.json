@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-10 20:16 UTC",
+  "generated_at": "2026-09-11 18:11 UTC",
   "sources_scanned": 4,
-  "jobs_fetched": 297,
-  "matches": 34,
+  "jobs_fetched": 294,
+  "matches": 32,
   "errors": [],
   "jobs": [
     {
@@ -204,28 +204,6 @@
       "salary": "",
       "location": "Anywhere in the World",
       "url": "https://weworkremotely.com/remote-jobs/collaboration-ai-senior-software-ai-engineer",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Independent AI Engineer / Architect",
-      "company": "A.Team",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/a-team-senior-independent-ai-engineer-architect",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Independent Software Developer ($90-$170/hr)",
-      "company": "A.Team",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/a-team-senior-independent-software-developer-90-170-hr",
       "score": 10.0,
       "matched": [
         "senior"
