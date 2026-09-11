@@ -45,8 +45,14 @@ are hosted SaaS that scrape your sessions and cost monthly. GigWatch is:
   otherwise a deterministic, dependency-free heuristic. Either way you get a
   ranked shortlist, not a raw dump.
 - **Output formats** — `scan`, `list`, and `rank` take `--format
-  text|markdown|json` (a Markdown table or a JSON array of job objects for
-  piping elsewhere).
+  text|markdown|json|html`. The HTML output is a single self-contained page
+  (inline CSS, no external assets) you can save, email, or publish to GitHub
+  Pages as a live demo.
+- **Batched digests** — `gigwatch digest` catches every new match the moment
+  it appears but delivers **one** consolidated alert per period (default:
+  daily) instead of a ping per scan. The mode that powers a hosted offering:
+  run `watch` on a short interval to keep the buffer fresh, `digest` on a
+  long interval to flush it.
 - **Skill-based filtering** — keyword matching (any/all), category and
   location filters, exclude-list, and a relevance score (title hits weigh
   more than body hits).
@@ -95,6 +101,24 @@ gigwatch watch
 # Or use cron on a VPS (once an hour):
 0 * * * * cd /opt/gigwatch && /usr/bin/python3 -m gigwatch scan
 ```
+
+### Batched digests (one email per day)
+
+`watch` pings you the instant a match lands — great for a personal job hunt,
+noisy for a recruiter or a job board scanning every 15 minutes. `digest`
+catches every new match as it appears but delivers **one** consolidated alert
+per period:
+
+```bash
+# Catch: keep the buffer fresh (e.g. every 15 min)
+*/15 * * * * cd /opt/gigwatch && /usr/bin/python3 -m gigwatch watch --interval 900
+
+# Deliver: one email per day with everything new since the last digest
+0 9 * * * cd /opt/gigwatch && /usr/bin/python3 -m gigwatch digest --period 86400
+```
+
+The buffer lives in `gigwatch-digest.json` (override with `--buffer`). Use
+`--force` to flush immediately, or `--period 3600` for hourly digests.
 
 ### Rank matches by fit
 

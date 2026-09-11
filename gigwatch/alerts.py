@@ -48,13 +48,14 @@ def send_console(jobs: List[ScoredJob], cfg: AlertConfig) -> Optional[str]:
     return None
 
 
-def send_email(jobs: List[ScoredJob], cfg: AlertConfig) -> Optional[str]:
+def send_email(jobs: List[ScoredJob], cfg: AlertConfig,
+               subject: Optional[str] = None) -> Optional[str]:
     e = cfg.email
     if not e or not e.get("to"):
         return None
     try:
         msg = EmailMessage()
-        msg["Subject"] = "GigWatch: %d new matching gig(s)" % len(jobs)
+        msg["Subject"] = subject or "GigWatch: %d new matching gig(s)" % len(jobs)
         msg["From"] = e.get("from", "gigwatch@localhost")
         msg["To"] = e["to"] if isinstance(e["to"], str) else ", ".join(e["to"])
         msg.set_content(format_jobs(jobs, cfg.max_per_alert))
@@ -113,13 +114,18 @@ def send_slack(jobs: List[ScoredJob], cfg: AlertConfig) -> Optional[str]:
         return "slack: %s" % exc
 
 
-def send_all(jobs: List[ScoredJob], cfg: AlertConfig) -> List[str]:
-    """Send through every enabled channel. Returns a list of error strings."""
+def send_all(jobs: List[ScoredJob], cfg: AlertConfig,
+             subject: Optional[str] = None) -> List[str]:
+    """Send through every enabled channel. Returns a list of error strings.
+
+    *subject* optionally overrides the email subject (used by the digest
+    command to make the batched nature obvious).
+    """
     errors: List[str] = []
     if not jobs:
         return errors
     for fn in (send_console, send_email, send_slack):
-        err = fn(jobs, cfg)
+        err = fn(jobs, cfg, subject) if fn is send_email else fn(jobs, cfg)
         if err:
             errors.append(err)
     return errors

@@ -502,3 +502,128 @@ def test_parser_accepts_rank():
     assert args.skills == "python,backend"
     assert args.no_ai is True
     assert args.format == "json"
+
+
+# ---------- HTML report format (v0.3.0) ----------
+
+def test_render_html_is_a_full_page():
+    out = render([_scored()], "html")
+    assert out.lstrip().lower().startswith("<!doctype html>")
+    assert "<html" in out and "</html>" in out
+    assert "<style>" in out
+    assert "<title>GigWatch" in out
+    assert "Senior Python Backend Engineer" in out
+    assert "Acme" in out
+    assert "https://example.com/j/1" in out
+    assert "$120k-$150k" in out
+    assert "<td>9.0</td>" in out
+
+
+def test_render_html_escapes_special_characters():
+    out = render([_scored(title="Data <&> Pipeline")], "html")
+    assert "Data &lt;&amp;&gt; Pipeline" in out
+    assert "Data <&> Pipeline" not in out
+
+
+def test_render_html_links_point_to_job_urls():
+    out = render([_scored()], "html")
+    assert '<a href="https://example.com/j/1"' in out
+
+
+def test_render_html_empty_list_still_renders():
+    out = render([], "html")
+    assert out.lstrip().lower().startswith("<!doctype html>")
+    assert "0" in out  # count badge
+
+
+def test_render_html_format_registered_in_parser():
+    from gigwatch.cli import build_parser
+    args = build_parser().parse_args(["list", "--format", "html"])
+    assert args.format == "html"
+
+
+# ---------- Batched digest (v0.3.0) ----------
+
+def test_buffer_roundtrip(tmp_path):
+    from gigwatch.digest import load_buffer, save_buffer
+    p = str(tmp_path / "digest.json")
+    buf = load_buffer(p)
+    assert buf == {"last_flush": 0, "jobs": {}}
+    buf["last_flush"] = 123
+    buf["jobs"] = {"j1": 100, "j2": 200}
+    save_buffer(p, buf)
+    again = load_buffer(p)
+    assert again == {"last_flush": 123, "jobs": {"j1": 100, "j2": 200}}
+    # arrival order preserved
+    assert list(again["jobs"]) == ["j1", "j2"]
+
+
+def test_buffer_corrupt_file_resets(tmp_path):
+    from gigwatch.digest import load_buffer
+    p = tmp_path / "digest.json"
+    p.write_text("not json at all")
+    assert load_buffer(str(p)) == {"last_flush": 0, "jobs": {}}
+
+
+def test_add_pending_dedupes_and_keeps_first_seen(monkeypatch):
+    from gigwatch import digest
+    monkeypatch.setattr(digest, "_now", lambda: 1000)
+    buf = {"last_flush": 0, "jobs": {}}
+    added = digest.add_pending(buf, [_scored(jid="j1"), _scored(jid="j2")])
+    assert added == 2
+    assert buf["jobs"] == {"j1": 1000, "j2": 1000}
+    monkeypatch.setattr(digest, "_now", lambda: 2000)
+    # re-adding an existing job does not re-timestamp or double-count
+    assert digest.add_pending(buf, [_scored(jid="j1"), _scored(jid="j3")]) == 1
+    assert buf["jobs"]["j1"] == 1000
+    assert buf["jobs"]["j3"] == 2000
+
+
+def test_is_due_respects_period_and_force(monkeypatch):
+    from gigwatch import digest
+    monkeypatch.setattr(digest, "_now", lambda: 1000)
+    buf = {"last_flush": 0, "jobs": {}}
+    assert digest.is_due(buf, 86400) is False  # nothing pending
+    buf["jobs"] = {"j1": 1000}
+    assert digest.is_due(buf, 86400) is True  # first flush is always due
+    buf["last_flush"] = 900
+    assert digest.is_due(buf, 86400) is False  # period not elapsed
+    assert digest.is_due(buf, 86400, force=True) is True
+    monkeypatch.setattr(digest, "_now", lambda: 900 + 86400)
+    assert digest.is_due(buf, 86400) is True  # period elapsed
+
+
+def test_build_digest_skips_unknown_ids():
+    from gigwatch import digest
+    buf = {"last_flush": 0, "jobs": {"j1": 1, "gone": 2}}
+    by_id = {"j1": _scored(jid="j1")}
+    out = digest.build_digest(buf, by_id)
+    assert [s.job.id for s in out] == ["j1"]
+
+
+def test_flush_clears_and_records_time(monkeypatch):
+    from gigwatch import digest
+    monkeypatch.setattr(digest, "_now", lambda: 500)
+    buf = {"last_flush": 0, "jobs": {"j1": 1}}
+    digest.flush(buf)
+    assert buf == {"last_flush": 500, "jobs": {}}
+
+
+def test_send_digest_empty_returns_no_errors():
+    from gigwatch import digest
+    from gigwatch.config import AlertConfig
+    assert digest.send_digest([], AlertConfig()) == []
+
+
+def test_parser_accepts_digest():
+    from gigwatch.cli import build_parser
+    args = build_parser().parse_args(
+        ["digest", "--period", "3600", "--buffer", "/tmp/d.json", "--force"])
+    assert args.period == 3600
+    assert args.buffer == "/tmp/d.json"
+    assert args.force is True
+    # defaults
+    args2 = build_parser().parse_args(["digest"])
+    assert args2.period is None
+    assert args2.buffer is None
+    assert args2.force is False

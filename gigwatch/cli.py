@@ -4,6 +4,7 @@ Commands:
   init      Write a starter config file.
   scan      One-shot: fetch, filter, dedupe, alert, update state.
   watch     Loop `scan` on an interval (for a cron-less daemon).
+  digest    Batched alerts: catch every new match, deliver one alert/period.
   list      Dry run: fetch + filter + print matches, WITHOUT touching state.
   reset     Clear the seen-state so everything can alert again.
 """
@@ -20,6 +21,16 @@ from typing import List
 from gigwatch import __version__
 from gigwatch.alerts import send_all
 from gigwatch.config import Config, load_config
+from gigwatch.digest import (
+    DEFAULT_PERIOD,
+    add_pending,
+    build_digest,
+    flush,
+    is_due,
+    load_buffer,
+    save_buffer,
+    send_digest,
+)
 from gigwatch.filtering import filter_jobs
 from gigwatch.ranking import rank_jobs
 from gigwatch.report import render
@@ -130,7 +141,10 @@ def cmd_scan(args) -> int:
         alert_errors = send_all(new_matches, cfg.alerts)
 
     if fmt != "text":
-        print(render(new_matches, fmt))
+        # HTML is a *report* format: show every current match (not just new
+        # ones) so the page is a complete, shareable snapshot. JSON/markdown
+        # keep the "new only" alert semantics.
+        print(render(scored if fmt == "html" else new_matches, fmt))
 
     # Mark every job that matched as seen (so it won't re-alert). Jobs that
     # don't match are left unmarked, so they can alert later if your filters
@@ -187,6 +201,63 @@ def cfg_interval(config_path: str) -> int:
 
 def _args_with_interval(args):
     return args
+
+
+def cmd_digest(args) -> int:
+    """Batched alerts: catch every new match, deliver one alert per period.
+
+    Each run: fetch + filter, mark new matches seen (so ``scan``/``watch``
+    won't double-alert), park them in the digest buffer, and — if the period
+    has elapsed since the last flush — send ONE consolidated alert with
+    everything pending.
+
+    Intended pairing for the hosted offering:
+      cron: gigwatch watch --interval 900   (keeps the buffer fresh)
+      cron: gigwatch digest --interval 86400 (one email per day)
+    """
+    cfg = load_config(args.config)
+    period = args.period or DEFAULT_PERIOD
+    buffer_path = args.buffer or "gigwatch-digest.json"
+    buffer = load_buffer(buffer_path)
+
+    jobs, fetch_errors = _fetch_all(cfg, args.verbose)
+    scored = filter_jobs(jobs, cfg.filters)
+    state = load_state(cfg.state_file)
+    new_matches = [s for s in scored if s.job.id not in state]
+
+    # Catch: park every new match in the buffer (first-seen timestamp wins).
+    added = add_pending(buffer, new_matches)
+
+    # Dedupe: mark seen so scan/watch don't re-alert on the same jobs.
+    mark_seen(state, scored)
+    removed = prune(state, args.max_age_days)
+    if removed:
+        _log("pruned %d stale state entries" % removed, args.verbose)
+    save_state(cfg.state_file, state)
+
+    # Deliver: flush when the period has elapsed (or --force).
+    due = is_due(buffer, period, force=args.force)
+    if due:
+        by_id = {s.job.id: s for s in scored}
+        pending = build_digest(buffer, by_id)
+        if pending:
+            subject = "GigWatch digest: %d new matching gig(s) since last digest"
+            alert_errors = send_digest(pending, cfg.alerts, subject=subject)
+            for e in alert_errors:
+                print("  [warn] digest alert failed: " + e, file=sys.stderr)
+            print("digest: sent %d job(s) (buffer flushed)" % len(pending))
+        else:
+            print("digest: buffer has %d pending id(s) but none matched the "
+                  "current scan; dropped" % len(buffer["jobs"]))
+        flush(buffer)
+    else:
+        print("digest: %d pending, period not elapsed (%ds) — no alert yet"
+              % (len(buffer["jobs"]), period))
+
+    save_buffer(buffer_path, buffer)
+    for e in fetch_errors:
+        print("  [warn] " + e, file=sys.stderr)
+    return 0
 
 
 def cmd_rank(args) -> int:
@@ -304,13 +375,13 @@ def build_parser() -> argparse.ArgumentParser:
     add_common(sp)
     sp.add_argument("--max-age-days", type=int, default=90,
                     help="drop state entries older than this (0 = keep all)")
-    sp.add_argument("--format", choices=("text", "markdown", "json"),
+    sp.add_argument("--format", choices=("text", "markdown", "json", "html"),
                     default="text", help="output format (default: text)")
     sp.set_defaults(func=cmd_scan)
 
     sp = sub.add_parser("list", help="dry run: show matches, no state change")
     add_common(sp)
-    sp.add_argument("--format", choices=("text", "markdown", "json"),
+    sp.add_argument("--format", choices=("text", "markdown", "json", "html"),
                     default="text", help="output format (default: text)")
     sp.set_defaults(func=cmd_list)
 
@@ -321,6 +392,23 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--max-age-days", type=int, default=90,
                     help="drop state entries older than this (0 = keep all)")
     sp.set_defaults(func=cmd_watch)
+
+    sp = sub.add_parser(
+        "digest",
+        help="batched alerts: catch every new match, deliver one alert/period",
+    )
+    add_common(sp)
+    sp.add_argument("--period", type=int, default=None,
+                    help="seconds between digest alerts "
+                         "(default: %d = daily)" % DEFAULT_PERIOD)
+    sp.add_argument("--buffer", default=None,
+                    help="path to the digest buffer file "
+                         "(default: gigwatch-digest.json)")
+    sp.add_argument("--force", action="store_true",
+                    help="flush the buffer now, even if the period hasn't elapsed")
+    sp.add_argument("--max-age-days", type=int, default=90,
+                    help="drop state entries older than this (0 = keep all)")
+    sp.set_defaults(func=cmd_digest)
 
     sp = sub.add_parser("rank",
                         help="rank matched jobs for a profile (AI or heuristic)")
@@ -336,7 +424,7 @@ def build_parser() -> argparse.ArgumentParser:
                     help="free-text profile notes (e.g. 'senior, $150k+')")
     sp.add_argument("--no-ai", action="store_true",
                     help="force the deterministic heuristic engine")
-    sp.add_argument("--format", choices=("text", "markdown", "json"),
+    sp.add_argument("--format", choices=("text", "markdown", "json", "html"),
                     default="text", help="output format (default: text)")
     sp.set_defaults(func=cmd_rank)
 

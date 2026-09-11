@@ -10,6 +10,8 @@ venv/
 # GigWatch runtime state
 gigwatch-state.json
 gigwatch-state.json.tmp
+gigwatch-digest.json
+gigwatch-digest.json.tmp
 config.json
 !config.example.json
 
