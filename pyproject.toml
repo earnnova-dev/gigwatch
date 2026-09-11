@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gigwatch"
+name = "gigwatch-nova"
 version = "0.2.0"
 description = "Self-hosted freelance-gig watcher: monitor job feeds, filter by your skills, alert on new matches."
 readme = "README.md"

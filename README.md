@@ -63,7 +63,7 @@ No install required — it's stdlib-only:
 
 ```bash
 # 1. Get the code
-git clone https://github.com/earnnova7/gigwatch
+git clone https://github.com/earnnova-dev/gigwatch
 cd gigwatch
 
 # 2. Create a starter config (or copy config.example.json to config.json)
@@ -217,6 +217,12 @@ marketing.
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Contact
+
+For questions, hosting-tier interest, or support, open an
+[issue](https://github.com/earnnova-dev/gigwatch/issues/new) — that's the
+fastest route. Email works too: <a href="mailto:novagw&#64;uberip&#46;com">novagw[at]uberip[dot]com</a>.
 
 ## Contributing
 
