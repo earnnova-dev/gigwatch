@@ -103,7 +103,7 @@
   </div>
 
   <section style="border-top:0;padding-top:72px">
-    <span class="badge">v0.4.0 · zero dependencies · MIT</span>
+    <span class="badge">v0.5.0 · zero dependencies · MIT</span>
     <h1>Stop refreshing job boards.<br>Let <em>GigWatch</em> watch them for you.</h1>
     <p class="sub">A self-hosted Python tool that scans remote job boards, matches them to
       your skills, dedupes what you've already seen, and pings you <b>only on new matches</b> —
@@ -139,7 +139,7 @@
       <div class="card"><div class="ic">📬</div><h3>Daily digest mode</h3>
         <p><code>gigwatch digest</code> batches every new match and sends ONE consolidated alert per period — no 40-email spam, one clean summary. The core of the hosted offer.</p></div>
       <div class="card"><div class="ic">🖥️</div><h3>One-command hosted server</h3>
-        <p><code>gigwatch serve</code> boots a live, shareable dashboard plus JSON and RSS feeds on one port — stdlib-only. The engine behind the $29/mo hosted tier.</p></div>
+        <p><code>gigwatch serve</code> boots a live, shareable dashboard — with an <b>AI-ranked top-matches panel</b> (fit score + why) — plus JSON and RSS feeds on one port. stdlib-only. The engine behind the $29/mo hosted tier.</p></div>
     </div>
   </section>
 
@@ -195,6 +195,46 @@
 <span class="g"> 3. [fit 50.0/100, ai] Senior Backend Engineer, Payments, Ledger &amp; Provable Fairness</span>
      company: Noricum
      why:     <span class="b">Senior backend role, but lacks specific tech stack and salary info.</span></pre></div>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch serve --skills python,fastapi,postgresql,aws --title "Senior Python Backend Engineer"   <span class="m"># v0.5.0 — the hosted dashboard, AI-ranked panel</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">http://gigwatch.yourdomain.com/ — live dashboard</span></div>
+<div style="padding:18px 20px;overflow-x:auto">
+  <div style="font-weight:800;font-size:17px">GigWatch — live gig dashboard</div>
+  <div style="color:var(--muted);font-size:12.5px;margin:4px 0 14px">6 match(es) · updated 2026-09-12 08:20 UTC · v0.5.0</div>
+  <div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="background:rgba(39,201,63,.15);color:#27c93f;border:1px solid rgba(39,201,63,.4);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.04em">ai-ranked</span>
+      <span style="color:var(--muted);font-size:12.5px">ranked for: Senior Python Backend Engineer · skills: python, fastapi, postgresql, aws</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">1</b><span style="background:rgba(39,201,63,.18);color:#27c93f;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 85/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9" style="color:var(--acc)">Senior Backend Developer (Python)</a></div>
+        <div style="color:var(--muted);font-size:12px">Perfect skill match and remote, but lacks salary transparency.</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">2</b><span style="background:rgba(255,189,46,.18);color:#ffbd2e;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 70/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://news.ycombinator.com/item?id=49523703" style="color:var(--acc)">SENIOR SOFTWARE ENGINEER (Python/Django + JS)</a></div>
+        <div style="color:var(--muted);font-size:12px">Strong Python match, but lacks remote confirmation and salary transparency.</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">3</b><span style="background:rgba(255,189,46,.18);color:#ffbd2e;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 50/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-build-ai-agents-salesforge-1137114" style="color:var(--acc)">Senior Backend Engineer, Build AI Agents</a></div>
+        <div style="color:var(--muted);font-size:12px">Senior backend role, but lacks specific tech stack and salary info.</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">4</b><span style="background:rgba(255,189,46,.18);color:#ffbd2e;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 45/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://remotive.com/remote-jobs/software-development/senior-react-full-stack-developer-2091101" style="color:var(--acc)">Senior React Full-stack Developer</a></div>
+        <div style="color:var(--muted);font-size:12px">Senior + remote, but the stack is React, not your backend profile.</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:2px;color:var(--muted);font-size:12px">Live, auto-refreshing dashboard + JSON + RSS on one port — the $29/mo hosted tier, ranked by your profile.</div>
+</div></div>
 
     <div class="demo-h" style="margin-top:34px">$ gigwatch scan --format html   <span class="m"># v0.3.0 — self-contained report page, real output from the live feed</span></div>
     <div class="term"><div class="bar">
@@ -272,8 +312,8 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
         <div class="price">$29<small>/mo</small></div>
         <ul>
           <li>We run it for you, 24/7</li>
-          <li><b>AI ranking</b> included</li>
-          <li><b>Live dashboard</b> — a shareable URL, auto-refreshing</li>
+          <li><b>AI-ranked dashboard</b> — fit score + why, per gig</li>
+          <li><b>Live shareable URL</b>, auto-refreshing</li>
           <li><b>JSON + RSS feed</b> for your own tools</li>
           <li><b>Daily digest</b> email (one, not 40)</li>
           <li>Custom sources added on request</li>

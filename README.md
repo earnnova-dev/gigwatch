@@ -268,6 +268,9 @@ it, back it up, or move it between machines.
 - ~~A tiny hosted tier (the natural monetization path — see below).~~ —
   **done in 0.4.0**: `gigwatch serve` is a self-contained hosted instance
   (live dashboard + JSON + RSS + health on one port, stdlib-only).
+  **v0.5.0** adds an **AI-ranked top-matches panel** to that dashboard:
+  pass `--profile`/`--skills`/`--title`/`--location` and the live page
+  scores every match (AI, or heuristic offline) and shows fit + why.
 
 ## Monetization
 
@@ -277,8 +280,9 @@ dashboard, a JSON/RSS feed, and email/Slack alerts (via `digest`) without
 running anything. Three tiers:
 
 - **Free (self-hosted)** — the full CLI, MIT, stdlib-only.
-- **$29/mo (hosted)** — we run your instance, you get the live dashboard +
-  feed + daily digest alerts, no infra to manage.
+- **$29/mo (hosted)** — we run your instance, you get the **AI-ranked
+  live dashboard** (fit score + why, per gig) + feed + daily digest
+  alerts, no infra to manage.
 - **$99 (custom setup)** — one-time: we configure a dedicated instance for
   your niche (sources, filters, profile, alerts) and hand it over.
 
