@@ -470,3 +470,9 @@ def main(argv: List[str] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     return args.func(args)
+
+
+if __name__ == "__main__":
+    import sys
+
+    sys.exit(main())
