@@ -42,12 +42,14 @@ from gigwatch import __version__
 from gigwatch.cli import _fetch_all
 from gigwatch.config import Config
 from gigwatch.filtering import ScoredJob, filter_jobs
+from gigwatch.ranking import rank_jobs
 from gigwatch.report import render
 
 DEFAULT_REFRESH = 900  # 15 minutes
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
 _MAX_FEED = 25  # cap the RSS/JSON feed so a huge scan can't bloat a response
+_RANK_CAP = 25  # cap the jobs we send to the (paid) ranking engine per refresh
 
 
 def _utcnow() -> str:
@@ -58,12 +60,21 @@ def _iso(ts: float) -> str:
     return datetime.fromtimestamp(ts, timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
 
 
-def run_once(cfg: Config, cache: Dict) -> None:
+def run_once(cfg: Config, cache: Dict,
+             profile: Optional[Dict] = None) -> None:
     """Fetch every enabled source, filter, and update *cache* in place.
 
     This is the unit that is tested directly (no socket needed) and that the
     background refresh thread calls on every tick. A source failure is
     recorded in ``cache["errors"]`` and never aborts the whole refresh.
+
+    When *profile* is given (a dict with ``title``/``skills``/``location``/
+    ``notes``), the matches are additionally ranked with
+    :func:`gigwatch.ranking.rank_jobs` (AI when ``OPENAI_API_KEY`` is set,
+    otherwise the deterministic heuristic) and the results are stored in
+    ``cache["ranked"]`` — a list of ``RankedJob`` sorted best-first. Ranking
+    is best-effort: any failure is swallowed and ``cache["ranked"]`` simply
+    stays empty, so a flaky LLM endpoint can never break the dashboard.
     """
     jobs, errors = _fetch_all(cfg, verbose=False)
     scored = filter_jobs(jobs, cfg.filters)
@@ -73,6 +84,19 @@ def run_once(cfg: Config, cache: Dict) -> None:
     cache["errors"] = errors
     cache["jobs"] = scored
     cache["by_id"] = {s.job.id: s for s in scored}
+
+    if profile:
+        try:
+            ranked = rank_jobs(scored[:_RANK_CAP], profile, use_ai=True)
+        except Exception:  # noqa: BLE001 - ranking must never break the loop
+            ranked = []
+        cache["ranked"] = ranked
+        cache["rank_method"] = ranked[0].method if ranked else "none"
+        cache["rank_profile"] = dict(profile)
+    else:
+        cache["ranked"] = []
+        cache["rank_method"] = "none"
+        cache["rank_profile"] = {}
 
 
 def jobs_json(scored: List[ScoredJob]) -> str:
@@ -129,9 +153,58 @@ def rss_xml(scored: List[ScoredJob]) -> str:
 def dashboard_html(cache: Dict) -> str:
     """Render the live dashboard page (auto-refreshing, self-contained)."""
     scored: List[ScoredJob] = cache.get("jobs", [])
+    ranked = cache.get("ranked") or []
+    rank_method = cache.get("rank_method") or "none"
+    rank_profile = cache.get("rank_profile") or {}
     errors: List[str] = cache.get("errors", [])
     last = cache.get("last_refresh_str") or "never"
     fetched = cache.get("fetched", 0)
+
+    # --- Ranked "top matches" panel (the AI/human-readable pitch) ---
+    ranked_html = ""
+    if ranked:
+        prof_bits = []
+        if rank_profile.get("title"):
+            prof_bits.append(_esc(rank_profile["title"]))
+        if rank_profile.get("skills"):
+            prof_bits.append(_esc(", ".join(rank_profile["skills"])))
+        prof_bits += [_esc(x) for x in (
+            rank_profile.get("location"), rank_profile.get("notes")) if x]
+        prof_line = " &middot; ".join(prof_bits) if prof_bits else "custom profile"
+        cards: List[str] = []
+        for i, r in enumerate(ranked[:10], 1):
+            j = r.job
+            cards.append(
+                "<div class='rank'>"
+                "<span class='rank-n'>%d</span>"
+                "<div class='rank-body'>"
+                "<div class='rank-title'><a href='%s'>%s</a>"
+                " <span class='fit'>fit %s/100</span></div>"
+                "<div class='rank-meta'>%s%s</div>"
+                "<div class='rank-why'>%s</div>"
+                "</div></div>" % (
+                    i, _esc(j.url), _esc(j.title) or "-", _esc(str(r.score)),
+                    _esc(j.company) or "-",
+                    (" &middot; " + _esc(j.salary)) if j.salary else "",
+                    _esc(r.rationale) or "-",
+                )
+            )
+        ranked_html = (
+            "<div class='ranked'>"
+            "<h2>Top matches <span class='rank-badge'>%s-ranked</span></h2>"
+            "<div class='rank-prof'>ranked for: %s</div>"
+            "%s"
+            "</div>" % (
+                _esc(rank_method), prof_line, "".join(cards))
+        )
+    else:
+        ranked_html = (
+            "<div class='ranked rank-off'>"
+            "<h2>Top matches</h2>"
+            "<div class='rank-prof'>start the server with <code>--profile "
+            "ROLE --skills a,b,c</code> to rank these with AI</div>"
+            "</div>"
+        )
 
     rows: List[str] = []
     for i, s in enumerate(scored, 1):
@@ -192,12 +265,35 @@ def dashboard_html(cache: Dict) -> str:
         ".errors{margin:0 0 16px;padding:10px 12px;background:#2a1c1c;"
         "border:1px solid #4a2a2a;border-radius:6px;font-size:13px;color:#e0a0a0}\n"
         ".errors ul{margin:6px 0 0;padding-left:18px}\n"
+        ".ranked{margin:0 0 20px}\n"
+        ".ranked h2{font-size:15px;margin:0 0 4px}\n"
+        ".rank-badge{display:inline-block;margin-left:8px;padding:1px 8px;\n"
+        "background:#1c2b1c;border:1px solid #2f5a2f;border-radius:10px;\n"
+        "font-size:11px;color:#7fd07f;text-transform:uppercase;letter-spacing:.04em}\n"
+        ".rank-prof{color:#8a93a3;font-size:12px;margin:0 0 10px}\n"
+        ".rank-prof code{color:#c9d1de;background:#161b24;padding:1px 5px;\n"
+        "border-radius:4px;font-size:11px}\n"
+        ".rank{display:flex;gap:12px;padding:10px 12px;margin-bottom:8px;\n"
+        "background:#141922;border:1px solid #232833;border-radius:8px}\n"
+        ".rank-n{flex:0 0 26px;height:26px;line-height:26px;text-align:center;\n"
+        "background:#1c2b1c;color:#7fd07f;border-radius:50%%;font-weight:700;\n"
+        "font-size:13px}\n"
+        ".rank-body{min-width:0}\n"
+        ".rank-title{font-size:14px;font-weight:600}\n"
+        ".rank-title a{color:#e6e6e6}\n"
+        ".rank-title a:hover{color:#5aa9ff}\n"
+        ".fit{color:#7fd07f;font-size:12px;font-weight:700;margin-left:6px}\n"
+        ".rank-meta{color:#8a93a3;font-size:12px;margin-top:2px}\n"
+        ".rank-why{color:#c9d1de;font-size:12px;margin-top:4px;\n"
+        "font-style:italic}\n"
+        ".rank-off .rank-prof{margin:0}\n"
         ".foot{margin-top:20px;color:#5b6472;font-size:12px}\n"
         ".foot a{color:#5b6472}\n"
         "</style></head><body>\n"
         "<h1>GigWatch &mdash; live matching gigs</h1>\n"
         "<div class='meta'>%d match(es) &middot; %d fetched &middot; updated %s "
         "&middot; auto-refreshes every %ds</div>\n"
+        "%s\n"
         "%s\n"
         "%s\n"
         "<div class='foot'>Self-hosted gig watcher &middot; "
@@ -207,7 +303,7 @@ def dashboard_html(cache: Dict) -> str:
         "</div>\n"
         "</body></html>\n" % (
             DEFAULT_REFRESH, len(scored), len(scored), fetched, last,
-            DEFAULT_REFRESH, err_html, table,
+            DEFAULT_REFRESH, ranked_html, err_html, table,
         )
     )
 
@@ -280,12 +376,14 @@ class Server:
 
     def __init__(self, cfg: Config, host: str = DEFAULT_HOST,
                  port: int = DEFAULT_PORT, refresh: int = DEFAULT_REFRESH,
-                 token: Optional[str] = None):
+                 token: Optional[str] = None,
+                 profile: Optional[Dict] = None):
         self.cfg = cfg
         self.host = host
         self.port = port
         self.refresh = refresh
         self.token = token
+        self.profile = profile
         self.cache: Dict = {
             "last_refresh": 0,
             "last_refresh_str": "never",
@@ -293,6 +391,9 @@ class Server:
             "errors": [],
             "jobs": [],
             "by_id": {},
+            "ranked": [],
+            "rank_method": "none",
+            "rank_profile": dict(profile) if profile else {},
         }
         self._httpd: Optional[ThreadingHTTPServer] = None
         self._thread: Optional[threading.Thread] = None
@@ -300,7 +401,7 @@ class Server:
     def _refresh_loop(self) -> None:
         while True:
             try:
-                run_once(self.cfg, self.cache)
+                run_once(self.cfg, self.cache, profile=self.profile)
             except Exception as exc:  # noqa: BLE001 - never kill the loop
                 self.cache["errors"] = ["refresh: %s" % exc]
             time.sleep(self.refresh)

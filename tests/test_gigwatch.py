@@ -701,6 +701,39 @@ def test_dashboard_html_escapes_html_in_fields():
     assert "&lt;script&gt;" in html
 
 
+def test_dashboard_html_ranks_panel_with_float_score():
+    # Regression: RankedJob.score is a float; the dashboard must str() it
+    # before html.escape (a raw float crashed the whole page).
+    from gigwatch.server import dashboard_html
+    from gigwatch.ranking import RankedJob
+    job = make_job(jid="j1", title="Senior Backend Developer (Python)",
+                   company="Proxify AB", url="https://example.com/j/1")
+    ranked = [RankedJob(job=job, score=85.0,
+                        rationale="Perfect role match and remote.",
+                        method="ai")]
+    cache = {"jobs": [_srv_scored()], "errors": [], "fetched": 1,
+             "last_refresh_str": "2026-09-12 00:00:00 UTC",
+             "ranked": ranked, "rank_method": "ai",
+             "rank_profile": {"title": "Senior Python Backend Engineer",
+                              "skills": ["python", "fastapi"]}}
+    html = dashboard_html(cache)
+    assert "ai-ranked" in html
+    assert "fit 85.0/100" in html
+    assert "Perfect role match and remote." in html
+    assert "Senior Python Backend Engineer" in html
+    assert "python, fastapi" in html
+
+
+def test_dashboard_html_rank_off_when_no_profile():
+    from gigwatch.server import dashboard_html
+    html = dashboard_html({"jobs": [_srv_scored()], "errors": [], "fetched": 1,
+                           "last_refresh_str": "x", "ranked": [],
+                           "rank_method": "none", "rank_profile": {}})
+    assert "rank-off" in html
+    assert "--profile" in html
+    assert "fit " not in html
+
+
 def test_run_once_updates_cache(monkeypatch):
     from gigwatch import server
     from gigwatch.config import Config, Filters, SourceConfig, AlertConfig

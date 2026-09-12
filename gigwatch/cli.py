@@ -193,16 +193,40 @@ def cmd_watch(args) -> int:
             return 0
 
 
+def _build_profile(args, base: dict) -> dict:
+    """Assemble a ranking profile from CLI flags (shared by rank + serve).
+
+    ``--profile`` points at a JSON file; the individual flags (``--skills``,
+    ``--title``, ``--location``, ``--notes``) layer on top of it. Returns a
+    plain dict (possibly empty) suitable for :func:`gigwatch.ranking.rank_jobs`.
+    """
+    profile: dict = dict(base or {})
+    if getattr(args, "profile", None):
+        with open(args.profile, "r", encoding="utf-8") as fh:
+            profile = json.load(fh)
+    if getattr(args, "skills", None):
+        profile["skills"] = [s.strip() for s in args.skills.split(",") if s.strip()]
+    if getattr(args, "title", None):
+        profile["title"] = args.title
+    if getattr(args, "location", None):
+        profile["location"] = args.location
+    if getattr(args, "notes", None):
+        profile["notes"] = args.notes
+    return profile
+
+
 def cmd_serve(args) -> int:
     """Run a self-contained hosted instance (dashboard + JSON + RSS + health)."""
     cfg = load_config(args.config)
     from gigwatch.server import Server
+    profile = _build_profile(args, cfg.profile)
     server = Server(
         cfg,
         host=args.host,
         port=args.port,
         refresh=args.refresh,
         token=args.token,
+        profile=profile or None,
     )
     return server.run()
 
@@ -422,6 +446,17 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--token", default=None,
                     help="optional bearer token gating /api/jobs and /feed "
                          "(dashboard stays public)")
+    sp.add_argument("--profile", default=None,
+                    help="path to a JSON profile file (title/skills/location/notes) "
+                         "used to AI-rank the top matches on the dashboard")
+    sp.add_argument("--skills", default=None,
+                    help="comma-separated skills (e.g. 'python,aws') for AI ranking")
+    sp.add_argument("--title", default=None,
+                    help="desired role title for AI ranking")
+    sp.add_argument("--location", default=None,
+                    help="preferred location for AI ranking")
+    sp.add_argument("--notes", default=None,
+                    help="free-text notes (e.g. 'senior, $150k+') for AI ranking")
     sp.set_defaults(func=cmd_serve)
 
     sp = sub.add_parser(
