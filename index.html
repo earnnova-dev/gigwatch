@@ -103,7 +103,7 @@
   </div>
 
   <section style="border-top:0;padding-top:72px">
-    <span class="badge">v0.2.0 · zero dependencies · MIT</span>
+    <span class="badge">v0.3.0 · zero dependencies · MIT</span>
     <h1>Stop refreshing job boards.<br>Let <em>GigWatch</em> watch them for you.</h1>
     <p class="sub">A self-hosted Python tool that scans remote job boards, matches them to
       your skills, dedupes what you've already seen, and pings you <b>only on new matches</b> —
@@ -134,6 +134,10 @@
         <p>Keyword any/all matching, category &amp; location filters, exclude-list, and relevance scoring (title hits weigh more).</p></div>
       <div class="card"><div class="ic">📦</div><h3>Zero dependencies</h3>
         <p>Pure standard library. One command to install, one config file to tune, one loop to run.</p></div>
+      <div class="card"><div class="ic">📄</div><h3>Shareable HTML report</h3>
+        <p><code>gigwatch scan --format html</code> renders a self-contained report page — inline CSS, no assets — you can email, host, or commit. The live feed on this page is one.</p></div>
+      <div class="card"><div class="ic">📬</div><h3>Daily digest mode</h3>
+        <p><code>gigwatch digest</code> batches every new match and sends ONE consolidated alert per period — no 40-email spam, one clean summary. The core of the hosted offer.</p></div>
     </div>
   </section>
 
@@ -189,6 +193,60 @@
 <span class="g"> 3. [fit 50.0/100, ai] Senior Backend Engineer, Payments, Ledger &amp; Provable Fairness</span>
      company: Noricum
      why:     <span class="b">Senior backend role, but lacks specific tech stack and salary info.</span></pre></div>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch scan --format html   <span class="m"># v0.3.0 — self-contained report page, real output from the live feed</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">gigwatch-report.html — what the generated page looks like</span></div>
+<div style="padding:18px 20px;overflow-x:auto">
+  <div style="font-weight:800;font-size:17px;margin-bottom:4px">GigWatch — matching gigs</div>
+  <div style="color:var(--muted);font-size:12.5px;margin-bottom:12px">6 match(es) · generated 2026-09-11 18:11 UTC</div>
+  <table style="border-collapse:collapse;width:100%;font-size:13px">
+    <thead><tr style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em">
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">#</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Title</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Company</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Salary</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Location</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Score</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Matched</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">1</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://remoteOK.com/remote-jobs/remote-senior-data-engineer-lemon-io-1136594">Senior Data Engineer</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Lemon.io</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">$40,000-$180,000</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">28.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">2</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9">Senior Backend Developer (Python)</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Proxify AB</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Anywhere in the World</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">26.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">python, backend, senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">3</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://news.ycombinator.com/item?id=49523703">SENIOR SOFTWARE ENGINEER (Python/Django + JS)</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">VersaFeed.com</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">26.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">python, django, senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">4</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://remotive.com/remote-jobs/software-development/senior-react-full-stack-developer-2091101">Senior React Full-stack Developer</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Lemon.io</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">LATAM, Europe, USA, Canada, APAC</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">26.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">5</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://weworkremotely.com/remote-jobs/toptal-senior-security-compliance-consultant-soc-2-grc-specialist">Senior Security Compliance Consultant (SOC 2)</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Toptal</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Anywhere in the World</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">25.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">senior</td></tr>
+      <tr><td style="padding:6px 8px">6</td><td style="padding:6px 8px"><a href="https://remotive.com/remote-jobs/software-development/senior-independent-ai-engineer-architect-1919266">Senior Independent AI Engineer / Architect</a></td><td style="padding:6px 8px">A.Team</td><td style="padding:6px 8px">$120 - $170 /hour</td><td style="padding:6px 8px">Americas, Europe, Israel</td><td style="padding:6px 8px">20.0</td><td style="padding:6px 8px">senior</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;color:var(--muted);font-size:12px">Self-hosted gig watcher · <a href="https://github.com/earnnova-dev/gigwatch">gigwatch-nova</a> — one file, no assets, safe to email or host anywhere.</div>
+</div></div>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch digest --period 86400   <span class="m"># v0.3.0 — one email per day, not 40</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">inbox — the daily digest email</span></div>
+<pre><span class="m">From:     gigwatch@yourserver
+To:       you@you.com
+Subject:  GigWatch digest: 3 new matching gig(s) since last digest
+
+ 1. Senior Data Engineer — Lemon.io
+    $40,000-$180,000 · remote
+    https://remoteOK.com/remote-jobs/remote-senior-data-engineer-lemon-io-1136594
+
+ 2. Senior Backend Developer (Python) — Proxify AB
+    Anywhere in the World
+    https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9
+
+ 3. SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript) — VersaFeed.com
+    https://news.ycombinator.com/item?id=49523703
+
+— 3 new match(es) since your last digest —</span></pre></div>
   </section>
 
   <section id="pricing">
@@ -213,7 +271,8 @@
         <ul>
           <li>We run it for you, 24/7</li>
           <li><b>AI ranking</b> included</li>
-          <li>Email + Slack delivery</li>
+          <li><b>Daily digest</b> email (one, not 40)</li>
+          <li><b>Shareable HTML report</b> page, hosted for you</li>
           <li>Custom sources added on request</li>
           <li>Cancel anytime</li>
         </ul>
