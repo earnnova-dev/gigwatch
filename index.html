@@ -103,7 +103,7 @@
   </div>
 
   <section style="border-top:0;padding-top:72px">
-    <span class="badge">v0.3.0 · zero dependencies · MIT</span>
+    <span class="badge">v0.4.0 · zero dependencies · MIT</span>
     <h1>Stop refreshing job boards.<br>Let <em>GigWatch</em> watch them for you.</h1>
     <p class="sub">A self-hosted Python tool that scans remote job boards, matches them to
       your skills, dedupes what you've already seen, and pings you <b>only on new matches</b> —
@@ -138,6 +138,8 @@
         <p><code>gigwatch scan --format html</code> renders a self-contained report page — inline CSS, no assets — you can email, host, or commit. The live feed on this page is one.</p></div>
       <div class="card"><div class="ic">📬</div><h3>Daily digest mode</h3>
         <p><code>gigwatch digest</code> batches every new match and sends ONE consolidated alert per period — no 40-email spam, one clean summary. The core of the hosted offer.</p></div>
+      <div class="card"><div class="ic">🖥️</div><h3>One-command hosted server</h3>
+        <p><code>gigwatch serve</code> boots a live, shareable dashboard plus JSON and RSS feeds on one port — stdlib-only. The engine behind the $29/mo hosted tier.</p></div>
     </div>
   </section>
 
@@ -271,8 +273,9 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
         <ul>
           <li>We run it for you, 24/7</li>
           <li><b>AI ranking</b> included</li>
+          <li><b>Live dashboard</b> — a shareable URL, auto-refreshing</li>
+          <li><b>JSON + RSS feed</b> for your own tools</li>
           <li><b>Daily digest</b> email (one, not 40)</li>
-          <li><b>Shareable HTML report</b> page, hosted for you</li>
           <li>Custom sources added on request</li>
           <li>Cancel anytime</li>
         </ul>
