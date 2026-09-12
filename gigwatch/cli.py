@@ -4,6 +4,7 @@ Commands:
   init      Write a starter config file.
   scan      One-shot: fetch, filter, dedupe, alert, update state.
   watch     Loop `scan` on an interval (for a cron-less daemon).
+  serve     Self-contained hosted instance: live dashboard + JSON + RSS feed.
   digest    Batched alerts: catch every new match, deliver one alert/period.
   list      Dry run: fetch + filter + print matches, WITHOUT touching state.
   reset     Clear the seen-state so everything can alert again.
@@ -190,6 +191,20 @@ def cmd_watch(args) -> int:
         except KeyboardInterrupt:
             print("\nstopped.")
             return 0
+
+
+def cmd_serve(args) -> int:
+    """Run a self-contained hosted instance (dashboard + JSON + RSS + health)."""
+    cfg = load_config(args.config)
+    from gigwatch.server import Server
+    server = Server(
+        cfg,
+        host=args.host,
+        port=args.port,
+        refresh=args.refresh,
+        token=args.token,
+    )
+    return server.run()
 
 
 def cfg_interval(config_path: str) -> int:
@@ -392,6 +407,22 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--max-age-days", type=int, default=90,
                     help="drop state entries older than this (0 = keep all)")
     sp.set_defaults(func=cmd_watch)
+
+    sp = sub.add_parser(
+        "serve",
+        help="run a self-contained hosted instance (live dashboard + JSON + RSS)",
+    )
+    add_common(sp)
+    sp.add_argument("--host", default="127.0.0.1",
+                    help="bind address (default: 127.0.0.1; use 0.0.0.0 to expose)")
+    sp.add_argument("--port", type=int, default=8765,
+                    help="port to listen on (default: 8765)")
+    sp.add_argument("--refresh", type=int, default=900,
+                    help="seconds between background refreshes (default: 900)")
+    sp.add_argument("--token", default=None,
+                    help="optional bearer token gating /api/jobs and /feed "
+                         "(dashboard stays public)")
+    sp.set_defaults(func=cmd_serve)
 
     sp = sub.add_parser(
         "digest",

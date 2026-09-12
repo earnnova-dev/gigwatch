@@ -53,6 +53,12 @@ are hosted SaaS that scrape your sessions and cost monthly. GigWatch is:
   daily) instead of a ping per scan. The mode that powers a hosted offering:
   run `watch` on a short interval to keep the buffer fresh, `digest` on a
   long interval to flush it.
+- **Self-contained hosted server** — `gigwatch serve` boots a live,
+  shareable dashboard (auto-refreshing HTML) plus machine-readable
+  `/api/jobs` (JSON) and `/feed` (RSS) endpoints on one port, with a
+  background refresh loop and a `/health` probe. Stdlib-only, one command —
+  this is the engine behind the hosted "$29/mo" tier and a demo you can point
+  anyone at.
 - **Skill-based filtering** — keyword matching (any/all), category and
   location filters, exclude-list, and a relevance score (title hits weigh
   more than body hits).
@@ -119,6 +125,36 @@ per period:
 
 The buffer lives in `gigwatch-digest.json` (override with `--buffer`). Use
 `--force` to flush immediately, or `--period 3600` for hourly digests.
+
+### Run it as a live hosted service
+
+`serve` turns GigWatch into a small web service with a single command. It
+starts a background refresh loop (fetch → filter → cache) and serves the
+current matches on one port:
+
+```bash
+# Local (default, 127.0.0.1:8765), refreshing every 15 min:
+gigwatch serve
+
+# Expose it on a VPS and gate the API/feed with a bearer token:
+gigwatch serve --host 0.0.0.0 --port 8080 --refresh 900 --token "s3cret"
+```
+
+Endpoints:
+
+| Path | What it returns |
+|------|-----------------|
+| `/` | A live HTML dashboard (auto-refreshes in the browser). Public by design — it's the shareable link. |
+| `/api/jobs` | The current matches as JSON (for integrations / scrapers). |
+| `/feed` | The current matches as an RSS 2.0 feed (subscribe in any feed reader). |
+| `/health` | Liveness probe: version, uptime, last refresh, match count, source errors. |
+
+The dashboard is public so you can share it as a link; pass `--token` to
+require `Authorization: Bearer <token>` on `/api/jobs` and `/feed` while
+leaving the dashboard and `/health` open. It is a **read-only** window onto
+the latest matches — it does not send email/Slack and does not touch the
+seen-state file, so a hosted instance never double-delivers alerts. Put it
+behind a reverse proxy (nginx/Caddy) with TLS for a real deployment.
 
 ### Rank matches by fit
 
@@ -190,6 +226,7 @@ present. Wrap in `{"jobs":[...]}`, `{"data":[...]}`, `{"results":[...]}`, or
 | `gigwatch scan` | Fetch, filter, alert on new matches, and record them as seen. |
 | `gigwatch rank` | Fetch + filter, then rank matches 0-100 for your `profile` (AI or heuristic). |
 | `gigwatch watch` | Loop `scan` every `poll_interval` seconds. |
+| `gigwatch serve` | Self-contained hosted instance: live dashboard + JSON + RSS + health on one port. |
 | `gigwatch reset` | Clear the seen-state (next scan alerts on everything that matches). |
 
 Useful flags: `--config PATH` (default `config.json`), `-v/--verbose`,
@@ -228,15 +265,22 @@ it, back it up, or move it between machines.
   0.2.0** (`gigwatch rank`).
 - LinkedIn via RSS, Upwork via a user-supplied export.
 - Draft proposals / cover letters per match.
-- A tiny hosted tier (the natural monetization path — see below).
+- ~~A tiny hosted tier (the natural monetization path — see below).~~ —
+  **done in 0.4.0**: `gigwatch serve` is a self-contained hosted instance
+  (live dashboard + JSON + RSS + health on one port, stdlib-only).
 
 ## Monetization
 
-The core is free and MIT-licensed. The obvious paid tier is a **hosted
-GigWatch**: we run the scanner on our infra, you get email/Slack alerts
-without running anything, plus AI-ranked matches and proposal drafts. That's
-the plan — the open-source CLI is both the product's engine and the
-marketing.
+The core is free and MIT-licensed. The paid tier is a **hosted GigWatch**:
+we run `gigwatch serve` on our infra behind TLS, you get a live shareable
+dashboard, a JSON/RSS feed, and email/Slack alerts (via `digest`) without
+running anything. Three tiers:
+
+- **Free (self-hosted)** — the full CLI, MIT, stdlib-only.
+- **$29/mo (hosted)** — we run your instance, you get the live dashboard +
+  feed + daily digest alerts, no infra to manage.
+- **$99 (custom setup)** — one-time: we configure a dedicated instance for
+  your niche (sources, filters, profile, alerts) and hand it over.
 
 ## License
 

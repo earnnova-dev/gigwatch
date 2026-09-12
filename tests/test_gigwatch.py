@@ -627,3 +627,257 @@ def test_parser_accepts_digest():
     assert args2.period is None
     assert args2.buffer is None
     assert args2.force is False
+
+
+# ---------- server (self-contained hosted instance) ----------
+
+def _srv_scored(jid="j1", title="Senior Python Backend Engineer",
+                company="Acme", url="https://example.com/j/1",
+                score=5.0, matched=("python",)):
+    return ScoredJob(job=make_job(jid=jid, title=title, company=company, url=url),
+                     score=score, matched_keywords=list(matched))
+
+
+def test_jobs_json_shape():
+    from gigwatch.server import jobs_json
+    data = json.loads(jobs_json([_srv_scored()]))
+    assert len(data) == 1
+    assert data[0]["id"] == "j1"
+    assert data[0]["score"] == 5.0
+    assert data[0]["matched_keywords"] == ["python"]
+    assert data[0]["url"] == "https://example.com/j/1"
+
+
+def test_rss_xml_wellformed():
+    import xml.etree.ElementTree as ET
+    from gigwatch.server import rss_xml
+    xml = rss_xml([_srv_scored(), _srv_scored(jid="j2", title="Rust Dev", url="https://e.com/2")])
+    root = ET.fromstring(xml)  # raises if malformed
+    assert root.tag == "rss"
+    items = root.findall("./channel/item")
+    assert len(items) == 2
+    assert items[0].findtext("title") == "Senior Python Backend Engineer"
+    assert items[0].findtext("guid") == "https://example.com/j/1"
+    # description carries the matched keywords
+    assert "Matched: python" in items[0].findtext("description")
+
+
+def test_rss_xml_caps_at_max_feed():
+    from gigwatch.server import rss_xml, _MAX_FEED
+    xml = rss_xml([_srv_scored(jid="j%d" % i) for i in range(_MAX_FEED + 10)])
+    import xml.etree.ElementTree as ET
+    items = ET.fromstring(xml).findall("./channel/item")
+    assert len(items) == _MAX_FEED
+
+
+def test_dashboard_html_renders_rows_and_meta():
+    from gigwatch.server import dashboard_html
+    cache = {"jobs": [_srv_scored()], "errors": ["remotive: boom"],
+             "fetched": 42, "last_refresh_str": "2026-09-12 00:00:00 UTC"}
+    html = dashboard_html(cache)
+    assert "<!doctype html>" in html
+    assert "Senior Python Backend Engineer" in html
+    assert "source warnings:" in html and "remotive: boom" in html
+    assert "42 fetched" in html and "1 match" in html
+    # links to the API endpoints are present
+    assert "/api/jobs" in html and "/feed" in html and "/health" in html
+
+
+def test_dashboard_html_empty_state():
+    from gigwatch.server import dashboard_html
+    html = dashboard_html({"jobs": [], "errors": [], "fetched": 0,
+                           "last_refresh_str": "never"})
+    assert "No jobs match your filters" in html
+    assert "0 match" in html
+
+
+def test_dashboard_html_escapes_html_in_fields():
+    from gigwatch.server import dashboard_html
+    evil = _srv_scored(title="<script>alert(1)</script>",
+                   company='Acme"<b>')
+    html = dashboard_html({"jobs": [evil], "errors": [], "fetched": 1,
+                           "last_refresh_str": "x"})
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
+
+
+def test_run_once_updates_cache(monkeypatch):
+    from gigwatch import server
+    from gigwatch.config import Config, Filters, SourceConfig, AlertConfig
+    cfg = Config(sources=[SourceConfig(type="remotive")],
+                 filters=Filters(keywords=["python"]),
+                 alerts=AlertConfig(), state_file="/tmp/never.json",
+                 poll_interval=900)
+    # fake the fetch layer so no network is touched
+    monkeypatch.setattr(server, "_fetch_all",
+                        lambda c, verbose=False: ([make_job()], []))
+    cache = {"jobs": [], "errors": [], "fetched": 0, "last_refresh": 0,
+             "last_refresh_str": "never", "by_id": {}}
+    server.run_once(cfg, cache)
+    assert cache["fetched"] == 1
+    assert len(cache["jobs"]) == 1
+    assert cache["jobs"][0].job.id == "j1"
+    assert cache["last_refresh"] > 0
+    assert "never" not in cache["last_refresh_str"]
+
+
+def test_run_once_records_source_error(monkeypatch):
+    from gigwatch import server
+    from gigwatch.config import Config, Filters, SourceConfig, AlertConfig
+    cfg = Config(sources=[SourceConfig(type="remotive")],
+                 filters=Filters(keywords=["python"]),
+                 alerts=AlertConfig(), state_file="/tmp/never.json",
+                 poll_interval=900)
+    monkeypatch.setattr(server, "_fetch_all",
+                        lambda c, verbose=False: ([], ["remotive: 404"]))
+    cache = {"jobs": [], "errors": [], "fetched": 0, "last_refresh": 0,
+             "last_refresh_str": "never", "by_id": {}}
+    server.run_once(cfg, cache)
+    assert cache["errors"] == ["remotive: 404"]
+    assert cache["jobs"] == []
+
+
+def test_server_endpoints_live(monkeypatch):
+    """Boot a real ThreadingHTTPServer on 127.0.0.1 and hit every endpoint."""
+    import socket
+    import threading
+    import urllib.request
+    from gigwatch import server
+    from gigwatch.config import Config, Filters, SourceConfig, AlertConfig
+
+    cfg = Config(sources=[SourceConfig(type="remotive")],
+                 filters=Filters(keywords=["python"]),
+                 alerts=AlertConfig(), state_file="/tmp/never.json",
+                 poll_interval=900)
+    monkeypatch.setattr(server, "_fetch_all",
+                        lambda c, verbose=False: ([make_job()], []))
+
+    # find a free port
+    s = socket.socket()
+    s.bind(("127.0.0.1", 0))
+    port = s.getsockname()[1]
+    s.close()
+
+    srv = server.Server(cfg, host="127.0.0.1", port=port, refresh=9999)
+    # seed the cache with one match without waiting for the refresh thread
+    server.run_once(cfg, srv.cache)
+    srv._start_http()
+    srv._serve()
+    srv._thread = threading.Thread(target=srv._refresh_loop, daemon=True)
+    srv._thread.start()
+    try:
+        base = "http://127.0.0.1:%d" % port
+
+        def get(path, headers=None):
+            import urllib.error
+            req = urllib.request.Request(base + path, headers=headers or {})
+            try:
+                with urllib.request.urlopen(req, timeout=5) as r:
+                    return r.status, r.headers.get("Content-Type", ""), r.read().decode()
+            except urllib.error.HTTPError as e:
+                return e.code, e.headers.get("Content-Type", ""), e.read().decode()
+
+        st, ct, body = get("/health")
+        assert st == 200 and "application/json" in ct
+        health = json.loads(body)
+        assert health["status"] == "ok"
+        assert health["matches"] == 1
+        assert health["version"]
+
+        st, ct, body = get("/api/jobs")
+        assert st == 200 and "application/json" in ct
+        assert len(json.loads(body)) == 1
+
+        st, ct, body = get("/feed")
+        assert st == 200 and "application/rss+xml" in ct
+        assert "<rss version=\"2.0\">" in body
+
+        st, ct, body = get("/")
+        assert st == 200 and "text/html" in ct
+        assert "GigWatch" in body
+
+        st, ct, body = get("/nope")
+        assert st == 404
+    finally:
+        srv._httpd.server_close()
+        srv._thread.join(timeout=2)
+
+
+def test_server_token_auth(monkeypatch):
+    """With a token set, /api/jobs and /feed require the bearer header."""
+    import socket
+    import threading
+    import urllib.request
+    import urllib.error
+    from gigwatch import server
+    from gigwatch.config import Config, Filters, SourceConfig, AlertConfig
+
+    cfg = Config(sources=[SourceConfig(type="remotive")],
+                 filters=Filters(keywords=["python"]),
+                 alerts=AlertConfig(), state_file="/tmp/never.json",
+                 poll_interval=900)
+    monkeypatch.setattr(server, "_fetch_all",
+                        lambda c, verbose=False: ([make_job()], []))
+
+    s = socket.socket()
+    s.bind(("127.0.0.1", 0))
+    port = s.getsockname()[1]
+    s.close()
+
+    srv = server.Server(cfg, host="127.0.0.1", port=port, refresh=9999,
+                        token="sekret")
+    server.run_once(cfg, srv.cache)
+    srv._start_http()
+    srv._serve()
+    srv._thread = threading.Thread(target=srv._refresh_loop, daemon=True)
+    srv._thread.start()
+    try:
+        base = "http://127.0.0.1:%d" % port
+
+        def get(path, headers=None):
+            req = urllib.request.Request(base + path, headers=headers or {})
+            try:
+                with urllib.request.urlopen(req, timeout=5) as r:
+                    return r.status, r.read().decode()
+            except urllib.error.HTTPError as e:
+                return e.code, e.read().decode()
+
+        # no token -> 401
+        st, _ = get("/api/jobs")
+        assert st == 401
+        st, _ = get("/feed")
+        assert st == 401
+        # wrong token -> 401
+        st, _ = get("/api/jobs", {"Authorization": "Bearer wrong"})
+        assert st == 401
+        # right token -> 200
+        st, body = get("/api/jobs", {"Authorization": "Bearer sekret"})
+        assert st == 200 and len(json.loads(body)) == 1
+        st, body = get("/feed", {"Authorization": "Bearer sekret"})
+        assert st == 200 and "<rss" in body
+        # dashboard stays public even with a token set
+        st, body = get("/")
+        assert st == 200 and "GigWatch" in body
+        # health stays public
+        st, body = get("/health")
+        assert st == 200 and json.loads(body)["status"] == "ok"
+    finally:
+        srv._httpd.server_close()
+        srv._thread.join(timeout=2)
+
+
+def test_parser_accepts_serve():
+    from gigwatch.cli import build_parser
+    args = build_parser().parse_args(
+        ["serve", "--host", "0.0.0.0", "--port", "9000",
+         "--refresh", "300", "--token", "tok"])
+    assert args.host == "0.0.0.0"
+    assert args.port == 9000
+    assert args.refresh == 300
+    assert args.token == "tok"
+    # defaults
+    args2 = build_parser().parse_args(["serve"])
+    assert args2.host == "127.0.0.1"
+    assert args2.port == 8765
+    assert args2.refresh == 900
+    assert args2.token is None
