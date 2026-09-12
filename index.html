@@ -96,7 +96,7 @@
     <div class="logo">Gig<span>Watch</span></div>
     <div class="nav">
       <a href="#features">Features</a>
-      <a href="#demo">Live demo</a>
+      <a href="#demo">Sample output</a>
       <a href="#pricing">Pricing</a>
       <a href="https://github.com/earnnova-dev/gigwatch">GitHub</a>
     </div>
@@ -145,16 +145,16 @@
 
   <section id="demo">
     <h2>See it actually work</h2>
-    <p class="lead">Real output from a live run on this machine — 297 jobs fetched across
+    <p class="lead">Real output from a run on this machine — 294 jobs fetched across
       We Work Remotely, RemoteOK, and Hacker News, filtered to a Python/backend profile.</p>
 
-    <div class="demo-h" id="live-h">$ gigwatch list --format text   <span class="live-badge" id="live-badge">LIVE</span></div>
+    <div class="demo-h" id="live-h">$ gigwatch list --format text   <span class="live-badge" id="live-badge">SAMPLE</span></div>
     <div class="term"><div class="bar">
       <span class="dot" style="background:#ff5f56"></span>
       <span class="dot" style="background:#ffbd2e"></span>
       <span class="dot" style="background:#27c93f"></span>
-      <span class="ttl">gigwatch — live feed <span id="live-updated" class="m"></span></span></div>
-<pre id="live-pre"><span class="m">loading live feed…</span></pre></div>
+      <span class="ttl">gigwatch — sample feed <span id="live-updated" class="m"></span></span></div>
+<pre id="live-pre"><span class="m">loading sample…</span></pre></div>
     <p class="m" id="live-note" style="font-size:13px;margin-top:8px"></p>
 
     <div class="demo-h" style="margin-top:34px">$ gigwatch list --format text   <span class="m"># static snapshot</span></div>
@@ -162,7 +162,7 @@
       <span class="dot" style="background:#ff5f56"></span>
       <span class="dot" style="background:#ffbd2e"></span>
       <span class="dot" style="background:#27c93f"></span>
-      <span class="ttl">gigwatch — live scan</span></div>
+      <span class="ttl">gigwatch — sample scan</span></div>
 <pre><span class="m">297 job(s) fetched, 6 match your filters (dry run, state untouched)</span>
 <span class="g"> 1. [score 6.0] Senior Backend Developer (Python)</span>
      company: Proxify AB
@@ -233,7 +233,7 @@
       </div>
     </div>
   </div>
-  <div style="margin-top:2px;color:var(--muted);font-size:12px">Live, auto-refreshing dashboard + JSON + RSS on one port — the $29/mo hosted tier, ranked by your profile.</div>
+  <div style="margin-top:2px;color:var(--muted);font-size:12px">Shareable dashboard + JSON + RSS on one port —</div>
 </div></div>
 
     <div class="demo-h" style="margin-top:34px">$ gigwatch scan --format html   <span class="m"># v0.3.0 — self-contained report page, real output from the live feed</span></div>
@@ -265,7 +265,7 @@
     </tbody>
   </table>
   <div style="margin-top:10px;color:var(--muted);font-size:12px">Self-hosted gig watcher · <a href="https://github.com/earnnova-dev/gigwatch">gigwatch-nova</a> — one file, no assets, safe to email or host anywhere.</div>
-  <div style="margin-top:12px"><a href="https://earnnova-dev.github.io/gigwatch/live-demo.html" style="display:inline-block;background:#27c93f;color:#0b0f0d;font-weight:700;font-size:13px;padding:9px 16px;border-radius:8px;text-decoration:none">▶ Open the live report (real feed, generated today)</a></div>
+  <div style="margin-top:12px"><a href="https://earnnova-dev.github.io/gigwatch/live-demo.html" style="display:inline-block;background:#27c93f;color:#0b0f0d;font-weight:700;font-size:13px;padding:9px 16px;border-radius:8px;text-decoration:none">▶ Open the sample report (real feed, generated 2026-09-11)</a></div>
 </div></div>
 
     <div class="demo-h" style="margin-top:34px">$ gigwatch digest --period 86400   <span class="m"># v0.3.0 — one email per day, not 40</span></div>
@@ -314,7 +314,7 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
         <ul>
           <li>We run it for you, 24/7</li>
           <li><b>AI-ranked dashboard</b> — fit score + why, per gig</li>
-          <li><b>Live shareable URL</b>, auto-refreshing</li>
+          <li><b>Shareable URL</b>, auto-refreshing</li>
           <li><b>JSON + RSS feed</b> for your own tools</li>
           <li><b>Daily digest</b> email (one, not 40)</li>
           <li>Custom sources added on request</li>
@@ -365,8 +365,9 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
 </div>
 
 <script>
-// Live feed: the repo's GitHub Actions job runs gigwatch every 6h and commits
-// live-feed.json. We fetch it here so the page shows genuinely fresh jobs.
+// Sample feed: the repo's live-feed.json is a snapshot from the last manual scan.
+// We fetch it here so the page shows real job data (not made-up examples).
+// It is NOT auto-refreshed — the badge and note make that explicit.
 (function () {
   var pre = document.getElementById("live-pre");
   var badge = document.getElementById("live-badge");
@@ -392,13 +393,13 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
       lines.push('<span class="m">…and ' + (data.jobs.length - jobs.length) + ' more matches</span>');
     }
     pre.innerHTML = lines.join("\n");
-    if (updated) updated.textContent = "· updated " + esc(data.generated_at);
-    if (note) note.textContent = "Fetched live from the public job boards " +
-      esc(data.generated_at) + " — refreshed every 6 hours by an automated run.";
+    if (updated) updated.textContent = "· scanned " + esc(data.generated_at);
+    if (note) note.textContent = "Snapshot from the last manual scan (" +
+      esc(data.generated_at) + "). Run gigwatch yourself for fresh results.";
     if (badge) {
-      // If the feed is older than ~18h, flag it as stale rather than "live".
+      // If the feed is older than ~24h, flag it as stale rather than "sample".
       var ageH = (Date.now() - new Date(data.generated_at.replace(" UTC", "Z")).getTime()) / 36e5;
-      if (ageH > 18) {
+      if (ageH > 24) {
         badge.textContent = "STALE";
         badge.className = "live-badge off";
       }
@@ -408,13 +409,13 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
   function fail(msg) {
     pre.innerHTML = '<span class="m">' + esc(msg) + '</span>';
     if (badge) { badge.textContent = "OFFLINE"; badge.className = "live-badge off"; }
-    if (note) note.textContent = "Live feed unavailable right now — see the static snapshot below.";
+    if (note) note.textContent = "Sample feed unavailable right now — see the static snapshot below.";
   }
 
   fetch("live-feed.json", { cache: "no-store" })
     .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(render)
-    .catch(function (e) { fail("could not load live feed (" + e.message + ")"); });
+    .catch(function (e) { fail("could not load sample feed (" + e.message + ")"); });
 })();
 </script>
 </body>
