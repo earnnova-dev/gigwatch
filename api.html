@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Remote Job API — Aggregated Jobs from 5+ Boards, No Auth | GigWatch</title>
+    <meta name="description" content="Free JSON API for remote jobs. Aggregates Remotive, We Work Remotely, RemoteOK, Jobicy, and Hacker News. No API key, no signup. Updated hourly.">
+    <meta name="keywords" content="remote job api, free job api, remote work api, job board api, freelance gig api, json jobs endpoint">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a2e; background: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #16213e; }
+        h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: #16213e; border-bottom: 2px solid #e94560; padding-bottom: 0.5rem; }
+        .subtitle { color: #666; font-size: 1.1rem; margin-bottom: 2rem; }
+        code { background: #e9ecef; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9rem; }
+        pre { background: #1a1a2e; color: #e9ecef; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+        pre code { background: none; padding: 0; color: inherit; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #dee2e6; }
+        th { background: #e9ecef; font-weight: 600; }
+        .badge { display: inline-block; background: #e94560; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+        .endpoint { background: white; border: 1px solid #dee2e6; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+        .method { display: inline-block; background: #4ecdc4; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+        .response { color: #666; font-size: 0.9rem; }
+        a { color: #e94560; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #dee2e6; color: #999; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Free Remote Job API <span class="badge">No Auth</span></h1>
+        <p class="subtitle">Aggregated remote jobs from 5+ boards. One JSON endpoint. Updated hourly. No API key, no signup, no rate limits (be nice).</p>
+
+        <h2>Quick Start</h2>
+        <pre><code># Get all current remote jobs
+curl https://hermes-webhooks.thorsland.no/api/jobs
+
+# Filter by source
+curl https://hermes-webhooks.thorsland.no/api/jobs?source=jobicy
+
+# Search by keyword
+curl "https://hermes-webhooks.thorsland.no/api/jobs?q=python&limit=10"
+
+# Python
+import urllib.request, json
+resp = urllib.request.urlopen("https://hermes-webhooks.thorsland.no/api/jobs?tag=django")
+jobs = json.loads(resp.read())["jobs"]</code></pre>
+
+        <h2>Endpoints</h2>
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/api/jobs</code>
+            <p class="response">All aggregated jobs. Query params:</p>
+            <table>
+                <tr><th>Param</th><th>Example</th><th>Description</th></tr>
+                <tr><td><code>source</code></td><td><code>?source=remotive</code></td><td>Filter by board: remotive, wwr, remoteok, jobicy, hn</td></tr>
+                <tr><td><code>tag</code></td><td><code>?tag=python</code></td><td>Filter by skill tag</td></tr>
+                <tr><td><code>q</code></td><td><code>?q=django</code></td><td>Search title + company</td></tr>
+                <tr><td><code>limit</code></td><td><code>?limit=20</code></td><td>Max results (default 50, max 200)</td></tr>
+            </table>
+        </div>
+
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/api/jobs/&lt;source&gt;</code>
+            <p class="response">Jobs from one source, includes descriptions (truncated to 500 chars).</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/api/jobs/&lt;id&gt;</code>
+            <p class="response">Single job by ID (full detail including description).</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/health</code>
+            <p class="response">Service health check.</p>
+        </div>
+
+        <h2>Response Format</h2>
+        <pre><code>{
+  "count": 19,
+  "total_available": 19,
+  "generated_at": "2026-09-13 09:50 UTC",
+  "sources_scanned": 5,
+  "jobs": [
+    {
+      "id": "65b208f6e60b061b",
+      "title": "Senior Backend Developer (Python)",
+      "company": "Proxify AB",
+      "url": "https://weworkremotely.com/remote-jobs/...",
+      "location": "Anywhere in the World",
+      "salary": "",
+      "tags": ["python", "backend"],
+      "source": "wwr",
+      "published": "Fri, 14 Aug 2026 10:07:01 +0000",
+      "score": 6.0
+    }
+  ]
+}</code></pre>
+
+        <h2>Sources</h2>
+        <table>
+            <tr><th>Source</th><th>Board</th><th>Notes</th></tr>
+            <tr><td><code>remotive</code></td><td>Remotive</td><td>Curated remote jobs</td></tr>
+            <tr><td><code>wwr</code></td><td>We Work Remotely</td><td>Largest remote job board</td></tr>
+            <tr><td><code>remoteok</code></td><td>RemoteOK</td><td>Tech-focused remote roles</td></tr>
+            <tr><td><code>jobicy</code></td><td>Jobicy</td><td>Aggregates 50+ boards</td></tr>
+            <tr><td><code>hn</code></td><td>Hacker News</td><td>"Who is hiring" threads</td></tr>
+        </table>
+
+        <h2>Use Cases</h2>
+        <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+            <li>Build a job alert bot (Slack, Telegram, email)</li>
+            <li>Populate your own job board or career page</li>
+            <li>Research remote salary trends (aggregate over time)</li>
+            <li>Train NLP models on job descriptions</li>
+            <li>Personal dashboard / watchlist</li>
+        </ul>
+
+        <h2>Built with GigWatch</h2>
+        <p>This API is powered by <a href="https://github.com/earnnova-dev/gigwatch">GigWatch</a> — a self-hosted job board watcher. You can run your own instance with custom sources, AI ranking, and alerts.</p>
+        <p><a href="/">← Back to GigWatch demo</a> · <a href="/remote-job-apis.html">Static API reference (no live data)</a></p>
+
+        <div class="footer">
+            <p>Data belongs to respective job boards. Please cache responses (min 5 min) and don't hammer the endpoint. If you're building something cool with this API, <a href="https://github.com/earnnova-dev/gigwatch/issues">let me know</a>.</p>
+            <p>&copy; 2026 Nova (earnnova-dev)</p>
+        </div>
+    </div>
+</body>
+</html>
