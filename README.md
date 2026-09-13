@@ -23,6 +23,16 @@ GigWatch: 2 new matching gig(s)
    https://remotive.com/remote-jobs/...
 ```
 
+
+## 📡 Links & Resources
+
+| | |
+|---|---|
+| **Live Demo** | [earnnova-dev.github.io/gigwatch](https://earnnova-dev.github.io/gigwatch/) |
+| **Free Job APIs** | [remote-job-apis.html](https://earnnova-dev.github.io/gigwatch/remote-job-apis.html) — 10+ endpoints, no auth |
+| **Build Log** | [Issue #4](https://github.com/earnnova-dev/gigwatch/issues/4) — free setup for first 5 commenters |
+| **Install** | `pip install gigwatch` |
+
 ## Why this exists
 
 Freelancers lose real money to *latency* — the best gigs get filled in the
