@@ -1,366 +1,121 @@
 {
-  "generated_at": "2026-09-11 18:11 UTC",
+  "generated_at": "2026-09-13 09:45 UTC",
   "sources_scanned": 4,
-  "jobs_fetched": 294,
-  "matches": 32,
+  "jobs_fetched": 6,
+  "matches": 6,
   "errors": [],
   "jobs": [
     {
-      "title": "Senior Data Engineer",
-      "company": "Lemon.io",
-      "salary": "$40,000-$180,000",
-      "location": "",
-      "url": "https://remoteOK.com/remote-jobs/remote-senior-data-engineer-lemon-io-1136594",
-      "score": 28.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
+      "id": "65b208f6e60b061b",
       "title": "Senior Backend Developer (Python)",
       "company": "Proxify AB",
-      "salary": "",
-      "location": "Anywhere in the World",
       "url": "https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9",
-      "score": 26.0,
-      "matched": [
+      "category": "Back-End Programming",
+      "location": "Anywhere in the World",
+      "salary": "",
+      "tags": [],
+      "published": "Fri, 14 Aug 2026 10:07:01 +0000",
+      "source": "wwr",
+      "description": "Headquarters: Sweden URL: http://career.proxify.io The Role: We are looking for a Senior Python Developer for one of our clients. You are a perfect candidate if you are growth-oriented, you love what you do, and you enjoy working on new ideas to develop exciting products. What we are looking for: 5+ years of experience building products with Python and Django. High proficiency in SQL with experience using databases like PostgreSQL. Experience scaling cloud infrastructures with Docker or Kubernetes is a plus. Experience managing cloud infrastructures, specifically AWS or GCP. You follow the best practices and conventions. Relevant experience in CI/CD and related tools. Ability to work with minimal supervision. Intermediate-advanced English level. You can communicate well with both technical and non-technical clients. Time zone: CET (+/- 3 hours). We are unable to consider applications from candidates in other time zones. Responsibilities: Ability to build libraries and frameworks of reusable efficient code. Competence in designing and implementing low-latency, stable and performing applications. Capacity to effectively collaborate with other team members and stakeholders remotely. Ability to implement data protection systems. Competence in data storage solutions. What we offer: Get paid, not played No more unreliable clients. Enjoy on-time monthly payments with flexible withdrawal options. Predictable project hours Enjoy a harmonious work-life balance with consistent 8-hour working days with clients. Flex days, so you can recharge Enjoy up to 24 flex days off per year without losing pay, for full-time positions found through Proxify. Career-accelerating positions at cutting-edge companies Discover exclusive long-term remote positions at the world's most exciting companies. Hand-picked opportunities just for you Skip the typical recruitment roadblocks and biases with personally matched positions. One seamless process, multiple opportunities A one-time contracting process for endless opportunities, with no extra assessments. Compensation Enjoy the same pay, every month with positions landed through Proxify. To apply: https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9",
+      "score": 6.0,
+      "matched_keywords": [
         "python",
-        "backend",
-        "senior"
+        "backend"
       ]
     },
     {
-      "title": "SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React)",
-      "company": "VersaFeed.com",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49523703",
-      "score": 26.0,
-      "matched": [
-        "python",
-        "django",
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior React Full-stack Developer",
-      "company": "Lemon.io",
-      "salary": "",
-      "location": "LATAM, Europe, USA, Canada, APAC",
-      "url": "https://remotive.com/remote-jobs/software-development/senior-react-full-stack-developer-2091101",
-      "score": 26.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Security Compliance Consultant (SOC 2 & GRC Specialist)",
-      "company": "Toptal",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/toptal-senior-security-compliance-consultant-soc-2-grc-specialist",
-      "score": 25.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Independent AI Engineer / Architect",
-      "company": "A.Team",
-      "salary": "$120 - $170 /hour",
-      "location": "Americas, Europe, Israel",
-      "url": "https://remotive.com/remote-jobs/software-development/senior-independent-ai-engineer-architect-1919266",
-      "score": 20.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Backend Engineer Build AI Agents",
-      "company": "Salesforge",
-      "salary": "",
-      "location": "",
-      "url": "https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-build-ai-agents-salesforge-1137114",
-      "score": 18.0,
-      "matched": [
-        "backend",
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Backend Engineer, Payments, Ledger & Provable Fairness",
-      "company": "Noricum",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49523604",
-      "score": 18.0,
-      "matched": [
-        "backend",
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior QA Engineer",
-      "company": "Lemon.io",
-      "salary": "",
-      "location": "Europe",
-      "url": "https://remotive.com/remote-jobs/qa/senior-qa-engineer-2091100",
-      "score": 18.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior DevOps Engineer",
-      "company": "Lemon.io",
-      "salary": "",
-      "location": "LATAM, Europe, USA, Canada, APAC",
-      "url": "https://remotive.com/remote-jobs/devops/senior-devops-engineer-2091099",
-      "score": 18.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Data Engineer",
-      "company": "Lemon.io",
-      "salary": "",
-      "location": "LATAM, Europe, USA, Canada, APAC",
-      "url": "https://remotive.com/remote-jobs/software-development/senior-data-engineer-2091097",
-      "score": 18.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Systems Engineer (Identity and Access)",
-      "company": "Flexport",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/flexport-senior-systems-engineer-identity-and-access",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Performance Marketing Manager (Part-Time)",
-      "company": "UTTR",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/uttr-senior-performance-marketing-manager-part-time",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior .NET Full-stack Developer",
-      "company": "Lemon.io",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/lemon-io-senior-net-full-stack-developer-1",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Professional Services DevOps Engineer",
-      "company": "JFrog",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/jfrog-senior-professional-services-devops-engineer",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Java & React Developer",
-      "company": "Lemon.io",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/lemon-io-senior-java-react-developer",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Software Engineer",
-      "company": "CircleCI",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/circleci-senior-software-engineer",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Software AI Engineer",
-      "company": "Collaboration.Ai",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/collaboration-ai-senior-software-ai-engineer",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Level Designer",
-      "company": "Blackbird Interactive",
-      "salary": "",
-      "location": "Vancouver, BC, Canada",
-      "url": "https://remoteOK.com/remote-jobs/remote-senior-level-designer-blackbird-interactive-1137156",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Governance Risk and Compliance Analyst",
-      "company": "RainFocus",
-      "salary": "",
-      "location": "Orem, UT",
-      "url": "https://remoteOK.com/remote-jobs/remote-senior-governance-risk-and-compliance-analyst-rainfocus-1137061",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Product Engineer",
-      "company": "Modash.io",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49522903",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior/Lead Platform & DevOps Engineer, Senior Frontend Engineer, Senior Full-Stack Engineer",
-      "company": "Open Education Applications / Neon",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49522929",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Engineer (Platform)",
-      "company": "OysterHR",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49523166",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior OpenZFS Developer",
-      "company": "klarasystems.com",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49523797",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Software Engineers (Senior, Staff, Principal)",
-      "company": "Fastly",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49523835",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior AI Engineer and Senior Product Engineer",
-      "company": "Starbridge",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49523985",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Product Manager",
-      "company": "ODK",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49524080",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Engineers (Agentic Engineer and Forward Deployed Engineer)",
-      "company": "Trustible",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49524822",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Frontline Engineering Manager, Senior Engineering Manager",
-      "company": "DAT",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49525544",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Software Engineer, Application Security",
-      "company": "Discord",
-      "salary": "",
-      "location": "",
-      "url": "https://news.ycombinator.com/item?id=49525748",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
+      "id": "1137224",
       "title": "AI Engineer Data APIs",
       "company": "Benzinga",
-      "salary": "",
-      "location": "",
       "url": "https://remoteOK.com/remote-jobs/remote-ai-engineer-data-apis-benzinga-1137224",
-      "score": 8.0,
-      "matched": [
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [
+        "golang",
+        "video",
+        "engineer"
+      ],
+      "published": "2026-08-30T21:00:01+00:00",
+      "source": "remoteok",
+      "description": "Remote - Before you read further: applying to this role requires a Loom video walkthrough under 5 minutes of the best thing you have built, plus a repo or live link. Tell us the hardest problem you hit and how you solved it. Focus on architecture decisions and tradeoffs, not a f... Please mention the word **CHARMINGLY** and tag RNzkuMTYwLjY4LjE4MQ== when applying to show you read the job post completely (#RNzkuMTYwLjY4LjE4MQ==). This is a beta feature to avoid spam applicants. Companies can search these words to find applicants that read this and see they're human.",
+      "score": 3.0,
+      "matched_keywords": [
         "api"
       ]
     },
     {
+      "id": "1137114",
+      "title": "Senior Backend Engineer Build AI Agents",
+      "company": "Salesforge",
+      "url": "https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-build-ai-agents-salesforge-1137114",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [
+        "golang",
+        "senior",
+        "sales",
+        "engineer",
+        "backend"
+      ],
+      "published": "2026-08-25T07:00:03+00:00",
+      "source": "remoteok",
+      "description": "Remote - Most sales tools help you send emails. We\u00e2\u0080\u0099re building something different.At Salesforge, we\u00e2\u0080\u0099re creating autonomous AI agents that can:Find the right prospectsGenerate highly personalized outreachRun conversationsAnd book meetingsAll without human invo... Please mention the word **EMPATHY** and tag RNzkuMTYwLjY4LjE4MQ== when applying to show you read the job post completely (#RNzkuMTYwLjY4LjE4MQ==). This is a beta feature to avoid spam applicants. Companies can search these words to find applicants that read this and see they're human.",
+      "score": 3.0,
+      "matched_keywords": [
+        "backend"
+      ]
+    },
+    {
+      "id": "5ff98535eadfbff2",
       "title": "Backend Systems Engineer (Rust)",
       "company": "Proxybase",
-      "salary": "",
-      "location": "",
       "url": "https://news.ycombinator.com/item?id=49523422",
-      "score": 8.0,
-      "matched": [
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "hn",
+      "description": "Proxybase | Backend Systems Engineer (Rust) | Remote, Global | Full-Time Hi HN,\nI\u2019m the founder of Proxybase [0]. We\u2019re building a SOCKS5 proxy network focused on transparency and ethical sourcing in the residential proxy market.\nA quick note for anyone who applied last month: thank you to everyone who reached out. We received far more strong applications than expected, and between running day-to-",
+      "score": 3.0,
+      "matched_keywords": [
         "backend"
+      ]
+    },
+    {
+      "id": "9a720c385dd15b22",
+      "title": "Senior Backend Engineer, Payments, Ledger & Provable Fairness",
+      "company": "Noricum",
+      "url": "https://news.ycombinator.com/item?id=49523604",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "hn",
+      "description": "Noricum | Senior Backend Engineer, Payments, Ledger & Provable Fairness | REMOTE (2h overlap with US Pacific) | Contract to permanent | $120-160/hr | Start by 14 Sep I'm the founder of Noricum where we build platforms \u2013 currently the money infrastructure, ledger, engine and payment rails behind a pre-launch wagering platform with a Steam skins economy. The games, a cashier and a bet ledger are bui",
+      "score": 3.0,
+      "matched_keywords": [
+        "backend"
+      ]
+    },
+    {
+      "id": "0f63b4e27ac03468",
+      "title": "SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React)",
+      "company": "VersaFeed.com",
+      "url": "https://news.ycombinator.com/item?id=49523703",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "hn",
+      "description": "VersaFeed.com | SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React) | REMOTE (USA ONLY) | Full-time  About us : Fancy ETL pipeline which processes products from huge ecommerce companies. Data extraction and massage, delivery to destinations like Google/Meta/TikTok/etc. Profitable, 18+ yrs stable, 100% employee-owned. No VC, no pointless meetings, just serious coding.  Stack : Pytho",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
       ]
     }
   ]
