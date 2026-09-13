@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-13 09:45 UTC",
-  "sources_scanned": 4,
-  "jobs_fetched": 6,
-  "matches": 6,
+  "generated_at": "2026-09-13 09:50 UTC",
+  "sources_scanned": 5,
+  "jobs_fetched": 19,
+  "matches": 19,
   "errors": [],
   "jobs": [
     {
@@ -17,6 +17,96 @@
       "published": "Fri, 14 Aug 2026 10:07:01 +0000",
       "source": "wwr",
       "description": "Headquarters: Sweden URL: http://career.proxify.io The Role: We are looking for a Senior Python Developer for one of our clients. You are a perfect candidate if you are growth-oriented, you love what you do, and you enjoy working on new ideas to develop exciting products. What we are looking for: 5+ years of experience building products with Python and Django. High proficiency in SQL with experience using databases like PostgreSQL. Experience scaling cloud infrastructures with Docker or Kubernetes is a plus. Experience managing cloud infrastructures, specifically AWS or GCP. You follow the best practices and conventions. Relevant experience in CI/CD and related tools. Ability to work with minimal supervision. Intermediate-advanced English level. You can communicate well with both technical and non-technical clients. Time zone: CET (+/- 3 hours). We are unable to consider applications from candidates in other time zones. Responsibilities: Ability to build libraries and frameworks of reusable efficient code. Competence in designing and implementing low-latency, stable and performing applications. Capacity to effectively collaborate with other team members and stakeholders remotely. Ability to implement data protection systems. Competence in data storage solutions. What we offer: Get paid, not played No more unreliable clients. Enjoy on-time monthly payments with flexible withdrawal options. Predictable project hours Enjoy a harmonious work-life balance with consistent 8-hour working days with clients. Flex days, so you can recharge Enjoy up to 24 flex days off per year without losing pay, for full-time positions found through Proxify. Career-accelerating positions at cutting-edge companies Discover exclusive long-term remote positions at the world's most exciting companies. Hand-picked opportunities just for you Skip the typical recruitment roadblocks and biases with personally matched positions. One seamless process, multiple opportunities A one-time contracting process for endless opportunities, with no extra assessments. Compensation Enjoy the same pay, every month with positions landed through Proxify. To apply: https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9",
+      "score": 6.0,
+      "matched_keywords": [
+        "python",
+        "backend"
+      ]
+    },
+    {
+      "id": "0f63b4e27ac03468",
+      "title": "SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React)",
+      "company": "VersaFeed.com",
+      "url": "https://news.ycombinator.com/item?id=49523703",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "hn",
+      "description": "VersaFeed.com | SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React) | REMOTE (USA ONLY) | Full-time  About us : Fancy ETL pipeline which processes products from huge ecommerce companies. Data extraction and massage, delivery to destinations like Google/Meta/TikTok/etc. Profitable, 18+ yrs stable, 100% employee-owned. No VC, no pointless meetings, just serious coding.  Stack : Pytho",
+      "score": 6.0,
+      "matched_keywords": [
+        "python",
+        "django"
+      ]
+    },
+    {
+      "id": "e9d3b44e60f15a2b",
+      "title": "Lead Python Backend Engineer, Reef Technologies",
+      "company": "",
+      "url": "https://www.python.org/jobs/8122/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Warsaw (fully remote), Poland Lead Python Backend Engineer We\u2019re looking for Python backend engineers interested in team management to work on a trustless supercluster of performance-proofed GPU-enabled sandboxed docker container runners controlled by truly decentralized algorithms (not just PAXOS or RAFT). Wow, that was a mouthful... If you found it interesting, join Reef Technologies and lead a team of senior engineers who tackle complex technical challenges. With us, you\u2019ll work on your own terms: Contribute from wherever you like\u2014we are fully remote Set your own time commitment, as long as it\u2019s at least 30h per week See how we work in our handbook: github.com/reef-technologies/handbook Influence the way we operate through our Sociocracy 3.0 decision-making process Salary on a B2B contract: 75\u201390 USD or 300\u2013380 PLN per hour, or 12600\u201315120 USD or 48000\u201360800 PLN a month if you work 40 hours per week (most of us work a bit less) Flexible work schedule (as measured with a time tracker) We automatically adjust rates based on inflation twice a year So, what do you think? You don't even need a CV, just click here and shoot a few quick commands to apply. We're looking for someone with 2+ years of team management and 5+ years of programming experience (including at least a year with Python, open source and significant personal projects do count).",
+      "score": 6.0,
+      "matched_keywords": [
+        "python",
+        "backend"
+      ]
+    },
+    {
+      "id": "649a53fbbe17ad8d",
+      "title": "Senior Python Backend Engineer, Reef Technologies",
+      "company": "",
+      "url": "https://www.python.org/jobs/8121/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Warsaw (fully remote), Poland Senior Python Backend Engineer We\u2019re looking for Python backend engineers to work on a trustless supercluster of performance-proofed GPU-enabled sandboxed docker container runners controlled by truly decentralized algorithms (not just PAXOS or RAFT). Wow, that was a mouthful... If you found it interesting, join Reef Technologies and tackle complex technical challenges like this on your own terms: Contribute from wherever you like\u2014we are fully remote Set your own time commitment, as long as it\u2019s at least 30h per week See how we work in our handbook Influence the way we operate through our Sociocracy 3.0 decision-making process Salary on a B2B contract: 45-70 USD or 180-280 PLN per hour Flexible work schedule (as measured with a time tracker) We automatically adjust rates based on inflation twice a year So, what do you think? You don't even need a CV, just click here and shoot a few quick commands to apply. We're looking for someone with 5+ years of programming experience, including at least a year with Python (including opensource and significant personal projects).",
+      "score": 6.0,
+      "matched_keywords": [
+        "python",
+        "backend"
+      ]
+    },
+    {
+      "id": "3ef90bb2961ec2e4",
+      "title": "Python Backend Engineer, Constelli Signals",
+      "company": "",
+      "url": "https://www.python.org/jobs/8120/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Hyderabad, Telangana, India We are hiring a Python Backend Engineer to take ownership of high-throughput backend services. You will work alongside our front-end and C# application teams to build the infrastructure that ingests, processes, and routes real-time data streams across our platforms. This role is for someone who enjoys asynchronous Python, complex data-flow problems, and the discipline of building production systems that need to run reliably under sustained load. Experience: 4+ years of professional backend software engineering experience, primarily in Python. Asynchronous Python: Strong working knowledge of asyncio and concurrent programming patterns for high-throughput I/O. API Frameworks: Production experience with FastAPI (or comparable async frameworks such as Starlette, aiohttp, or Sanic) and pydantic-based schema validation. Message Brokers: Hands-on experience with at least one event streaming or message broker platform \u2014 Apache Kafka, RabbitMQ, NATS, or equivalent. Databases: Proficient with PostgreSQL and capable of writing optimized SQL; comfortable with schema design, indexing, and query profiling. Time-Series Data: Working familiarity with time-series databases (e.g., TimescaleDB, InfluxDB, QuestDB) and the trade-offs of heavy-write workloads. Networking: Solid grasp of TCP/UDP, WebSockets, and HTTP/REST; able to debug at the protocol level when needed. Platform & Tooling: Comfortable Git-based workflows. Testing & Quality: Demonstrated practice with pytest, unit and integration testing, and CI pipelines.",
+      "score": 6.0,
+      "matched_keywords": [
+        "python",
+        "backend"
+      ]
+    },
+    {
+      "id": "019c9331f89212a8",
+      "title": "Senior Backend Python Engineer, mindIT HR Agency (on behalf of a confidential client)",
+      "company": "",
+      "url": "https://www.python.org/jobs/8109/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Remote, Argentina Our client is transforming the commercial real estate financing space. Backed by leading venture capital firms and financial institutions, they have built an AI-powered platform that connects brokers and borrowers with the most suitable lenders for their deals, automating the most time-consuming steps of the financing process. They are looking for a Senior Backend Python Engineer to join their engineering team and help scale their platform. Responsibilities: Write clean, scalable, and testable Python code. Maintain and improve the core Flask API and FastAPI microservices (including the AI Service and Email Service). Architect, design, and implement new features across the product roadmap. Collaborate closely with product, design, marketing, and engineering teams. Perform code reviews with teammates. Help define and document engineering best practices, testing, and CI/CD processes. Contribute to a culture of technical excellence, velocity, and collaboration. Participate in interviews and help improve the hiring process. Proven experience building Python APIs with Flask or FastAPI. Experience working in product companies or startups, ideally in fast-paced, growth-oriented environments. Strong ability to take business ideas from whiteboard to production. B.S. in Computer Science or equivalent experience. Must be based in Latin America; candidates based in Argentina are preferred. Nice to have: Experience with LLMs and building agentic AI applications. Experience with GraphQL. Experience with projects handling complex workflows. Previous experience in a high-growth company.",
       "score": 6.0,
       "matched_keywords": [
         "python",
@@ -102,17 +192,153 @@
       ]
     },
     {
-      "id": "0f63b4e27ac03468",
-      "title": "SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React)",
-      "company": "VersaFeed.com",
-      "url": "https://news.ycombinator.com/item?id=49523703",
+      "id": "5b03276fa9616654",
+      "title": "Agentic Python Engineer, Evaboot",
+      "company": "",
+      "url": "https://www.python.org/jobs/8133/",
       "category": "",
       "location": "",
       "salary": "",
       "tags": [],
       "published": "",
-      "source": "hn",
-      "description": "VersaFeed.com | SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript - VueJS/React) | REMOTE (USA ONLY) | Full-time  About us : Fancy ETL pipeline which processes products from huge ecommerce companies. Data extraction and massage, delivery to destinations like Google/Meta/TikTok/etc. Profitable, 18+ yrs stable, 100% employee-owned. No VC, no pointless meetings, just serious coding.  Stack : Pytho",
+      "source": "rss",
+      "description": "Remote, Remote/Worldwide, Remote/Worldwide, Remote Evaboot turns LinkedIn Sales Navigator searches into clean, verified prospecting lists. Demo: https://www.youtube.com/watch?v=khYgyDlo2Iw We are bootstrapped, $2.2M+ ARR, a team of 5, and remote since day one. What we are doing: building self-improving loops and agentic products. Agentic products you will work on: SDR agent (Sales Navigator agent, emailing outreach agent) Self-improving loops you will build: Coding Support SEO & content Analytics Company-wide systems (memory, tooling) You will work directly with the co-founder & CEO. What is guaranteed: an intense execution pace and an exponential learning curve. A zero-nonsense environment, focused mostly on results and KPIs. Autodidacts are welcome. Two weeks maximum from apply to reply. Compensation: $70,000 - 120,000 USD. Full-time, 100% remote. Strong Python engineering Power user of agentic coding Bonus points: AWS Agentic plumbing & observability",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "fe5421efa00453f6",
+      "title": "Agentic Python Engineer, Evaboot",
+      "company": "",
+      "url": "https://www.python.org/jobs/8130/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Remote, Remote, Worldwide Evaboot | Agentic Python Engineer | REMOTE | Full-time | $70-120K USD Evaboot turns LinkedIn Sales Navigator searches into clean, verified prospecting lists. Demo: https://www.youtube.com/watch?v=khYgyDlo2Iw Bootstrapped, $2.2M+ ARR, team of 5, remote since day one. What we're doing: building self-improving loops and agentic products. Agentic products you'll work on: SDR agent (sales navigator agent, emailing outreach agent). Self-improving loops you'll build: coding, support, SEO & content, analytics, and company-wide systems (memory, tooling). You will work directly with me (co-founder & CEO). Requirements: strong Python engineering, power user of agentic coding. Bonus points: AWS, agentic plumbing & observability. What's guaranteed: intense execution pace & exponential learning curve. Zero bullshit environment, we focus mostly on results and KPIs. Autodidacts are welcome. Two weeks maximum from apply to reply. Apply right here: https://forms.gle/NM9BLJyuS8FNitYc8 Requirements: strong Python engineering, power user of agentic coding.",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "7b95282eba81b9f1",
+      "title": "Python developer, Eleks",
+      "company": "",
+      "url": "https://www.python.org/jobs/8129/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Poland, Lviv, Ivano-Frankivsk, Ternopil, Uzhhorod, Chernivtsi or Kyiv, Ukraine/Poland ABOUT PROJECT Our client is one of the leading financial services companies in the USA. The project focuses on developing a large-scale platform for financial data management, enabling secure storage, processing, and delivery of business-critical financial data. Offices to Apply in - Poland Ternopil Ivano-Frankivsk Lviv Kyiv Ukraine Krakow Chicago Las Vegas Argentina Croatia Uzhhorod Chernivtsi Zhytomyr Rivne Lutsk REQUIREMENTS 4+ years of commercial experience with Python Strong experience with Flask Experience building RESTful APIs and web services Experience with Java is a plus Experience with Snowflake or Snowpark is a plus Upper-Intermediate English or higher RESPONSIBILITIES Develop, test, and maintain reliable Python backend services and applications Design and implement new features in collaboration with cross-functional teams Build and integrate RESTful APIs using Flask Write clean, maintainable, and well-tested code Troubleshoot performance issues and resolve defects across development and production environments Participate in code reviews and contribute to engineering best practices Support application deployment, monitoring, and ongoing production maintenance Continuously improve the codebase, development processes, and technical solutions WHAT YOU WILL GET WITH ELEKS Close cooperation with a customer Challenging tasks Competence development Team of professionals Dynamic environment with low level of bureaucracy",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "f21eb105f0810a47",
+      "title": "Python/DevOps Engineer, NordVpn/NordSecurity",
+      "company": "",
+      "url": "https://www.python.org/jobs/8128/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Vilnius / Kaunas / Warsaw, Lithuania/Poland DevOps Engineer Threat Protection Full-time Hybrid Vilnius / Kaunas / Warsaw Learn & grow Boost your skills via our extensive training programs (online and offline) & other resources. Benefit from mentorship and career-switch opportunities to grow within the company. Work from anywhere Recharge with a change of scenery \u2013 choose work from any location when you feel a need to power your creativity and drive. Physical well-being Fuel your active lifestyle with online workouts led by our Physical Well-Being experts. Unlock a variety of sports and wellness facilities, like gyms, swimming pools, and fitness classes, with the Multisport card. Mental & emotional health Nurture your mind with free psychologist consultations, dedicated mental health events, and premium access to top-rated wellness apps like Calm, Headspace, and Mindletic. Premium healthcare Receive private health insurance giving you peace of mind for your health needs. Joyful moments \u2013 special treats Celebrate life\u2019s big moments with special gifts from us on your birthday, anniversary, and other major events, such as weddings or the arrival of a new family member. Company events & team-building Experience iconic Nord Security celebrations, team-buildings, and knowledge-sharing events, nurturing bonds that fuel our success. Workation Embark on a legendary company getaway abroad, filled with exciting activities, live concerts, engaging workshops, and epic time together. Salary Range (Gross) \u20ac3.6K \u2013 \u20ac5.8K per month Main Responsibilities Collaborate with the Threat Protection development team to build and automate infrastructure for the product Write scripts to expand and maintain automated Code delivery and Release pipelines using Docker, Gitlab CI, AWS Help build frameworks for automated unit/integration/E2E tests, as well as setting up various virtual test environments/services Design and manage infrastructure for a multi-tenant distributed environment Assist with service migration to and within cloud environments (S3, EC2, EMR, Kubernetes) Ensure the application of best practices including but not limited to security, availability, and observability of the infrastructure. Core Requirements Experience as a DevOps, System or Infrastructure Engineer or a similar engineering role Proficiency with Linux systems and tools; knowledge of Windows administration strongly appreciated Working knowledge of Git and Git workflows Experience with scripting languages (e.g. Shell, Bash, Python, etc.) Experience implementing CI/CD principles, understanding of build systems and tooling (preferably Make, CMake, Conan, Ninja) Understanding of software composition principles: compilation, linking, loading of binaries and dependency management in major operating systems Knowledge of virtualization and containerization principles Experience working with cloud technologies and tooling: Configuration as code (Ansible, Terraform), Dockerization, EKS/Kubernetes Ownership mindset around your work and a desire for understanding of how systems interact including those outside your immediate area of expertise Critical thinking with a high degree of professionalism, flexibility, and attention to detail. What We Offer Innovate with industry leaders Work alongside global experts to build world-leading cybersecurity tools, impacting millions of users around the world.",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "1df61f190197d789",
+      "title": "Agentic Python Engineer, Evaboot",
+      "company": "",
+      "url": "https://www.python.org/jobs/8125/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Remote, Remote/Worldwide, Remote/Worldwide Evaboot turns LinkedIn Sales Navigator searches into clean, verified prospecting lists. Demo: https://www.youtube.com/watch?v=khYgyDlo2Iw We are bootstrapped, $2.2M+ ARR, a team of 5, and remote since day one. What we are doing: building self-improving loops and agentic products. Agentic products you will work on: SDR agent (Sales Navigator agent, emailing outreach agent) Self-improving loops you will build: Coding Support SEO & content Analytics Company-wide systems (memory, tooling) You will work directly with the co-founder & CEO. What is guaranteed: an intense execution pace and an exponential learning curve. A zero-nonsense environment, focused mostly on results and KPIs. Autodidacts are welcome. Two weeks maximum from apply to reply. Compensation: $70,000 - 120,000 USD. Full-time, 100% remote. Strong Python engineering Power user of agentic coding Bonus points: AWS Agentic plumbing & observability",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "1e929452a1360610",
+      "title": "Python Developer, Micro1",
+      "company": "",
+      "url": "https://www.python.org/jobs/8118/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Miami Shores, FL, United States Job Summary: In this role, you'll apply your expertise to help train next-generation AI systems. Your work will shape how models learn, reason, and perform through high-quality, real-world input. No prior experience in AI is required \u2014 your domain knowledge is what matters. Key Responsibilities: Design, develop, and optimize REST and GraphQL endpoints for scalable APIs. Drive data validation, error handling, and security best practices within backend services. Plan and execute database migrations, optimizations, and schema changes as needed. Actively test new AI-powered models in Cursor, providing actionable feedback via incident reports, bug traces, and screenshots. Participate in 4-day intensive testing bursts, exploring how AI models impact real coding workflows. Engage thoughtfully with the research team in a dedicated Slack channel to discuss findings and propose improvements. Submit detailed post-burst surveys, delivering insights on model performance and developer experience. Restrictions Telecommuting is OK Agencies are OK Requirements 3+ years of professional experience as a backend developer, with strong expertise in Python. Proficient in building and maintaining RESTful and GraphQL APIs. Advanced understanding of backend data validation, error handling, and API security. Hands-on experience with database migrations, performance tuning, and schema design. Extensive use of AI tools for coding; familiarity with Cursor is highly desirable. Outstanding written and verbal communication skills, with a knack for clear incident and bug reporting. Proven ability to thrive in fast-paced, confidential, and collaborative remote environments. Preferred Qualifications: Visible contributions to open source (e.g., GitHub stars or contributions). Experience designing or evaluating experimental tooling and developer workflows. Demonstrated enthusiasm for AI advancements in software development. About the Company micro1 matches companies with skilled, pre-vetted software developers worldwide.",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "3d0cd0fff5c647cb",
+      "title": "Senior Python Engineer, EPAM",
+      "company": "",
+      "url": "https://www.python.org/jobs/8117/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Miami Shores, FL, United States Job Description We are seeking a Senior Python Engineer who brings strong backend development expertise along with a solid grasp of cloud-native solutions. The right candidate will be capable of designing, building and maintaining scalable backend services through Python and modern cloud platforms. Countries : Argentina, Australia, Bulgaria, Canada, Chile, China, Colombia, Czech Republic, Greece, Hong Kong, Japan, Malaysia, Mexico,Romania, Singapore, Slovakia, Ukraine, USA, Vietnam Solid experience in Python backend development Familiarity with frameworks like FastAPI, Flask or Django Practical experience using AWS, Azure or GCP Proven background building REST APIs and microservices Sound knowledge of relational and/or NoSQL databases Exposure to CI/CD, testing and modern software engineering practices Excellent analytical and problem-solving abilities Nice to have Working knowledge of Docker and Kubernetes Background in serverless architectures Familiarity with data pipelines or event-driven architectures Understanding of Terraform or infrastructure as code We offer/Benefits Connectivity Bonus (25,000 ARS are paid with a salary receipt at the end of each month as a non-wages concept).",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "dd2cb384de677f7f",
+      "title": "Senior Python Engineer, Turing",
+      "company": "",
+      "url": "https://www.python.org/jobs/8116/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "Miami Shores, FL, United States Job Description Role Overview: This position is within a project with one of the foundational LLM companies. The goal is to assist these foundational LLM companies in enhancing their Large Language Models. One way we help these companies improve their models is by providing them with high-quality proprietary data. This data serves two main purposes: first, as a basis for fine-tuning their models, and second, as an evaluation set to benchmark the performance of their models or competitor models. For example, for SFT data generation, you might have to put together or be provided a prompt which contains provided code and questions, you will then provide the model responses, and write corresponding Python code to solve the questions. For RLHF data generation, you may need to create a prompt yourself or use one provided by the customer, ask the model questions, and evaluate the outputs generated by two versions of the LLM. You'll compare these outputs and provide feedback, which is then used to fine-tune the models. Please note that this role does not involve building or fine-tuning LLMs. What does day-to-day look like: Design, develop, and maintain efficient, high-quality Python code to train and optimize AI models. Conduct evaluations (Evals) to benchmark model performance and analyze results for continuous improvement. Familiarity with Python frameworks and libraries Evaluate and rank AI model responses to user queries across diverse domains, ensuring alignment with predefined criteria. Develop comprehensive explanations and rationales for evaluations, showcasing excellent reasoning and technical expertise. Lead efforts in Supervised Fine-Tuning (SFT), including creating and maintaining high-quality, task-specific datasets. Collaborate with researchers and annotators to execute Reinforcement Learning with Human * Feedback (RLHF) and refine reward models. Design innovative evaluation strategies and processes to improve the model's alignment with user needs and ethical guidelines. Create and refine optimal responses to improve AI performance, emphasizing clarity, relevance, and technical accuracy. Conduct thorough peer reviews of code and documentation, providing constructive feedback and identifying areas for improvement. Collaborate with cross-functional teams to improve model performance and contribute to product enhancements. Continuously explore and integrate new tools, techniques, and methodologies to enhance AI training processes. Requirements: 3+ years of strong experience with Python programming language. Industry experience and knowledge of code quality, formatting, and best practices of software development Experience with Python\u2019s testing ecosystem, including unit, integration, and property-based testing. Knowledge of multi-threading and asynchronous programming in Python. Ability to work with architectural patterns and refactor code without introducing regressions. Strong debugging skills, including fixing memory and concurrency issues. Fluent in conversational and written English communication skills",
+      "score": 3.0,
+      "matched_keywords": [
+        "python"
+      ]
+    },
+    {
+      "id": "257fec79b981ebb3",
+      "title": "Senior Python/DevOps Engineer (100% Remote - USA Only), Six Feet Up",
+      "company": "",
+      "url": "https://www.python.org/jobs/8113/",
+      "category": "",
+      "location": "",
+      "salary": "",
+      "tags": [],
+      "published": "",
+      "source": "rss",
+      "description": "100% Remote, USA Only Six Feet Up is seeking a seasoned Python/DevOps Engineer (100% remote, USA only) who can work across software development, architecture, cloud infrastructure, data, AI, and client collaboration. This role is for an experienced engineering generalist: someone with deep expertise who is not limited to one framework, platform, or layer of the stack. You are comfortable entering unfamiliar systems, clarifying ambiguous problems, and applying sound judgment where it creates the most value. You also understand that AI has changed software engineering. You use AI-assisted development tools to accelerate research, implementation, testing, documentation, and troubleshooting while remaining accountable for the quality, security, and correctness of the result. One project may involve modernizing a mature Python application. Another may require designing an API, building a data workflow, integrating AI capabilities, or improving cloud infrastructure and observability. This role is a strong fit for someone who is curious, pragmatic, collaborative, and ready to work on the problem that matters most. Apply online: https://sixfeetup.com/company/senior-python-developer-devops-engineer-us-only Strong candidates will have meaningful experience in several of the following areas: Python Django, Wagtail, FastAPI, Flask, or comparable frameworks REST, GraphQL, event-driven systems, and third-party integrations PostgreSQL and relational data modeling JavaScript or TypeScript and modern frontend frameworks Automated testing, code quality, and continuous integration Docker and containerized application development AWS, Azure, or another major cloud platform Kubernetes and cloud-native application delivery Infrastructure as code and deployment automation Integration of AI/ML capabilities into production systems AI-assisted development workflows Application performance, observability, and production troubleshooting Secure practices such as least-privilege access, secrets management, dependency management, and remediation of common application vulnerabilities Data ingestion, transformation, or processing workflows Authentication, authorization, SSO, and secure application design Legacy system modernization and incremental migrations As a Senior Python/DevOps Engineer, you will: Work with clients and teammates to understand business goals, user needs, constraints, and desired outcomes. Design and deliver secure, maintainable, well-tested software across application, data, integration, and infrastructure boundaries. Use AI tools responsibly to accelerate development while reviewing and validating generated code, tests, analysis, and recommendations. Rapidly evaluate emerging technologies and determine where they can improve delivery, quality, security, or developer productivity. Help evolve how the team uses AI for coding, testing, code review, documentation, debugging, estimation, discovery, and delivery. Work with delivery leads to turn unclear initiatives into practical, incremental technical plans. Identify architectural, security, privacy, performance, reliability, and delivery risks early. Contribute across the application stack, including backend services, APIs, databases, integrations, frontend applications, data workflows, and cloud infrastructure. Improve testing, deployment automation, observability, documentation, and developer workflows. You are an experienced software engineer who: Learns publicly by sharing findings, examples, warnings, and practical guidance with teammates. Can solve problems that cross traditional boundaries between development, data, infrastructure, and operations. Makes decisions based on client needs, project constraints, maintainability, risk, and long-term value. Communicates progress, uncertainty, risks, and blockers openly. Treats learning, experimentation, and technical reinvention as part of the job, not something reserved for spare time. Is energized by rapidly changing technology and comfortable replacing familiar workflows when a better approach emerges. Learns publicly by sharing discoveries, failures, limitations, and useful techniques with the team through demos, documentation, pairing, and technical discussions. You are successful when you: Understand our clients\u2019 problems and aspirations. Proactively seek and provide actionable feedback from and to peers. Are reliable in delivering work and escalate issues quickly when needed. Promote best practices while following company methodologies to ensure quality and stability.",
       "score": 3.0,
       "matched_keywords": [
         "python"

@@ -124,7 +124,7 @@ def load_config(path: str) -> Config:
     if not cfg.sources:
         raise ValueError("config must define at least one source")
     for s in cfg.sources:
-        if s.type not in ("remotive", "wwr", "remoteok", "hn", "rss", "json"):
+        if s.type not in ("remotive", "wwr", "remoteok", "hn", "jobicy", "rss", "json"):
             raise ValueError("unknown source type: %r" % s.type)
         if s.type in ("rss", "json") and not s.url:
             raise ValueError("source of type %r requires a url" % s.type)
