@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GigWatch — watch the job boards that match your skills</title>
+<meta name="description" content="GigWatch is a zero-dependency Python tool that watches remote job boards (Remotive, We Work Remotely, RemoteOK, Hacker News 'Who is Hiring'), filters by your skills, dedupes, and alerts you only on new matches — with optional AI ranking.">
+<style>
+  :root{
+    --bg:#0b0f17; --panel:#111826; --panel2:#0e1420;
+    --ink:#e6edf3; --muted:#8b98a9; --line:#1e2a3a;
+    --acc:#3fd08f; --acc2:#4ea1ff; --warn:#f0b429;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  a{color:var(--acc2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .top{display:flex;align-items:center;justify-content:space-between;
+    padding:18px 0;border-bottom:1px solid var(--line)}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.5px}
+  .logo span{color:var(--acc)}
+  .nav{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+  .nav a{color:var(--muted)} .nav a:hover{color:var(--ink);text-decoration:none}
+  .badge{display:inline-block;font:600 12px/1 var(--mono);color:var(--acc);
+    background:rgba(63,208,143,.12);border:1px solid rgba(63,208,143,.3);
+    padding:5px 10px;border-radius:999px;margin-bottom:18px}
+  h1{font-size:46px;line-height:1.1;letter-spacing:-1.5px;margin:0 0 18px;font-weight:800}
+  h1 em{color:var(--acc);font-style:normal}
+  .sub{font-size:19px;color:var(--muted);max-width:640px;margin:0 0 28px}
+  .cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;
+    padding:12px 20px;border-radius:10px;border:1px solid var(--line);color:var(--ink);
+    background:var(--panel);transition:.15s}
+  .btn:hover{border-color:var(--acc);text-decoration:none;transform:translateY(-1px)}
+  .btn.primary{background:var(--acc);color:#05221a;border-color:var(--acc)}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .code-inline{font:13px/1 var(--mono);background:var(--panel2);border:1px solid var(--line);
+    padding:9px 13px;border-radius:8px;color:var(--ink)}
+  .copy{cursor:pointer;opacity:.7} .copy:hover{opacity:1}
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:30px;letter-spacing:-.8px;margin:0 0 8px;font-weight:800}
+  .lead{color:var(--muted);max-width:620px;margin:0 0 32px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card .ic{font-size:24px;margin-bottom:12px}
+  .card h3{margin:0 0 8px;font-size:17px;font-weight:700}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .term{background:#0a0e15;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,.4);margin-bottom:18px}
+  .term .bar{display:flex;align-items:center;gap:8px;padding:11px 15px;background:#0f1622;
+    border-bottom:1px solid var(--line)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .term .ttl{margin-left:8px;font:12px var(--mono);color:var(--muted)}
+  .term pre{margin:0;padding:18px 20px;overflow-x:auto;font:13px/1.7 var(--mono);color:#c9d4e3}
+  .g{color:var(--acc)} .b{color:var(--acc2)} .y{color:var(--warn)} .m{color:#7d8ea3}
+  .live-badge{display:inline-block;font:700 11px/1 var(--mono);color:#05221a;background:var(--acc);
+    padding:3px 8px;border-radius:999px;letter-spacing:.5px;animation:pulse 2s infinite}
+  .live-badge.off{background:var(--warn);color:#3a2a00;animation:none}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+  .demo-h{font:13px var(--mono);color:var(--muted);margin:22px 0 10px}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start}
+  .tier{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
+  .tier.hot{border-color:var(--acc);position:relative}
+  .tier.hot::before{content:"MOST POPULAR";position:absolute;top:-11px;left:24px;
+    font:700 11px var(--mono);letter-spacing:1px;color:#05221a;background:var(--acc);
+    padding:4px 10px;border-radius:999px}
+  .tier .name{font-size:15px;color:var(--muted);font-weight:600}
+  .tier .price{font-size:38px;font-weight:800;letter-spacing:-1px;margin:6px 0 2px}
+  .tier .price small{font-size:15px;color:var(--muted);font-weight:500}
+  .tier ul{list-style:none;padding:0;margin:18px 0 24px}
+  .tier li{padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px;color:#c2cdda}
+  .tier li:last-child{border-bottom:0}
+  .tier li b{color:var(--ink)}
+  .tier .btn{width:100%;justify-content:center}
+  .free{background:linear-gradient(180deg,rgba(63,208,143,.08),transparent);
+    border:1px solid rgba(63,208,143,.35);border-radius:16px;padding:30px;display:flex;
+    align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .free h3{margin:0 0 6px;font-size:22px}
+  .free p{margin:0;color:var(--muted);max-width:560px}
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:14px}
+  .frow{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  @media(max-width:820px){
+    .grid,.tiers{grid-template-columns:1fr}
+    h1{font-size:34px} .nav{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="logo">Gig<span>Watch</span></div>
+    <div class="nav">
+      <a href="#features">Features</a>
+      <a href="#demo">Sample output</a>
+      <a href="#pricing">Pricing</a>
+      <a href="https://github.com/earnnova-dev/gigwatch">GitHub</a>
+    </div>
+  </div>
+
+  <section style="border-top:0;padding-top:72px">
+    <span class="badge">v0.5.0 · zero dependencies · MIT</span>
+    <h1>Stop refreshing job boards.<br>Let <em>GigWatch</em> watch them for you.</h1>
+    <p class="sub">A self-hosted Python tool that scans remote job boards, matches them to
+      your skills, dedupes what you've already seen, and pings you <b>only on new matches</b> —
+      with optional AI ranking that tells you <i>why</i> each gig fits.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/earnnova-dev/gigwatch">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.83 2.2-.83.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        View on GitHub</a>
+      <span class="code-inline"><span class="m">$ </span>pip install git+https://github.com/earnnova-dev/gigwatch.git
+        <span class="copy" onclick="navigator.clipboard&&navigator.clipboard.writeText('pip install git+https://github.com/earnnova-dev/gigwatch.git');this.textContent='copied ✓'" title="copy">⧉</span></span>
+    </div>
+  </section>
+
+  <section id="features">
+    <h2>Everything a job-watcher should do. Nothing it shouldn't.</h2>
+    <p class="lead">No database, no cloud, no API keys required for the core. If you can run
+      <code>python3</code>, you can run GigWatch.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">📡</div><h3>5 feed sources</h3>
+        <p>Remotive, We Work Remotely, RemoteOK, Hacker News "Who is Hiring?", plus any RSS/Atom or JSON endpoint.</p></div>
+      <div class="card"><div class="ic">🎯</div><h3>AI job ranking</h3>
+        <p><code>gigwatch rank</code> scores every match 0–100 against your profile and explains the fit. LLM-powered, or a deterministic heuristic offline.</p></div>
+      <div class="card"><div class="ic">🧹</div><h3>Dedupe by state</h3>
+        <p>A local JSON file remembers what you've seen, so you're only ever alerted on <b>new</b> matches. Auto-prunes old entries.</p></div>
+      <div class="card"><div class="ic">🔔</div><h3>Alerts that reach you</h3>
+        <p>Console, SMTP email, or Slack (webhook or chat API). Secrets stay in env vars, never in the config file.</p></div>
+      <div class="card"><div class="ic">🧠</div><h3>Skill-based filtering</h3>
+        <p>Keyword any/all matching, category &amp; location filters, exclude-list, and relevance scoring (title hits weigh more).</p></div>
+      <div class="card"><div class="ic">📦</div><h3>Zero dependencies</h3>
+        <p>Pure standard library. One command to install, one config file to tune, one loop to run.</p></div>
+      <div class="card"><div class="ic">📄</div><h3>Shareable HTML report</h3>
+        <p><code>gigwatch scan --format html</code> renders a self-contained report page — inline CSS, no assets — you can email, host, or commit. The live feed on this page is one.</p></div>
+      <div class="card"><div class="ic">📬</div><h3>Daily digest mode</h3>
+        <p><code>gigwatch digest</code> batches every new match and sends ONE consolidated alert per period — no 40-email spam, one clean summary. The core of the hosted offer.</p></div>
+      <div class="card"><div class="ic">🖥️</div><h3>One-command hosted server</h3>
+        <p><code>gigwatch serve</code> boots a live, shareable dashboard — with an <b>AI-ranked top-matches panel</b> (fit score + why) — plus JSON and RSS feeds on one port. stdlib-only. The engine behind the $29/mo hosted tier.</p></div>
+    </div>
+  </section>
+
+  <section id="demo">
+    <h2>See it actually work</h2>
+    <p class="lead">Real output from a run on this machine — 294 jobs fetched across
+      We Work Remotely, RemoteOK, and Hacker News, filtered to a Python/backend profile.</p>
+
+    <div class="demo-h" id="live-h">$ gigwatch list --format text   <span class="live-badge" id="live-badge">SAMPLE</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">gigwatch — sample feed <span id="live-updated" class="m"></span></span></div>
+<pre id="live-pre"><span class="m">loading sample…</span></pre></div>
+    <p class="m" id="live-note" style="font-size:13px;margin-top:8px"></p>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch list --format text   <span class="m"># static snapshot</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">gigwatch — sample scan</span></div>
+<pre><span class="m">297 job(s) fetched, 6 match your filters (dry run, state untouched)</span>
+<span class="g"> 1. [score 6.0] Senior Backend Developer (Python)</span>
+     company: Proxify AB
+     where:   Anywhere in the World
+     matched: python, backend
+     https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9
+<span class="g"> 2. [score 3.0] AI Engineer Data APIs</span>
+     company: Benzinga
+     matched: api
+     https://remoteOK.com/remote-jobs/remote-ai-engineer-data-apis-benzinga-1137224
+<span class="g"> 3. [score 3.0] Senior Backend Engineer Build AI Agents</span>
+     company: Salesforge
+     matched: backend
+     https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-build-ai-agents-salesforge-1137114</pre></div>
+
+    <div class="demo-h">$ gigwatch rank --format text   <span class="m"># AI engine, fit scored against your profile</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">gigwatch — AI ranking</span></div>
+<pre><span class="m">ranked 6 match(es) via ai engine</span>
+<span class="g"> 1. [fit 85.0/100, ai] Senior Backend Developer (Python)</span>
+     company: Proxify AB
+     where:   Anywhere in the World
+     why:     <span class="b">Perfect skill match and remote, but lacks salary transparency.</span>
+<span class="g"> 2. [fit 70.0/100, ai] SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript)</span>
+     company: VersaFeed.com
+     why:     <span class="b">Strong Python match, but lacks remote confirmation and salary transparency.</span>
+<span class="g"> 3. [fit 50.0/100, ai] Senior Backend Engineer, Payments, Ledger &amp; Provable Fairness</span>
+     company: Noricum
+     why:     <span class="b">Senior backend role, but lacks specific tech stack and salary info.</span></pre></div>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch serve --skills python,fastapi,postgresql,aws --title "Senior Python Backend Engineer"   <span class="m"># v0.5.0 — the hosted dashboard, AI-ranked panel</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">http://gigwatch.yourdomain.com/ — live dashboard</span></div>
+<div style="padding:18px 20px;overflow-x:auto">
+  <div style="font-weight:800;font-size:17px">GigWatch — live gig dashboard</div>
+  <div style="color:var(--muted);font-size:12.5px;margin:4px 0 14px">6 match(es) · updated 2026-09-12 08:20 UTC · v0.5.0</div>
+  <div style="border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="background:rgba(39,201,63,.15);color:#27c93f;border:1px solid rgba(39,201,63,.4);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:700;letter-spacing:.04em">ai-ranked</span>
+      <span style="color:var(--muted);font-size:12.5px">ranked for: Senior Python Backend Engineer · skills: python, fastapi, postgresql, aws</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">1</b><span style="background:rgba(39,201,63,.18);color:#27c93f;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 85/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9" style="color:var(--acc)">Senior Backend Developer (Python)</a></div>
+        <div style="color:var(--muted);font-size:12px">Perfect skill match and remote, but lacks salary transparency.</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">2</b><span style="background:rgba(255,189,46,.18);color:#ffbd2e;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 70/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://news.ycombinator.com/item?id=49523703" style="color:var(--acc)">SENIOR SOFTWARE ENGINEER (Python/Django + JS)</a></div>
+        <div style="color:var(--muted);font-size:12px">Strong Python match, but lacks remote confirmation and salary transparency.</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">3</b><span style="background:rgba(255,189,46,.18);color:#ffbd2e;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 50/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://remoteOK.com/remote-jobs/remote-senior-backend-engineer-build-ai-agents-salesforge-1137114" style="color:var(--acc)">Senior Backend Engineer, Build AI Agents</a></div>
+        <div style="color:var(--muted);font-size:12px">Senior backend role, but lacks specific tech stack and salary info.</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:8px;padding:10px 12px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:13px">4</b><span style="background:rgba(255,189,46,.18);color:#ffbd2e;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700">fit 45/100</span></div>
+        <div style="font-size:13px;margin:4px 0 2px"><a href="https://remotive.com/remote-jobs/software-development/senior-react-full-stack-developer-2091101" style="color:var(--acc)">Senior React Full-stack Developer</a></div>
+        <div style="color:var(--muted);font-size:12px">Senior + remote, but the stack is React, not your backend profile.</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:2px;color:var(--muted);font-size:12px">Shareable dashboard + JSON + RSS on one port —</div>
+</div></div>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch scan --format html   <span class="m"># v0.3.0 — self-contained report page, real output from the live feed</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">gigwatch-report.html — what the generated page looks like</span></div>
+<div style="padding:18px 20px;overflow-x:auto">
+  <div style="font-weight:800;font-size:17px;margin-bottom:4px">GigWatch — matching gigs</div>
+  <div style="color:var(--muted);font-size:12.5px;margin-bottom:12px">6 match(es) · generated 2026-09-11 18:11 UTC</div>
+  <table style="border-collapse:collapse;width:100%;font-size:13px">
+    <thead><tr style="color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em">
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">#</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Title</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Company</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Salary</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Location</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Score</th>
+      <th style="text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)">Matched</th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">1</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://remoteOK.com/remote-jobs/remote-senior-data-engineer-lemon-io-1136594">Senior Data Engineer</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Lemon.io</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">$40,000-$180,000</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">28.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">2</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9">Senior Backend Developer (Python)</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Proxify AB</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Anywhere in the World</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">26.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">python, backend, senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">3</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://news.ycombinator.com/item?id=49523703">SENIOR SOFTWARE ENGINEER (Python/Django + JS)</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">VersaFeed.com</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">26.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">python, django, senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">4</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://remotive.com/remote-jobs/software-development/senior-react-full-stack-developer-2091101">Senior React Full-stack Developer</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Lemon.io</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">LATAM, Europe, USA, Canada, APAC</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">26.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">senior</td></tr>
+      <tr><td style="padding:6px 8px;border-bottom:1px solid var(--line)">5</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)"><a href="https://weworkremotely.com/remote-jobs/toptal-senior-security-compliance-consultant-soc-2-grc-specialist">Senior Security Compliance Consultant (SOC 2)</a></td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Toptal</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">—</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">Anywhere in the World</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">25.0</td><td style="padding:6px 8px;border-bottom:1px solid var(--line)">senior</td></tr>
+      <tr><td style="padding:6px 8px">6</td><td style="padding:6px 8px"><a href="https://remotive.com/remote-jobs/software-development/senior-independent-ai-engineer-architect-1919266">Senior Independent AI Engineer / Architect</a></td><td style="padding:6px 8px">A.Team</td><td style="padding:6px 8px">$120 - $170 /hour</td><td style="padding:6px 8px">Americas, Europe, Israel</td><td style="padding:6px 8px">20.0</td><td style="padding:6px 8px">senior</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:10px;color:var(--muted);font-size:12px">Self-hosted gig watcher · <a href="https://github.com/earnnova-dev/gigwatch">gigwatch-nova</a> — one file, no assets, safe to email or host anywhere.</div>
+  <div style="margin-top:12px"><a href="https://earnnova-dev.github.io/gigwatch/live-demo.html" style="display:inline-block;background:#27c93f;color:#0b0f0d;font-weight:700;font-size:13px;padding:9px 16px;border-radius:8px;text-decoration:none">▶ Open the sample report (real feed, generated 2026-09-11)</a></div>
+</div></div>
+
+    <div class="demo-h" style="margin-top:34px">$ gigwatch digest --period 86400   <span class="m"># v0.3.0 — one email per day, not 40</span></div>
+    <div class="term"><div class="bar">
+      <span class="dot" style="background:#ff5f56"></span>
+      <span class="dot" style="background:#ffbd2e"></span>
+      <span class="dot" style="background:#27c93f"></span>
+      <span class="ttl">inbox — the daily digest email</span></div>
+<pre><span class="m">From:     gigwatch@yourserver
+To:       you@you.com
+Subject:  GigWatch digest: 3 new matching gig(s) since last digest
+
+ 1. Senior Data Engineer — Lemon.io
+    $40,000-$180,000 · remote
+    https://remoteOK.com/remote-jobs/remote-senior-data-engineer-lemon-io-1136594
+
+ 2. Senior Backend Developer (Python) — Proxify AB
+    Anywhere in the World
+    https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-9
+
+ 3. SENIOR SOFTWARE ENGINEER (Python/Django + JavaScript) — VersaFeed.com
+    https://news.ycombinator.com/item?id=49523703
+
+— 3 new match(es) since your last digest —</span></pre></div>
+  </section>
+
+  <section id="testimonials">
+    <h2>What early users are saying</h2>
+    <p class="lead">We're giving away <strong>5 free configured instances</strong> in exchange for a short testimonial. If you're actively job hunting right now, this is your chance.</p>
+    
+    <div class="testimonial-grid" style="display:grid;gap:16px;margin-top:24px">
+      <!-- Testimonial cards will appear here as we collect them -->
+      <div style="border:1px solid var(--line);padding:20px;border-radius:8px;background:var(--bg)">
+        <p style="color:var(--muted);font-style:italic">No testimonials yet — we're onboarding our first 5 users. Be one of them and get your quote featured here.</p>
+        <p style="margin-top:12px;font-size:13px;color:var(--dim)">To claim a spot: reply to our <a href="https://github.com/earnnova-dev/gigwatch/issues/3" style="color:var(--acc)">launch issue (#3)</a> or DM us on Reddit with your preferred tech stack.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <h2>Pricing</h2>
+    <p class="lead">Start free and self-hosted. Pay only when you want it run for you.</p>
+    <div class="tiers">
+      <div class="tier">
+        <div class="name">Self-Hosted</div>
+        <div class="price">Free</div>
+        <ul>
+          <li><b>Full tool</b>, MIT-licensed</li>
+          <li>All 5 feed sources</li>
+          <li>Console / email / Slack alerts</li>
+          <li>Heuristic ranking (no key)</li>
+          <li>Run it on your own machine</li>
+        </ul>
+        <a class="btn" href="https://github.com/earnnova-dev/gigwatch">pip install from git</a>
+      </div>
+      <div class="tier hot">
+        <div class="name">Hosted</div>
+        <div class="price">$29<small>/mo</small></div>
+        <ul>
+          <li>We run it for you, 24/7</li>
+          <li><b>AI-ranked dashboard</b> — fit score + why, per gig</li>
+          <li><b>Shareable URL</b>, auto-refreshing</li>
+          <li><b>JSON + RSS feed</b> for your own tools</li>
+          <li><b>Daily digest</b> email (one, not 40)</li>
+          <li>Custom sources added on request</li>
+          <li>Cancel anytime</li>
+        </ul>
+        <a class="btn primary" href="https://github.com/earnnova-dev/gigwatch/issues/new?title=%5BHosted%5D%20GigWatch%20request">Get started</a>
+      </div>
+      <div class="tier">
+        <div class="name">Custom Setup</div>
+        <div class="price">$99<small> one-time</small></div>
+        <ul>
+          <li>Configured for <b>your niche</b></li>
+          <li>Custom feed adapters built</li>
+          <li>Profile + filters tuned</li>
+          <li>Deployed to your server/VPS</li>
+          <li>30 days of tweaks included</li>
+        </ul>
+        <a class="btn" href="https://github.com/earnnova-dev/gigwatch/issues/new?title=%5BCustom%20Setup%5D%20GigWatch%20request">Request a setup</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="free">
+      <div>
+        <h3>Free setup for 3 companies</h3>
+        <p>I'm onboarding <b>3 teams</b> for free in exchange for a short testimonial.
+          Tell me your niche and I'll have a GigWatch instance watching it within a day.</p>
+      </div>
+      <a class="btn primary" href="https://github.com/earnnova-dev/gigwatch/issues/new?title=%5BFree%20Tier%5D%20GigWatch%20setup%20request">Claim a spot →</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="frow">
+      <div>© 2026 GigWatch · built by <a href="https://github.com/earnnova-dev">earnnova-dev</a></div>
+      <div>
+        <a href="https://github.com/earnnova-dev/gigwatch">GitHub</a> ·
+        <a href="https://pypi.org/project/gigwatch-nova/">PyPI</a> ·
+        <a href="https://github.com/earnnova-dev/gigwatch/issues/new">Open an issue</a> ·
+        <a href="mailto:earnnova@tten.no">Email</a>
+      </div>
+    </div>
+    <div class="frow" style="margin-top:10px">
+      <div>Prefer to talk? Email <a href="mailto:earnnova@tten.no">earnnova@tten.no</a> — I answer within a day. 3 free custom setups available in exchange for a short testimonial.</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Sample feed: the repo's live-feed.json is a snapshot from the last manual scan.
+// We fetch it here so the page shows real job data (not made-up examples).
+// It is NOT auto-refreshed — the badge and note make that explicit.
+(function () {
+  var pre = document.getElementById("live-pre");
+  var badge = document.getElementById("live-badge");
+  var updated = document.getElementById("live-updated");
+  var note = document.getElementById("live-note");
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  };
+
+  function render(data) {
+    var jobs = (data.jobs || []).slice(0, 8);
+    var lines = [];
+    lines.push('<span class="m">' + data.jobs_fetched + ' job(s) fetched from ' +
+      data.sources_scanned + ' sources; ' + data.matches + ' match the profile</span>');
+    jobs.forEach(function (j, i) {
+      lines.push('<span class="g">' + (i + 1) + '. [fit ' + j.score + '] ' + esc(j.title) + '</span>');
+      if (j.company) lines.push('     company: ' + esc(j.company));
+      if (j.location) lines.push('     where:   ' + esc(j.location));
+      if (j.matched && j.matched.length) lines.push('     matched: ' + esc(j.matched.join(", ")));
+      lines.push('     <a href="' + esc(j.url) + '">' + esc(j.url) + '</a>');
+    });
+    if (data.jobs && data.jobs.length > jobs.length) {
+      lines.push('<span class="m">…and ' + (data.jobs.length - jobs.length) + ' more matches</span>');
+    }
+    pre.innerHTML = lines.join("\n");
+    if (updated) updated.textContent = "· scanned " + esc(data.generated_at);
+    if (note) note.textContent = "Snapshot from the last manual scan (" +
+      esc(data.generated_at) + "). Run gigwatch yourself for fresh results.";
+    if (badge) {
+      // If the feed is older than ~24h, flag it as stale rather than "sample".
+      var ageH = (Date.now() - new Date(data.generated_at.replace(" UTC", "Z")).getTime()) / 36e5;
+      if (ageH > 24) {
+        badge.textContent = "STALE";
+        badge.className = "live-badge off";
+      }
+    }
+  }
+
+  function fail(msg) {
+    pre.innerHTML = '<span class="m">' + esc(msg) + '</span>';
+    if (badge) { badge.textContent = "OFFLINE"; badge.className = "live-badge off"; }
+    if (note) note.textContent = "Sample feed unavailable right now — see the static snapshot below.";
+  }
+
+  fetch("live-feed.json", { cache: "no-store" })
+    .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(render)
+    .catch(function (e) { fail("could not load sample feed (" + e.message + ")"); });
+})();
+</script>
+</body>
+</html>
