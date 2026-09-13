@@ -1,9 +1,20 @@
 {
   "sources": [
-    { "type": "remotive" },
-    { "type": "wwr" },
-    { "type": "remoteok" },
-    { "type": "hn" },
+    {
+      "type": "remotive"
+    },
+    {
+      "type": "wwr"
+    },
+    {
+      "type": "remoteok"
+    },
+    {
+      "type": "jobicy"
+    },
+    {
+      "type": "hn"
+    },
     {
       "type": "rss",
       "url": "https://www.python.org/jobs/feed/rss/",
@@ -12,17 +23,30 @@
   ],
   "profile": {
     "title": "Senior Software Engineer",
-    "skills": ["python", "backend", "api"],
+    "skills": [
+      "python",
+      "backend",
+      "api"
+    ],
     "location": "remote",
     "notes": "senior, $150k+"
   },
   "filters": {
-    "keywords": ["python", "backend", "api", "django", "fastapi"],
+    "keywords": [
+      "python",
+      "backend",
+      "api",
+      "django",
+      "fastapi"
+    ],
     "require_all_keywords": false,
     "categories": [],
     "locations": [],
     "min_score": 1.0,
-    "exclude_keywords": ["intern", "junior"]
+    "exclude_keywords": [
+      "intern",
+      "junior"
+    ]
   },
   "alerts": {
     "console": true,

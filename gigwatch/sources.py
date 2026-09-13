@@ -412,6 +412,61 @@ def fetch_hn(limit: Optional[int] = None) -> List[Job]:
     return [j for j in jobs if j.id and j.title]
 
 
+def _jobicy_salary(job: Dict[str, Any]) -> str:
+    """Extract salary from Jobicy's ``salary`` field (e.g. "$80k-$120k")."""
+    s = job.get("salary") or ""
+    if not s:
+        return ""
+    if s.strip().upper() in ("N/A", "NA"):
+        return ""
+    return str(s).strip()
+
+
+def fetch_jobicy(limit: Optional[int] = None) -> List[Job]:
+    """Fetch remote jobs from Jobicy's public JSON API (no auth required).
+
+    Jobicy aggregates remote jobs from many boards and exposes a free
+    ``/api/v2/remote-jobs`` endpoint.  Each job carries title, company,
+    industry, type, geo, level, and a link back to the original posting.
+    """
+    url = "https://jobicy.com/api/v2/remote-jobs?count=%d" % (limit or 50)
+    data = json.loads(_http_get(url).decode("utf-8", "replace"))
+    jobs: List[Job] = []
+    for raw in data.get("jobs", []):
+        if not isinstance(raw, dict):
+            continue
+        title = _clean(raw.get("jobTitle") or "")
+        if not title:
+            continue
+        industry = raw.get("jobIndustry") or []
+        jtype = raw.get("jobType") or []
+        tags = []
+        if isinstance(industry, list):
+            tags.extend(str(t) for t in industry)
+        if isinstance(jtype, list):
+            tags.extend(str(t) for t in jtype)
+        geo = raw.get("jobGeo") or ""
+        level = raw.get("jobLevel") or ""
+        loc_parts = [p for p in (geo, level) if p]
+        jobs.append(
+            Job(
+                id=str(raw.get("id") or _hashlib_sha1(raw.get("url", ""))),
+                title=title,
+                company=_clean(raw.get("companyName") or ""),
+                url=raw.get("url", ""),
+                location=" / ".join(loc_parts),
+                salary=_jobicy_salary(raw),
+                tags=tags,
+                published=raw.get("lastUpdate") or "",
+                source="jobicy",
+                description=_clean((raw.get("jobExcerpt") or "")[:300]),
+            )
+        )
+    if limit:
+        jobs = jobs[:limit]
+    return [j for j in jobs if j.id and j.title]
+
+
 def fetch(source) -> List[Job]:
     """Dispatch to the right fetcher for a :class:`SourceConfig`."""
     if source.type == "remotive":
@@ -422,6 +477,8 @@ def fetch(source) -> List[Job]:
         return fetch_remoteok(source.limit)
     if source.type == "hn":
         return fetch_hn(source.limit)
+    if source.type == "jobicy":
+        return fetch_jobicy(source.limit)
     if source.type == "rss":
         return fetch_rss(source.url, source.limit)
     if source.type == "json":

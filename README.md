@@ -36,7 +36,7 @@ are hosted SaaS that scrape your sessions and cost monthly. GigWatch is:
 
 ## Features
 
-- **Multiple feed sources** — Remotive, We Work Remotely, RemoteOK, and
+- **Multiple feed sources** — Remotive, We Work Remotely, RemoteOK, Jobicy, and
   Hacker News "Who is Hiring?" (built-in, no auth), any RSS/Atom feed, or any
   JSON endpoint returning a list of job objects.
 - **AI job ranking** — `gigwatch rank` scores every match 0-100 against a
@@ -199,7 +199,7 @@ example. The top-level keys:
 
 | Key | Meaning |
 |-----|---------|
-| `sources` | List of feeds to watch. `{"type":"remotive"}`, `{"type":"wwr"}`, `{"type":"remoteok"}`, `{"type":"hn"}`, `{"type":"rss","url":...}`, or `{"type":"json","url":...}`. |
+| `sources` | List of feeds to watch. `{"type":"remotive"}`, `{"type":"wwr"}`, `{"type":"remoteok"}`, `{"type":"jobicy"}`, `{"type":"hn"}`, `{"type":"rss","url":...}`, or `{"type":"json","url":...}`. |
 | `profile` | Optional candidate profile for `rank`: `{"title","skills":[...],"location","notes"}`. |
 | `filters.keywords` | Your skills. A job matches if it contains any of these (or all, with `require_all_keywords`). |
 | `filters.categories` / `filters.locations` | Optional extra filters (empty = match anything). |
@@ -261,6 +261,7 @@ it, back it up, or move it between machines.
 ## Roadmap / ideas
 
 - ~~More built-in sources (Hacker News "Who is hiring")~~ — **done in 0.2.0**.
+- ~~Jobicy source (aggregates 50+ remote boards)~~ — **done in 0.6.0**.
 - ~~AI ranking: summarize each match and rank by fit to a profile~~ — **done in
   0.2.0** (`gigwatch rank`).
 - LinkedIn via RSS, Upwork via a user-supplied export.
