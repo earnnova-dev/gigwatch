@@ -7,6 +7,7 @@ pure functions of the network + config, so they are easy to test and extend.
 from __future__ import annotations
 
 import json
+import re
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -41,7 +42,7 @@ class Job:
 
 
 def _http_get(url: str, timeout: int = 25) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"})
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.read()
 
@@ -467,6 +468,55 @@ def fetch_jobicy(limit: Optional[int] = None) -> List[Job]:
     return [j for j in jobs if j.id and j.title]
 
 
+
+
+def fetch_linkedin(keywords: str = "python", location: str = "United States",
+                   days: int = 7, limit: Optional[int] = None) -> List[Job]:
+    """Fetch jobs from LinkedIn's public search page (JSON-LD)."""
+    import urllib.parse as _up
+    url = ("https://www.linkedin.com/jobs/search"
+           f"?keywords={_up.quote(keywords)}&f_TPR=r{days * 86400}"
+           f"&location={_up.quote(location)}")
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"})
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        html = resp.read().decode("utf-8", errors="replace")
+
+    match = re.search(
+        r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL)
+    if not match:
+        return []
+    data = json.loads(match.group(1))
+    if data.get("@type") != "ItemList":
+        return []
+
+    jobs: List[Job] = []
+    for item in data.get("itemListElement", []):
+        if item.get("@type") != "ListItem":
+            continue
+        title = item.get("name", "")
+        desc = item.get("disambiguatingDescription", "")
+        link = item.get("url", "")
+        if not title or not link:
+            continue
+        company = ""
+        if desc:
+            parts = desc.split(",")
+            company = parts[0].strip() if parts else ""
+        jid = re.search(r"/(\d+)$", link)
+        jobs.append(Job(
+            id=f"linkedin-{jid.group(1)}" if jid else f"linkedin-{abs(hash(link))}",
+            title=title,
+            company=company,
+            location=location,
+            url=link,
+            published="",
+            source="linkedin",
+            description=_clean(desc[:300]),
+        ))
+    if limit:
+        jobs = jobs[:limit]
+    return [j for j in jobs if j.id and j.title]
+
 def fetch(source) -> List[Job]:
     """Dispatch to the right fetcher for a :class:`SourceConfig`."""
     if source.type == "remotive":
@@ -479,6 +529,10 @@ def fetch(source) -> List[Job]:
         return fetch_hn(source.limit)
     if source.type == "jobicy":
         return fetch_jobicy(source.limit)
+    if source.type == "linkedin":
+        kw = getattr(source, "keywords", "python") or "python"
+        loc = getattr(source, "location", "United States") or "United States"
+        return fetch_linkedin(kw, loc, limit=source.limit)
     if source.type == "rss":
         return fetch_rss(source.url, source.limit)
     if source.type == "json":
