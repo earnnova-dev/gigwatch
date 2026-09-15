@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GigWatch — watch the job boards that match your skills</title>
-<meta name="description" content="GigWatch is a zero-dependency Python tool that watches remote job boards (Remotive, We Work Remotely, RemoteOK, Hacker News 'Who is Hiring'), filters by your skills, dedupes, and alerts you only on new matches — with optional AI ranking.">
+<meta name="description" content="GigWatch is a zero-dependency Python tool that watches 6+ remote job boards (Remotive, We Work Remotely, RemoteOK, LinkedIn, Hacker News), filters by your skills, dedupes, and alerts you only on new matches — with optional AI ranking.">
 <style>
   :root{
     --bg:#0b0f17; --panel:#111826; --panel2:#0e1420;
@@ -122,8 +122,8 @@
     <p class="lead">No database, no cloud, no API keys required for the core. If you can run
       <code>python3</code>, you can run GigWatch.</p>
     <div class="grid">
-      <div class="card"><div class="ic">📡</div><h3>5 feed sources</h3>
-        <p>Remotive, We Work Remotely, RemoteOK, Hacker News "Who is Hiring?", plus any RSS/Atom or JSON endpoint.</p></div>
+      <div class="card"><div class="ic">📡</div><h3>6 feed sources</h3>
+        <p>Remotive, We Work Remotely, RemoteOK, LinkedIn, Hacker News "Who is Hiring?", plus any RSS/Atom or JSON endpoint.</p></div>
       <div class="card"><div class="ic">🎯</div><h3>AI job ranking</h3>
         <p><code>gigwatch rank</code> scores every match 0–100 against your profile and explains the fit. LLM-powered, or a deterministic heuristic offline.</p></div>
       <div class="card"><div class="ic">🧹</div><h3>Dedupe by state</h3>
@@ -314,7 +314,7 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
         <div class="price">Free</div>
         <ul>
           <li><b>Full tool</b>, MIT-licensed</li>
-          <li>All 5 feed sources</li>
+          <li>All 6 feed sources</li>
           <li>Console / email / Slack alerts</li>
           <li>Heuristic ranking (no key)</li>
           <li>Run it on your own machine</li>
