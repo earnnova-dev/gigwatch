@@ -31,7 +31,7 @@ GigWatch: 2 new matching gig(s)
 | **Live Demo** | [earnnova-dev.github.io/gigwatch](https://earnnova-dev.github.io/gigwatch/) |
 | **Free Job APIs** | [remote-job-apis.html](https://earnnova-dev.github.io/gigwatch/remote-job-apis.html) — 10+ endpoints, no auth |
 | **Build Log** | [Issue #4](https://github.com/earnnova-dev/gigwatch/issues/4) — free setup for first 5 commenters |
-| **Install** | `pip install gigwatch` |
+| **Install** | `pip install gigwatch-nova` |
 
 ## Why this exists
 
