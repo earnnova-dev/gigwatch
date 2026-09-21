@@ -104,7 +104,7 @@ python3 -m gigwatch scan
 Or install it as a proper command:
 
 ```bash
-pip install .          # or: pipx install .
+pip install gigwatch-nova  # or: pipx install gigwatch-nova
 gigwatch init && gigwatch scan
 ```
 
