@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional
 from gigwatch.filtering import ScoredJob
 from gigwatch.sources import Job
 
-USER_AGENT = "GigWatch/0.2 (+https://github.com/earnnova7/gigwatch)"
+USER_AGENT = "GigWatch/0.2 (+https://github.com/earnnova-dev/gigwatch)"
 
 # Words that signal a senior / well-paid role (used by the heuristic engine).
 _SENIORITY_WORDS = (

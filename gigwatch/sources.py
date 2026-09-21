@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-USER_AGENT = "GigWatch/0.1 (+https://github.com/earnnova7/gigwatch)"
+USER_AGENT = "GigWatch/0.1 (+https://github.com/earnnova-dev/gigwatch)"
 
 
 @dataclass
