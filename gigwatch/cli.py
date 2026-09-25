@@ -504,7 +504,20 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: List[str] = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except FileNotFoundError as exc:
+        # Only translate a missing *config* file into the friendly init
+        # hint; a missing --profile / state file keeps its normal behaviour.
+        cfg_path = getattr(args, "config", None) or DEFAULT_CONFIG
+        if str(getattr(exc, "filename", None)) != str(cfg_path):
+            raise
+        print(
+            "[gigwatch] no config file at %s. Run `gigwatch init` first "
+            "(or point --config at an existing file)." % cfg_path,
+            file=sys.stderr,
+        )
+        return 1
 
 
 if __name__ == "__main__":
