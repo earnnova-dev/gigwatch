@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-17 20:25 UTC",
+  "generated_at": "2026-09-25 12:54 UTC",
   "sources_scanned": 4,
   "jobs_fetched": 290,
-  "matches": 35,
+  "matches": 37,
   "errors": [],
   "jobs": [
     {
@@ -43,55 +43,22 @@
       ]
     },
     {
-      "title": "Senior SEO & Organic Growth Strategist",
-      "company": "Powered by search",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/powered-by-search-senior-seo-organic-growth-strategist",
-      "score": 25.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Performance Marketing Strategist",
-      "company": "Powered by search",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/powered-by-search-senior-performance-marketing-strategist",
-      "score": 25.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Magento Developer",
-      "company": "Proxify AB",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/proxify-ab-senior-magento-developer-4",
-      "score": 25.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior QA Automation Engineer",
-      "company": "Proxify AB",
-      "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/proxify-ab-senior-qa-automation-engineer",
-      "score": 25.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
       "title": "Senior Software Engineer, remote",
       "company": "Edfinity",
       "salary": "",
       "location": "Anywhere in the World",
       "url": "https://weworkremotely.com/remote-jobs/edfinity-senior-software-engineer-remote",
+      "score": 25.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Senior Google Ads Media Buyer / Performance Marketing Lead",
+      "company": "Egear",
+      "salary": "",
+      "location": "Anywhere in the World",
+      "url": "https://weworkremotely.com/remote-jobs/egear-senior-google-ads-media-buyer-performance-marketing-lead",
       "score": 25.0,
       "matched": [
         "senior"
@@ -116,6 +83,18 @@
       "url": "https://remoteOK.com/remote-jobs/remote-senior-people-talent-operations-partner-testgorilla-1137378",
       "score": 20.0,
       "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Senior Integration Engineer for Enterprise API & Integration Products",
+      "company": "Toptal",
+      "salary": "",
+      "location": "North America Only",
+      "url": "https://weworkremotely.com/remote-jobs/toptal-senior-integration-engineer-for-enterprise-api-integration-products",
+      "score": 18.0,
+      "matched": [
+        "api",
         "senior"
       ]
     },
@@ -156,6 +135,39 @@
       ]
     },
     {
+      "title": "Senior AI Engineer",
+      "company": "Lemon.io",
+      "salary": "",
+      "location": "Northern America, LATAM, Europe, APAC",
+      "url": "https://remotive.com/remote-jobs/artificial-intelligence/senior-ai-engineer-2091131",
+      "score": 18.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Senior .NET Full-stack Developer",
+      "company": "Lemon.io",
+      "salary": "",
+      "location": "Northern America, LATAM, Europe, APAC",
+      "url": "https://remotive.com/remote-jobs/software-development/senior-net-full-stack-developer-2091130",
+      "score": 18.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Senior Data Scientist",
+      "company": "Lemon.io",
+      "salary": "",
+      "location": "Northern America, LATAM, Europe, APAC",
+      "url": "https://remotive.com/remote-jobs/data/senior-data-scientist-2091129",
+      "score": 18.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
       "title": "Senior QA Engineer",
       "company": "Lemon.io",
       "salary": "",
@@ -178,55 +190,55 @@
       ]
     },
     {
-      "title": "Senior Data Engineer",
-      "company": "Lemon.io",
+      "title": "Senior .NET Software Engineer",
+      "company": "OkWhen",
       "salary": "",
-      "location": "LATAM, Europe, USA, Canada, APAC",
-      "url": "https://remotive.com/remote-jobs/software-development/senior-data-engineer-2091097",
+      "location": "",
+      "url": "https://remoteOK.com/remote-jobs/remote-senior-net-software-engineer-okwhen-1137411",
       "score": 18.0,
       "matched": [
         "senior"
       ]
     },
     {
-      "title": "Senior Software Engineer",
-      "company": "AccuLynx",
+      "title": "Senior Staff Operations Manager, Office of the President (PED)",
+      "company": "Squarespace",
       "salary": "",
       "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/acculynx-senior-software-engineer",
+      "url": "https://weworkremotely.com/remote-jobs/squarespace-senior-staff-operations-manager-office-of-the-president-ped",
       "score": 10.0,
       "matched": [
         "senior"
       ]
     },
     {
-      "title": "Senior Fullstack Developer (React.js / Node.js)",
-      "company": "Proxify AB",
+      "title": "Senior Product Director, Client Engagement Group",
+      "company": "Squarespace",
       "salary": "",
       "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/proxify-ab-senior-fullstack-developer-react-js-node-js-4",
+      "url": "https://weworkremotely.com/remote-jobs/squarespace-senior-product-director-client-engagement-group",
       "score": 10.0,
       "matched": [
         "senior"
       ]
     },
     {
-      "title": "Senior Professional Services DevOps Engineer",
-      "company": "JFrog",
+      "title": "Senior Full-Stack Developer - Marketplace Web & Mobile Platform",
+      "company": "Adventure Travel 365",
       "salary": "",
       "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/jfrog-senior-professional-services-devops-engineer",
+      "url": "https://weworkremotely.com/remote-jobs/adventure-travel-365-senior-full-stack-developer-marketplace-web-mobile-platform",
       "score": 10.0,
       "matched": [
         "senior"
       ]
     },
     {
-      "title": "Senior Software Engineer",
-      "company": "CircleCI",
+      "title": "Senior Growth Product Manager AI Native",
+      "company": "Magic Eden",
       "salary": "",
-      "location": "Anywhere in the World",
-      "url": "https://weworkremotely.com/remote-jobs/circleci-senior-software-engineer",
+      "location": "Melbourne",
+      "url": "https://remoteOK.com/remote-jobs/remote-senior-growth-product-manager-ai-native-magic-eden-1137414",
       "score": 10.0,
       "matched": [
         "senior"
@@ -249,17 +261,6 @@
       "salary": "",
       "location": "Vancouver, BC, Canada",
       "url": "https://remoteOK.com/remote-jobs/remote-senior-level-designer-blackbird-interactive-1137156",
-      "score": 10.0,
-      "matched": [
-        "senior"
-      ]
-    },
-    {
-      "title": "Senior Governance Risk and Compliance Analyst",
-      "company": "RainFocus",
-      "salary": "",
-      "location": "Orem, UT",
-      "url": "https://remoteOK.com/remote-jobs/remote-senior-governance-risk-and-compliance-analyst-rainfocus-1137061",
       "score": 10.0,
       "matched": [
         "senior"
@@ -373,6 +374,28 @@
       "score": 10.0,
       "matched": [
         "senior"
+      ]
+    },
+    {
+      "title": "Senior/Staff Software Engineer (Interactives)",
+      "company": "Brilliant.org",
+      "salary": "",
+      "location": "",
+      "url": "https://news.ycombinator.com/item?id=49526361",
+      "score": 10.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Backend Software Engineer",
+      "company": "Airspace Link",
+      "salary": "",
+      "location": "",
+      "url": "https://remoteOK.com/remote-jobs/remote-backend-software-engineer-airspace-link-1137409",
+      "score": 8.0,
+      "matched": [
+        "backend"
       ]
     },
     {
