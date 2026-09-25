@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GigWatch — watch the job boards that match your skills</title>
-<meta name="description" content="GigWatch is a zero-dependency Python tool that watches remote job boards (Remotive, We Work Remotely, RemoteOK, Hacker News 'Who is Hiring'), filters by your skills, dedupes, and alerts you only on new matches — with optional AI ranking.">
+<meta name="description" content="GigWatch is a zero-dependency Python tool that watches 6+ remote job boards (Remotive, We Work Remotely, RemoteOK, LinkedIn, Hacker News), filters by your skills, dedupes, and alerts you only on new matches — with optional AI ranking.">
 <style>
   :root{
     --bg:#0b0f17; --panel:#111826; --panel2:#0e1420;
@@ -116,6 +116,7 @@
       <span class="code-inline"><span class="m">$ </span>pip install gigwatch-nova
         <span class="copy" onclick="navigator.clipboard&&navigator.clipboard.writeText('pip install gigwatch-nova');this.textContent='copied ✓'" title="copy">⧉</span></span>
     </div>
+    <p style="margin-top:12px;font-size:13px;color:var(--muted)">535+ downloads in the last 30 days · <a href="https://pypistats.org/packages/gigwatch-nova" style="color:var(--acc)">live stats</a></p>
   </section>
 
   <section id="features">
@@ -123,8 +124,8 @@
     <p class="lead">No database, no cloud, no API keys required for the core. If you can run
       <code>python3</code>, you can run GigWatch.</p>
     <div class="grid">
-      <div class="card"><div class="ic">📡</div><h3>5 feed sources</h3>
-        <p>Remotive, We Work Remotely, RemoteOK, Hacker News "Who is Hiring?", plus any RSS/Atom or JSON endpoint.</p></div>
+      <div class="card"><div class="ic">📡</div><h3>6 feed sources</h3>
+        <p>Remotive, We Work Remotely, RemoteOK, LinkedIn, Hacker News "Who is Hiring?", plus any RSS/Atom or JSON endpoint.</p></div>
       <div class="card"><div class="ic">🎯</div><h3>AI job ranking</h3>
         <p><code>gigwatch rank</code> scores every match 0–100 against your profile and explains the fit. LLM-powered, or a deterministic heuristic offline.</p></div>
       <div class="card"><div class="ic">🧹</div><h3>Dedupe by state</h3>
@@ -315,12 +316,12 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
         <div class="price">Free</div>
         <ul>
           <li><b>Full tool</b>, MIT-licensed</li>
-          <li>All 5 feed sources</li>
+          <li>All 6 feed sources</li>
           <li>Console / email / Slack alerts</li>
           <li>Heuristic ranking (no key)</li>
           <li>Run it on your own machine</li>
         </ul>
-        <a class="btn" href="https://github.com/earnnova-dev/gigwatch">pip install from git</a>
+        <a class="btn" href="https://pypi.org/project/gigwatch-nova/">pip install gigwatch-nova</a>
       </div>
       <div class="tier hot">
         <div class="name">Hosted</div>
@@ -359,6 +360,21 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
           Tell me your niche and I'll have a GigWatch instance watching it within a day.</p>
       </div>
       <a class="btn primary" href="https://github.com/earnnova-dev/gigwatch/issues/new?title=%5BFree%20Tier%5D%20GigWatch%20setup%20request">Claim a spot →</a>
+    </div>
+  </section>
+
+
+  <section id="hire" class="section">
+    <div class="wrap">
+      <h2>Need it set up for you?</h2>
+      <p class="lead">I'll configure GigWatch for your niche in under 24 hours — sources, filters, profile, alerts. One-time fee, no subscription.</p>
+      <div class="cards" style="margin-top:1.5rem">
+        <div class="card"><div class="ic">&#9889;</div><h3>$50 flat</h3>
+          <p>Full setup: pick your keywords, location, alert channel. You get a running instance + config file. Delivered in 24h.</p></div>
+        <div class="card"><div class="ic">&#128295;</div><h3>$100 custom</h3>
+          <p>Custom source integration + LLM scoring tuned to your role. Includes one week of support.</p></div>
+      </div>
+      <p style="margin-top:1.5rem"><a href="mailto:earnnova@tten.no?subject=GigWatch%20Setup" class="btn btn-primary">&#128231; Request Setup</a></p>
     </div>
   </section>
 
