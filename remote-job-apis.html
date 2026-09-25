@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Remote Job Board APIs — No Auth Required (2026)</title>
+<meta name="description" content="Curated list of free remote job board APIs: Remotive, We Work Remotely, RemoteOK, Jobicy, Hacker News. JSON + RSS endpoints with Python examples. No API keys needed.">
+<meta name="keywords" content="remote job api, job board api, free job api, remotive api, we work remotely rss, remoteok api, jobicy api, hacker news hiring, python job scraper, freelance job search">
+<style>
+  :root { --bg: #0f1117; --card: #1a1d27; --text: #e2e8f0; --muted: #94a3b8; --accent: #60a5fa; --green: #4ade80; --border: #2d3348; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 800px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  th { text-align: left; padding: 0.75rem; border-bottom: 2px solid var(--border); color: var(--accent); }
+  td { padding: 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  code { background: var(--card); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--green); }
+  pre { background: var(--card); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; font-size: 0.85rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .cta { background: linear-gradient(135deg, #1e3a5f, #1a1d27); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+  .cta h3 { color: var(--green); margin-bottom: 0.5rem; }
+  .badge { display: inline-block; background: var(--card); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; color: var(--muted); margin-right: 0.3rem; }
+  .tip { background: #1c2a1c; border-left: 3px solid var(--green); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="container">
+<div style="background:#e94560;color:white;padding:1rem 1.5rem;border-radius:8px;margin-bottom:2rem;">
+    <strong>Want all of these in ONE API call?</strong><br>
+    <a href="/api.html" style="color:white;text-decoration:underline;font-size:1.1rem;">Try the Live Aggregated Job API</a><br>
+    <span style="opacity:0.9">One endpoint, 5+ sources, no auth. Updated hourly.</span>
+</div>
+<h1>Free Remote Job Board APIs</h1>
+<p class="subtitle">JSON &amp; RSS endpoints you can hit without registration or API keys. Tested September 2026.</p>
+
+<div class="cta">
+<h3>🔭 Want a ready-made tool?</h3>
+<p><strong>GigWatch</strong> watches all these sources automatically, dedupes results, and AI-ranks them against your skill profile. Self-hosted, free, no account.</p>
+<p style="margin-top:0.75rem"><a href="https://github.com/earnnova-dev/gigwatch">GitHub →</a> · <a href="/">Live Demo →</a></p>
+</div>
+
+<h2>JSON APIs (no auth)</h2>
+<table>
+<tr><th>Board</th><th>Endpoint</th><th>Notes</th></tr>
+<tr><td><a href="https://remotive.com">Remotive</a></td><td><code>remotive.com/api/remote-jobs?limit=50</code></td><td>Title, company, tags, salary, location, contract type</td></tr>
+<tr><td><a href="https://remoteok.com">RemoteOK</a></td><td><code>remoteok.com/api</code></td><td>Company, category, tags, salary range</td></tr>
+<tr><td><a href="https://jobicy.com">Jobicy</a></td><td><code>jobicy.com/api/v2/remote-jobs?count=50</code></td><td>Aggregates 50+ boards; industry, level, geo</td></tr>
+<tr><td><a href="https://hn.algolia.com">Hacker News</a></td><td><code>hn.algolia.com/api/v1/search?query=hiring&amp;tags=story</code></td><td>Algolia-backed; filter by date, points</td></tr>
+</table>
+
+<h2>RSS / Atom Feeds</h2>
+<table>
+<tr><th>Board</th><th>Feed URL</th><th>Notes</th></tr>
+<tr><td><a href="https://weworkremotely.com">We Work Remotely</a></td><td><code>weworkremotely.com/remote-jobs.rss</code></td><td>Largest remote-only board; dev, design, marketing, sales</td></tr>
+<tr><td><a href="https://www.workingnomads.com">Working Nomads</a></td><td><code>workingnomads.com/feed</code></td><td>Curated across categories</td></tr>
+<tr><td><a href="https://jobspresso.co">Jobspresso</a></td><td><code>jobspresso.co/rss.xml</code></td><td>Startup-focused</td></tr>
+</table>
+
+<h2>Niche / Key-Required (free tier)</h2>
+<table>
+<tr><th>Source</th><th>Endpoint</th><th>Notes</th></tr>
+<tr><td><a href="https://adzuna.com">Adzuna</a></td><td><code>api.adzuna.com/v1/api/jobs/search/ee?app_id=KEY</code></td><td>250 req/day free; register at adzuna.com</td></tr>
+<tr><td><a href="https://jooble.org">Jooble</a></td><td><code>jooble.org/api/search?keyword=remote&amp;api_key=***</code></td><td>Aggregates many boards; free key</td></tr>
+</table>
+
+<h2>SPA / No Clean API</h2>
+<table>
+<tr><th>Board</th><th>Why it's hard</th></tr>
+<tr><td>JustRemote</td><td>Next.js SPA; <code>/api/jobs</code> returns HTML shell</td></tr>
+<tr><td>Arc.dev</td><td>Cloudflare-protected; blocks non-browser UAs</td></tr>
+<tr><td>Toptal / Turing</td><td>Auth-walled; enterprise-focused</td></tr>
+</table>
+
+<h2>Python Quick Start</h2>
+<pre><code>import requests, time
+from dataclasses import dataclass, field
+
+@dataclass
+class Job:
+    title: str
+    company: str | None
+    url: str
+    tags: list[str] = field(default_factory=list)
+    salary: str | None = None
+    source: str = ""
+
+def fetch_all(limit=50):
+    jobs = []
+
+    r = requests.get("https://remotive.com/api/remote-jobs",
+                     params={"limit": limit}, timeout=15)
+    for j in r.json().get("jobs", []):
+        jobs.append(Job(j["title"], j.get("company_name"),
+                       j.get("url",""), j.get("tags",[]),
+                       j.get("salary"), "remotive"))
+
+    r = requests.get("https://jobicy.com/api/v2/remote-jobs",
+                     params={"count": limit}, timeout=15)
+    for j in r.json():
+        jobs.append(Job(j.get("title",""), j.get("company"),
+                       j.get("link",""),
+                       [j["industry"]] if j.get("industry") else [],
+                       j.get("salary"), "jobicy"))
+
+    r = requests.get("https://hn.algolia.com/api/v1/search",
+                     params={"query":"hiring","tags":"story",
+                             "numericFilters":f"created_at_i>{int(time.time())-7*86400}",
+                             "hitsPerPage":limit}, timeout=15)
+    for h in r.json().get("hits",[]):
+        jobs.append(Job(h.get("title",""), None,
+                       h.get("url") or f"https://news.ycombinator.com/item?id={h['objectID']}",
+                       ["hn"], None, "hn"))
+    return jobs
+
+for job in fetch_all(10):
+    print(f"[{job.source:10}] {job.title} @ {job.company}")</code></pre>
+
+<h2>Tips</h2>
+<div class="tip">💡 <strong>Cache aggressively.</strong> These are public marketing endpoints, not SLA-backed APIs. Cache 15-60 min minimum.</div>
+<div class="tip">💡 <strong>Set a User-Agent.</strong> Some boards block the default <code>python-requests</code> UA.</div>
+<div class="tip">💡 <strong>Dedupe.</strong> Same job appears on multiple aggregators. Match on normalized title + company.</div>
+<div class="tip">💡 <strong>Salary is sparse.</strong> Most boards don't publish it. Don't build features that depend on it.</div>
+
+<footer>
+<p>Maintained by <a href="https://github.com/earnnova-dev">Nova</a> · Part of <a href="https://github.com/earnnova-dev/gigwatch">GigWatch</a> · Last updated: September 2026</p>
+<p><span class="badge">free</span><span class="badge">no-auth</span><span class="badge">json</span><span class="badge">rss</span><span class="badge">python</span></p>
+</footer>
+</div>
+</body>
+</html>
