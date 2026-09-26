@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Free Job APIs Compared (2026) — Which Remote Job Board API to Use</title>
+<meta name="description" content="Side-by-side comparison of free remote job board APIs: Remotive, We Work Remotely, RemoteOK, Jobicy, Hacker News. Which one to use for your job scraper, alerting, or job aggregator. No API keys. Tested September 2026.">
+<meta name="keywords" content="best job api, remote job api comparison, job board api which, remotive vs jobicy, job api free tier, job scraper data source, job aggregator api, free remote job feed">
+<link rel="canonical" href="https://earnnova-dev.github.io/gigwatch/job-api-comparison.html">
+<meta property="og:title" content="Best Free Job APIs Compared (2026) — Which Remote Job Board API to Use">
+<meta property="og:description" content="Side-by-side comparison of free remote job board APIs. Pick the right one for your scraper, alerts, or aggregator. No API keys needed.">
+<meta property="og:url" content="https://earnnova-dev.github.io/gigwatch/job-api-comparison.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root { --bg: #0f1117; --card: #1a1d27; --text: #e2e8f0; --muted: #94a3b8; --accent: #60a5fa; --green: #4ade80; --amber: #fbbf24; --border: #2d3348; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: var(--accent); }
+  h3 { font-size: 1.1rem; margin: 1rem 0 0.5rem; color: var(--text); }
+  .subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  th { text-align: left; padding: 0.7rem; border-bottom: 2px solid var(--border); color: var(--accent); }
+  td { padding: 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  code { background: var(--card); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--green); }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .cta { background: linear-gradient(135deg, #1e3a5f, #1a1d27); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+  .cta h3 { color: var(--green); margin-bottom: 0.5rem; }
+  .verdict { background: #1c2a1c; border-left: 3px solid var(--green); padding: 0.85rem 1.1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: 0.92rem; }
+  .pill { display:inline-block; padding:0.15rem 0.55rem; border-radius:12px; font-size:0.72rem; font-weight:600; }
+  .pill.good { background:#16351f; color:#4ade80; }
+  .pill.mid  { background:#3a2f16; color:#fbbf24; }
+  .pill.bad  { background:#3a1620; color:#f87171; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="container">
+<div style="background:#e94560;color:white;padding:1rem 1.5rem;border-radius:8px;margin-bottom:2rem;">
+    <strong>Want all of these in ONE call instead of stitching five?</strong><br>
+    <a href="/api.html" style="color:white;text-decoration:underline;font-size:1.1rem;">Try the Live Aggregated Job API</a><br>
+    <span style="opacity:0.9">One endpoint, 5+ sources, no auth, updated hourly.</span>
+</div>
+<h1>Best Free Job APIs Compared (2026)</h1>
+<p class="subtitle">A decision guide for the five remote job board APIs you can hit without registration. Which one to use depends on what you're building. Tested September 2026.</p>
+
+<div class="cta">
+<h3>🔭 Don't want to pick?</h3>
+<p><strong>GigWatch</strong> wires all of these together, dedupes results, and AI-ranks them against your skill profile. Self-hosted, free, no account.</p>
+<p style="margin-top:0.75rem"><a href="https://github.com/earnnova-dev/gigwatch">GitHub →</a> · <a href="/remote-job-apis.html">Full endpoint list →</a> · <a href="/">Live Demo →</a></p>
+</div>
+
+<h2>The five no-auth sources, side by side</h2>
+<table>
+<tr><th>Source</th><th>Type</th><th>Auth</th><th>Fields</th><th>Freshness</th><th>Best for</th></tr>
+<tr>
+  <td><a href="https://remotive.com">Remotive</a></td>
+  <td>JSON API</td>
+  <td><span class="pill good">none</span></td>
+  <td>title, company, tags, <strong>salary</strong>, location, contract</td>
+  <td>near-real-time</td>
+  <td>Clean structured data + salary</td>
+</tr>
+<tr>
+  <td><a href="https://weworkremotely.com">We Work Remotely</a></td>
+  <td>RSS feed</td>
+  <td><span class="pill good">none</span></td>
+  <td>title, company, link, category</td>
+  <td>daily</td>
+  <td>Largest remote-only volume</td>
+</tr>
+<tr>
+  <td><a href="https://remoteok.com">RemoteOK</a></td>
+  <td>JSON API</td>
+  <td><span class="pill good">none</span></td>
+  <td>company, category, tags, salary range</td>
+  <td>near-real-time</td>
+  <td>Cheapest bulk scrape</td>
+</tr>
+<tr>
+  <td><a href="https://jobicy.com">Jobicy</a></td>
+  <td>JSON API</td>
+  <td><span class="pill good">none</span></td>
+  <td>title, company, industry, level, geo, salary</td>
+  <td>daily</td>
+  <td>One call across 50+ boards</td>
+</tr>
+<tr>
+  <td><a href="https://news.ycombinator.com">Hacker News</a></td>
+  <td>Algolia JSON</td>
+  <td><span class="pill good">none</span></td>
+  <td>title, URL, points, date</td>
+  <td>real-time</td>
+  <td>Startup "hiring" posts</td>
+</tr>
+</table>
+
+<h2>Which one should you use?</h2>
+
+<h3>"I need clean structured JSON with salary." → Remotive</h3>
+<div class="verdict"><strong>Verdict: Remotive.</strong> It's the only no-auth source that consistently returns salary, contract type, and a stable JSON shape. <code>remotive.com/api/remote-jobs?limit=50</code> — no key, no rate-limit wall for reasonable polling. This is the best single-source starting point.</div>
+
+<h3>"I want the most remote-only job volume." → We Work Remotely</h3>
+<div class="verdict"><strong>Verdict: We Work Remotely.</strong> The largest remote-only board. It's RSS, not JSON, so you parse the feed — but the coverage (dev, design, marketing, sales) is unmatched. Use <code>weworkremotely.com/remote-jobs.rss</code> and a feed parser; expect fewer structured fields than Remotive.</div>
+
+<h3>"I want broadest coverage in a single call." → Jobicy</h3>
+<div class="verdict"><strong>Verdict: Jobicy.</strong> It aggregates 50+ boards into one JSON endpoint with industry, level, and geo. The trade-off is freshness (updated roughly daily) and looser schema. <code>jobicy.com/api/v2/remote-jobs?count=50</code> is the cheapest way to get a wide net in one request.</div>
+
+<h3>"I want raw startup hiring signals." → Hacker News</h3>
+<div class="verdict"><strong>Verdict: HN (via Algolia).</strong> Search <code>hn.algolia.com/api/v1/search?query=hiring&amp;tags=story</code> and filter by date/points. Best for catching startup "we're hiring" posts that never hit job boards. No structured fields — it's raw post data, so treat it as a signal source, not a structured feed.</div>
+
+<h3>"I'm building a job alert / monitoring tool." → Don't pick one — combine</h3>
+<div class="verdict"><strong>Verdict: Combine.</strong> No single source covers enough. Remotive + Jobicy + WWR gives you structured data + volume + aggregator breadth. The catch: the same job appears on multiple aggregators, so you must dedupe on normalized title + company. That's exactly what <a href="https://github.com/earnnova-dev/gigwatch">GigWatch</a> does out of the box — watch all sources, dedupe, and rank against a skill profile.</div>
+
+<h2>Trade-offs every build hits</h2>
+<table>
+<tr><th>Concern</th><th>What you'll actually see</th><th>How to handle it</th></tr>
+<tr><td><strong>Free tier ≠ SLA</strong></td><td>These are public marketing endpoints, not contracted APIs. No uptime guarantee.</td><td>Cache 15–60 min; don't poll on a tight timer.</td></tr>
+<tr><td><strong>Blocking</strong></td><td>Some boards block the default <code>python-requests</code> User-Agent.</td><td>Send a browser-like UA. If you get 403s, back off.</td></tr>
+<tr><td><strong>Duplicates</strong></td><td>Aggregators (Jobicy) repost the same job from upstream boards.</td><td>Normalize title + company; key your store on that.</td></tr>
+<tr><td><strong>Sparse salary</strong></td><td>Only Remotive + a few aggregators publish it; most don't.</td><td>Don't build ranking on salary alone — treat it as optional.</td></tr>
+<tr><td><strong>Freshness mismatch</strong></td><td>JSON APIs are near-real-time; RSS/aggregators are daily.</td><td>Blend sources; label each job with its source + timestamp.</td></tr>
+</table>
+
+<h2>Free-key tiers (one registration, more volume)</h2>
+<p>If you outgrow the no-auth set, <a href="https://adzuna.com">Adzuna</a> (250 req/day free) and <a href="https://jooble.org">Jooble</a> (free key, multi-board) add scale for the cost of an email. Both require a key, so they're a step past the no-auth tier above.</p>
+
+<h2>What "no clean API" boards mean</h2>
+<p>JustRemote is a Next.js SPA (its <code>/api/jobs</code> returns an HTML shell) and Arc.dev sits behind Cloudflare that blocks non-browser UAs. If a board needs a real browser to render, treat it as a scraping problem, not an API problem — or cover it with an aggregator that already has it.</p>
+
+<footer>
+<p>Maintained by <a href="https://github.com/earnnova-dev">Nova</a> · Part of <a href="https://github.com/earnnova-dev/gigwatch">GigWatch</a> · Last updated: September 2026</p>
+<p><a href="/remote-job-apis.html">→ Full endpoint list with code examples</a> · <a href="/api.html">→ Live Aggregated API</a></p>
+<p><span class="pill good">decision guide</span> <span class="pill mid">no-auth</span> <span class="pill good">comparison</span></p>
+</footer>
+</div>
+</body>
+</html>
