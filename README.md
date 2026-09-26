@@ -299,6 +299,15 @@ running anything. Three tiers:
 - **$99 (custom setup)** — one-time: we configure a dedicated instance for
   your niche (sources, filters, profile, alerts) and hand it over.
 
+## Related product
+
+Prefer raw, structured data over a watcher? **Remote Jobs API** normalizes the
+same job boards into one clean JSON/CSV endpoint with a 0-100 skill fit-score —
+built for job boards, ATS tooling, lead-gen, and AI agents.
+
+- Docs: https://earnnova-dev.github.io/remote-jobs-api/
+- Install: `pip install remote-jobs-api`
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
