@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-25 12:54 UTC",
+  "generated_at": "2026-09-26 09:33 UTC",
   "sources_scanned": 4,
   "jobs_fetched": 290,
-  "matches": 37,
+  "matches": 39,
   "errors": [],
   "jobs": [
     {
@@ -196,6 +196,28 @@
       "location": "",
       "url": "https://remoteOK.com/remote-jobs/remote-senior-net-software-engineer-okwhen-1137411",
       "score": 18.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Senior Staff Machine Learning Platform Engineer",
+      "company": "Faire",
+      "salary": "",
+      "location": "Anywhere in the World",
+      "url": "https://weworkremotely.com/remote-jobs/faire-senior-staff-machine-learning-platform-engineer",
+      "score": 10.0,
+      "matched": [
+        "senior"
+      ]
+    },
+    {
+      "title": "Senior Software Engineer - Platform",
+      "company": "Dremio",
+      "salary": "",
+      "location": "Anywhere in the World",
+      "url": "https://weworkremotely.com/remote-jobs/dremio-senior-software-engineer-platform",
+      "score": 10.0,
       "matched": [
         "senior"
       ]
