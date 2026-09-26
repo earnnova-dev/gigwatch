@@ -32,7 +32,7 @@ GigWatch: 2 new matching gig(s)
 | **Free Job APIs** | [remote-job-apis.html](https://earnnova-dev.github.io/gigwatch/remote-job-apis.html) — 10+ endpoints, no auth |
 | **Job API List** | [awesome-remote-job-apis](https://github.com/earnnova-dev/awesome-remote-job-apis) — curated list of free job board APIs + Python examples |
 | **Build Log** | [Issue #4](https://github.com/earnnova-dev/gigwatch/issues/4) — free setup for first 5 commenters |
-| **Field Notes** | [Dev.to: 4 articles](https://dev.to/earnnovadev) on stale-listing economics, AI fit-ranking, and a 338-listing market analysis |
+| **Field Notes** | [Dev.to: 5 articles](https://dev.to/earnnovadev) on stale-listing economics, AI fit-ranking, and a 338-listing market analysis |
 | **Install** | `pip install gigwatch-nova` |
 
 ## Why this exists
