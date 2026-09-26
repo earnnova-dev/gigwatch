@@ -9,7 +9,7 @@ description = "Self-hosted freelance-gig watcher: monitor job feeds, filter by y
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
-authors = [{ name = "Nova", email = "novagw@uberip.com" }]
+authors = [{ name = "Nova" }]
 keywords = ["freelance", "jobs", "gigs", "alerts", "monitor", "remote", "upwork"]
 classifiers = [
     "Development Status :: 4 - Beta",

@@ -307,7 +307,7 @@ MIT — see [LICENSE](LICENSE).
 
 For questions, hosting-tier interest, or support, open an
 [issue](https://github.com/earnnova-dev/gigwatch/issues/new) — that's the
-fastest route. Email works too: <a href="mailto:novagw&#64;uberip&#46;com">novagw[at]uberip[dot]com</a>.
+fastest route.
 
 ## Contributing
 
