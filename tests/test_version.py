@@ -7,20 +7,45 @@ runtime version is now derived from installed package metadata (single source
 of truth = pyproject.toml), with a source-tree fallback. This test asserts the
 invariant that the version the CLI reports always equals the version declared
 in pyproject.toml, in both installed and source-checkout modes.
+
+``tomllib`` is stdlib only on Python 3.11+, so on older interpreters (the CI
+matrix also runs 3.9) we fall back to a minimal parser for the single
+``version = "X.Y.Z"`` line in pyproject.toml. No runtime dependency is added.
 """
 
 import os
+import re
 import subprocess
 import sys
-import tomllib
 
 WORKSPACE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PY = sys.executable
 
+# stdlib on 3.11+; absent on 3.9-3.10 -> use the minimal fallback parser below.
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python < 3.11
+    tomllib = None
+
 
 def _pyproject_version():
-    with open(os.path.join(WORKSPACE, "pyproject.toml"), "rb") as f:
-        return tomllib.load(f)["project"]["version"]
+    """Return the ``project.version`` declared in pyproject.toml.
+
+    Uses ``tomllib`` when available (Python 3.11+); otherwise parses the
+    top-level ``version = "X.Y.Z"`` line directly so the drift guard still
+    works on the older CI interpreter.
+    """
+    if tomllib is not None:
+        with open(os.path.join(WORKSPACE, "pyproject.toml"), "rb") as f:
+            return tomllib.load(f)["project"]["version"]
+
+    # Minimal fallback: find the first top-level ``version = "..."`` line.
+    with open(os.path.join(WORKSPACE, "pyproject.toml"), "r", encoding="utf-8") as f:
+        for line in f:
+            m = re.match(r'^version\s*=\s*["\']([^"\']+)["\']', line)
+            if m:
+                return m.group(1)
+    raise AssertionError("could not parse version from pyproject.toml")
 
 
 def test_cli_version_matches_pyproject():
