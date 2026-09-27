@@ -146,8 +146,8 @@
 
   <section id="demo">
     <h2>See it actually work</h2>
-    <p class="lead">Real output from a run on this machine — 294 jobs fetched across
-      We Work Remotely, RemoteOK, and Hacker News, filtered to a Python/backend profile.</p>
+    <p class="lead">Real output from a run on this machine — <span id="pf-jobs">289</span> jobs fetched across
+      <span id="pf-sources">4</span> remote job boards, filtered to a Python/backend profile.</p>
 
     <div class="demo-h" id="live-h">$ gigwatch list --format text   <span class="live-badge" id="live-badge">SAMPLE</span></div>
     <div class="term"><div class="bar">
@@ -422,6 +422,8 @@ Subject:  GigWatch digest: 3 new matching gig(s) since last digest
       lines.push('<span class="m">…and ' + (data.jobs.length - jobs.length) + ' more matches</span>');
     }
     pre.innerHTML = lines.join("\n");
+    var pfj = document.getElementById("pf-jobs"); if (pfj) pfj.textContent = data.jobs_fetched;
+    var pfs = document.getElementById("pf-sources"); if (pfs) pfs.textContent = data.sources_scanned;
     if (updated) updated.textContent = "· scanned " + esc(data.generated_at);
     if (note) note.textContent = "Snapshot from the last manual scan (" +
       esc(data.generated_at) + "). Run gigwatch yourself for fresh results.";
