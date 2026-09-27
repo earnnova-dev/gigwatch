@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remote Jobs API — normalized jobs from 5 boards, one endpoint</title>
+    <meta name="description" content="Free JSON API for remote jobs across Remotive, We Work Remotely, RemoteOK, Jobicy and Hacker News. One normalized schema, one endpoint. Free tier: 100 calls/month. Self-hostable, MIT.">
+    <meta name="keywords" content="remote job api, free job api, remote work api, job board api, remotive api, we work remotely, remoteok api, jobicy, hacker news hiring, python job scraper, job data api">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a2e; background: #f8f9fa; }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #16213e; }
+        h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: #16213e; border-bottom: 2px solid #e94560; padding-bottom: 0.5rem; }
+        .subtitle { color: #666; font-size: 1.1rem; margin-bottom: 2rem; }
+        code { background: #e9ecef; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9rem; }
+        pre { background: #1a1a2e; color: #e9ecef; padding: 1.5rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+        pre code { background: none; padding: 0; color: inherit; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+        th, td { padding: 0.75rem; text-align: left; border-bottom: 1px solid #dee2e6; vertical-align: top; }
+        th { background: #e9ecef; font-weight: 600; }
+        .badge { display: inline-block; background: #e94560; color: white; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+        .endpoint { background: white; border: 1px solid #dee2e6; border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+        .method { display: inline-block; background: #4ecdc4; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: bold; font-size: 0.85rem; }
+        .method.pub { background: #22a06b; }
+        .response { color: #666; font-size: 0.9rem; }
+        a { color: #e94560; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .cta { background: #16213e; color: white; border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+        .cta a { color: #7fd1c9; }
+        .note { background: #fff8e6; border-left: 3px solid #f0ad4e; padding: 0.9rem 1.1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: 0.92rem; }
+        .footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #dee2e6; color: #999; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Remote Jobs API <span class="badge">Free tier</span></h1>
+        <p class="subtitle">Live, normalized remote jobs from 5 boards — one clean endpoint, one schema. Free tier: 100 calls/month, no card. Self-hostable (MIT) for free.</p>
+
+        <div class="note">
+            <b>How it works:</b> a free API key gets you <b>100 calls/month</b> across all five boards.
+            Request one at <a href="mailto:earnnova@tten.no?subject=Remote%20Jobs%20API%20key">earnnova@tten.no</a> (say the skills/boards you need and you'll get a key back),
+            or run the whole engine yourself with <a href="https://github.com/earnnova-dev/remote-jobs-api">remote-jobs-api</a> — stdlib-only Python, MIT licensed, free.
+        </div>
+
+        <h2>Quick start</h2>
+        <pre><code># Health + live job count (public, no key)
+curl https://remote-jobs-api.tten.no/health
+# -&gt; {"status":"ok","sources":["remotive","remoteok","jobicy","wwr","hn"],"count_live":323}
+
+# Available boards (public, no key)
+curl https://remote-jobs-api.tten.no/v1/jobs/sources
+# -&gt; {"sources":["remotive","remoteok","jobicy","wwr","hn"]}
+
+# Normalized jobs (needs your free key)
+curl -H "Authorization: Bearer &lt;YOUR_KEY&gt;" \
+     "https://remote-jobs-api.tten.no/v1/jobs?skills=python,backend&limit=5"
+
+# Python
+import urllib.request, json
+req = urllib.request.Request(
+    "https://remote-jobs-api.tten.no/v1/jobs?skills=python&limit=10",
+    headers={"Authorization": "Bearer YOUR_KEY"})
+jobs = json.loads(urllib.request.urlopen(req).read())["jobs"]</code></pre>
+
+        <h2>Endpoints</h2>
+        <div class="endpoint">
+            <span class="method pub">GET</span> <code>/health</code>
+            <p class="response">Public. Service status, the list of boards, and the current live job count.</p>
+        </div>
+        <div class="endpoint">
+            <span class="method pub">GET</span> <code>/v1/jobs/sources</code>
+            <p class="response">Public. The set of supported boards: <code>remotive</code>, <code>remoteok</code>, <code>jobicy</code>, <code>wwr</code>, <code>hn</code>.</p>
+        </div>
+        <div class="endpoint">
+            <span class="method">GET</span> <code>/v1/jobs</code>
+            <p class="response">Keyed (free tier included). A deduped, normalized list of remote jobs. Every board uses the same schema, so no per-board parsing on your side. Query params:</p>
+            <table>
+                <tr><th>Param</th><th>Example</th><th>Description</th></tr>
+                <tr><td><code>skills</code></td><td><code>?skills=python,backend,api</code></td><td>Keywords to match and rank by — adds a deterministic 0&ndash;100 <code>fit_score</code> and ranks best-fit first</td></tr>
+                <tr><td><code>source</code></td><td><code>?source=jobicy</code></td><td>Restrict to one board: remotive / remoteok / jobicy / wwr / hn</td></tr>
+                <tr><td><code>limit</code></td><td><code>?limit=20</code></td><td>Max results (default 50, max 500)</td></tr>
+                <tr><td><code>min_score</code></td><td><code>?min_score=70</code></td><td>Only jobs with <code>fit_score</code> &ge; this (needs <code>skills</code>)</td></tr>
+                <tr><td><code>format</code></td><td><code>?format=csv</code></td><td><code>json</code> (default) or <code>csv</code> (Pro tier)</td></tr>
+            </table>
+        </div>
+
+        <h2>Response format</h2>
+        <p class="subtitle" style="font-size:0.95rem">One normalized job object, regardless of source. <code>published</code> is always a canonical ISO-8601 UTC string.</p>
+        <pre><code>{
+  "count": 1,
+  "generated_at": 1790433192,
+  "query": { "skills": ["python", "api"], "source": null, "min_score": null, "limit": 1 },
+  "jobs": [
+    {
+      "id": "94516b10164d3c70",
+      "title": "Senior Backend Developer (Python)",
+      "company": "Proxify AB",
+      "url": "https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-10",
+      "location": "Anywhere in the World",
+      "salary": "",
+      "category": "Back-End Programming",
+      "tags": [],
+      "published": "2026-09-15T09:01:36+00:00",
+      "source": "wwr",
+      "description": "Headquarters: Sweden ... Senior Python Developer ... Django ... PostgreSQL ...",
+      "fit_score": 40
+    }
+  ]
+}</code></pre>
+
+        <h2>Sources</h2>
+        <table>
+            <tr><th>Source</th><th>Board</th><th>Notes</th></tr>
+            <tr><td><code>remotive</code></td><td>Remotive</td><td>Curated remote jobs</td></tr>
+            <tr><td><code>wwr</code></td><td>We Work Remotely</td><td>Large remote job board</td></tr>
+            <tr><td><code>remoteok</code></td><td>RemoteOK</td><td>Tech-focused remote roles</td></tr>
+            <tr><td><code>jobicy</code></td><td>Jobicy</td><td>Aggregates many boards</td></tr>
+            <tr><td><code>hn</code></td><td>Hacker News</td><td>"Who is hiring" threads</td></tr>
+        </table>
+
+        <h2>Pricing</h2>
+        <table>
+            <tr><th>Plan</th><th>Price</th><th>Includes</th></tr>
+            <tr><td><b>Free</b></td><td>$0</td><td>100 calls/mo, all boards, 50 results/req</td></tr>
+            <tr><td><b>Pro</b></td><td>$19/mo</td><td>10k calls/mo, CSV, min_score, higher limits</td></tr>
+            <tr><td><b>Team</b></td><td>$49/mo</td><td>100k calls/mo, SLA</td></tr>
+        </table>
+        <p class="response">Indicative pricing for the hosted tier. Self-hosting the same engine is free (MIT): <a href="https://github.com/earnnova-dev/remote-jobs-api">remote-jobs-api</a>.</p>
+
+        <div class="cta">
+            <p><b>Get a free key &rarr;</b> email <a href="mailto:earnnova@tten.no?subject=Remote%20Jobs%20API%20key">earnnova@tten.no</a> with the skills/boards you need. No card, 100 calls/month.</p>
+            <p style="margin-top:0.6rem">Or self-host free: <a href="https://github.com/earnnova-dev/remote-jobs-api">github.com/earnnova-dev/remote-jobs-api</a></p>
+        </div>
+
+        <h2>Use cases</h2>
+        <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+            <li>Build a job alert bot (Slack, Telegram, email)</li>
+            <li>Populate your own job board or career page</li>
+            <li>Research remote salary trends (aggregate over time)</li>
+            <li>Rank roles against a skill profile with the deterministic <code>fit_score</code></li>
+            <li>Personal dashboard / watchlist</li>
+        </ul>
+
+        <div class="footer">
+            <p>Data belongs to the respective job boards; the API only reads their public, no-auth endpoints. Please cache responses and be gentle with the rate limit. Building something with this? <a href="https://github.com/earnnova-dev/remote-jobs-api/issues">tell me</a>.</p>
+            <p><a href="/">&larr; Back to GigWatch</a> &middot; <a href="/remote-job-apis.html">Static reference of free job-board APIs</a> &middot; <a href="https://github.com/earnnova-dev/gigwatch">GigWatch</a> &middot; <a href="https://github.com/earnnova-dev/remote-jobs-api">remote-jobs-api</a></p>
+            <p>&copy; 2026 Nova (earnnova-dev)</p>
+        </div>
+    </div>
+</body>
+</html>
