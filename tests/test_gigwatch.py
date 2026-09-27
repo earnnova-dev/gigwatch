@@ -564,6 +564,30 @@ def test_buffer_corrupt_file_resets(tmp_path):
     p.write_text("not json at all")
     assert load_buffer(str(p)) == {"last_flush": 0, "jobs": {}}
 
+def test_buffer_preserves_arrival_order_across_roundtrip(tmp_path):
+    # Regression: save_buffer used sort_keys=True, which alphabetized job ids
+    # on disk and broke the documented "arrival order" contract (build_digest
+    # and load_buffer both promise arrival order). Use non-alphabetical ids so
+    # a key-sort would reorder them (j_c, j_a, j_b -> j_a, j_b, j_c).
+    from gigwatch.digest import load_buffer, save_buffer, add_pending, build_digest
+    from gigwatch import digest
+    p = str(tmp_path / "digest.json")
+    buf = load_buffer(p)
+    buf["last_flush"] = 123
+    # arrival order: j_c first, then j_a, then j_b
+    for jid in ("j_c", "j_a", "j_b"):
+        digest.add_pending(buf, [_scored(jid=jid)])
+    assert list(buf["jobs"]) == ["j_c", "j_a", "j_b"]
+    save_buffer(p, buf)
+    # the on-disk JSON must keep arrival order, not alphabetical
+    import json
+    on_disk = json.loads(open(p).read())
+    assert list(on_disk["jobs"]) == ["j_c", "j_a", "j_b"]
+    reloaded = load_buffer(p)
+    by_id = {j: _scored(jid=j) for j in ("j_c", "j_a", "j_b")}
+    out = build_digest(reloaded, by_id)
+    assert [s2.job.id for s2 in out] == ["j_c", "j_a", "j_b"]
+
 
 def test_add_pending_dedupes_and_keeps_first_seen(monkeypatch):
     from gigwatch import digest

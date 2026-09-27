@@ -61,7 +61,18 @@ def save_buffer(path: str, buffer: Dict) -> None:
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
-        json.dump(buffer, fh, indent=2, sort_keys=True)
+        # Preserve arrival order of pending jobs. The ``jobs`` dict is built in
+        # arrival order by :func:`add_pending` and that order is part of the
+        # contract documented on :func:`load_buffer` / :func:`build_digest`
+        # ("in arrival order"). ``sort_keys=True`` would alphabetize job ids on
+        # every persist and silently reorder the digest, so the payload is
+        # written in insertion order. Top-level key order is deterministic
+        # (``last_flush`` then ``jobs``) regardless.
+        payload = {
+            "last_flush": int(buffer.get("last_flush", 0)),
+            "jobs": buffer.get("jobs", {}),
+        }
+        json.dump(payload, fh, indent=2)
     os.replace(tmp, path)
 
 
