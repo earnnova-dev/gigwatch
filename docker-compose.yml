@@ -1,0 +1,32 @@
+# GigWatch — one-command self-hosted hosted instance (gigwatch serve)
+#
+#   docker compose up -d
+#   -> live dashboard at http://localhost:8765/
+#
+# State (seen-state + digest buffer) persists in the named volume below.
+# To point at your own feeds/profile, drop a config.json into the project dir
+# and mount it over /app/config.json (see the 'config' override example below).
+#
+# Optional: set GIGWATCH_TOKEN to gate /api/jobs and /feed (dashboard stays public).
+
+services:
+  gigwatch:
+    build: .
+    image: earnnova-dev/gigwatch
+    container_name: gigwatch
+    ports:
+      - "8765:8765"
+    environment:
+      # Leave empty/absent for a fully public instance (no API token).
+      GIGWATCH_TOKEN: ""
+    volumes:
+      # Persist state + digest buffer across container restarts.
+      - gigwatch-data:/app
+      # Optional: mount your own config to override the baked-in default.
+      # - ./config.json:/app/config.json:ro
+    restart: unless-stopped
+    # Hosted instance only needs outbound network to fetch job feeds.
+    # No inbound dependencies, no database.
+
+volumes:
+  gigwatch-data:

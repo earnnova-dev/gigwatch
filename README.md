@@ -168,6 +168,29 @@ the latest matches — it does not send email/Slack and does not touch the
 seen-state file, so a hosted instance never double-delivers alerts. Put it
 behind a reverse proxy (nginx/Caddy) with TLS for a real deployment.
 
+#### One command with Docker
+
+The whole hosted instance is a single container (stdlib-only, no dependencies,
+no environment variables required — a working `config.json` is baked in):
+
+```bash
+docker compose up -d
+# -> live dashboard at http://localhost:8765/
+```
+
+Or by hand:
+
+```bash
+docker build -t gigwatch .
+docker run -d -p 8765:8765 -v gigwatch-data:/app gigwatch
+```
+
+State (seen-state + digest buffer) persists in the `gigwatch-data` volume, so
+the container survives restarts. To point it at your own feeds/profile, mount
+your own `config.json` over `/app/config.json` (see the override example in
+`docker-compose.yml`). Set `GIGWATCH_TOKEN` to gate `/api/jobs` and `/feed`
+(the dashboard and `/health` stay public).
+
 ### Rank matches by fit
 
 `rank` fetches and filters like `scan`, then scores every match 0-100 against
