@@ -39,21 +39,35 @@ def test_remotive_returns_jobs():
 
 @pytest.mark.live
 def test_remotive_filter_end_to_end():
-    """Filter with a broad keyword set that Remotive reliably has."""
+    """Filter with a broad keyword set that Remotive reliably has.
+
+    The point is that the filter pipeline works end-to-end, not that one
+    specific technology is posted today. Role words (developer/engineer/...)
+    appear on any non-empty remote board, so we pair them with a few tech
+    keywords instead of asserting a hard dependency on one language — a day
+    with no Python/React roles posted (live-data drift) must not fail CI.
+    """
     jobs = fetch_remotive(limit=200)
     assert len(jobs) > 0, "Remotive returned no jobs at all"
-    # Use keywords that are common on remote boards; the point is the
-    # filter pipeline works end-to-end, not that one specific language
-    # is always present.
-    f = Filters(keywords=["react", "golang", "python", "java", "node"], min_score=1.0)
+    # Role words + a few tech keywords: robust to which specific roles are
+    # posted on any given day.
+    f = Filters(keywords=[
+        "react", "golang", "python", "java", "node",
+        "engineer", "developer", "designer", "manager", "lead",
+    ], min_score=1.0)
     out = filter_jobs(jobs, f)
-    # At least one of these should match on any given day; if none do,
-    # the board is empty or the API changed shape — fail loudly.
+    # A non-empty remote tech board always has at least one role-word title.
     assert len(out) >= 1, (
-        f"No matches for common tech keywords among {len(jobs)} jobs. "
+        f"No matches for common role/tech keywords among {len(jobs)} jobs. "
         f"Titles: {[j.title for j in jobs[:10]]}"
     )
-    assert all(s.score >= 1.0 for s in out)
+    # Pipeline invariant (deterministic): every result clears the threshold
+    # and its title genuinely contains at least one matched keyword.
+    for s in out:
+        assert s.score >= f.min_score
+        assert s.matched_keywords
+        for kw in s.matched_keywords:
+            assert kw in s.job.title.lower()
 
 
 @pytest.mark.live
