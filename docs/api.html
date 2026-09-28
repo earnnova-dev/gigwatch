@@ -38,8 +38,8 @@
         <p class="subtitle">Live, normalized remote jobs from 5 boards — one clean endpoint, one schema. Free tier: 100 calls/month, no card. Self-hostable (MIT) for free.</p>
 
         <div class="note">
-            <b>How it works:</b> a free API key gets you <b>100 calls/month</b> across all five boards.
-            Request one at <a href="mailto:earnnova@tten.no?subject=Remote%20Jobs%20API%20key">earnnova@tten.no</a> (say the skills/boards you need and you'll get a key back),
+            <b>How it works:</b> the hosted endpoint is <b>open by default</b> — call it with no key for light use.
+            For tracked usage, create a free account (your API key is generated instantly on the dashboard, <b>100 calls/month</b>),
             or run the whole engine yourself with <a href="https://github.com/earnnova-dev/remote-jobs-api">remote-jobs-api</a> — stdlib-only Python, MIT licensed, free.
         </div>
 
@@ -52,16 +52,15 @@ curl https://remote-jobs-api.tten.no/health
 curl https://remote-jobs-api.tten.no/v1/jobs/sources
 # -&gt; {"sources":["remotive","remoteok","jobicy","wwr","hn"]}
 
-# Normalized jobs (needs your free key)
-curl -H "Authorization: Bearer &lt;YOUR_KEY&gt;" \
-     "https://remote-jobs-api.tten.no/v1/jobs?skills=python,backend&limit=5"
+# Normalized jobs (no key required — hosted endpoint is open by default)
+curl "https://remote-jobs-api.tten.no/v1/jobs?skills=python,backend&limit=5"
+# Optional: add a Bearer key to use your free account quota (100 calls/month)
+curl -H "Authorization: Bearer ***" "https://remote-jobs-api.tten.no/v1/jobs?skills=python,backend&limit=5"
 
-# Python
+# Python (no key required)
 import urllib.request, json
-req = urllib.request.Request(
-    "https://remote-jobs-api.tten.no/v1/jobs?skills=python&limit=10",
-    headers={"Authorization": "Bearer YOUR_KEY"})
-jobs = json.loads(urllib.request.urlopen(req).read())["jobs"]</code></pre>
+jobs = json.loads(urllib.request.urlopen(
+    "https://remote-jobs-api.tten.no/v1/jobs?skills=python&limit=10").read())["jobs"]</code></pre>
 
         <h2>Endpoints</h2>
         <div class="endpoint">
@@ -74,7 +73,7 @@ jobs = json.loads(urllib.request.urlopen(req).read())["jobs"]</code></pre>
         </div>
         <div class="endpoint">
             <span class="method">GET</span> <code>/v1/jobs</code>
-            <p class="response">Keyed (free tier included). A deduped, normalized list of remote jobs. Every board uses the same schema, so no per-board parsing on your side. Query params:</p>
+            <p class="response">Open by default (no key). A deduped, normalized list of remote jobs. Add a Bearer key to use your free account quota (100 calls/month). Every board uses the same schema, so no per-board parsing on your side. Query params:</p>
             <table>
                 <tr><th>Param</th><th>Example</th><th>Description</th></tr>
                 <tr><td><code>skills</code></td><td><code>?skills=python,backend,api</code></td><td>Keywords to match and rank by — adds a deterministic 0&ndash;100 <code>fit_score</code> and ranks best-fit first</td></tr>
@@ -129,7 +128,7 @@ jobs = json.loads(urllib.request.urlopen(req).read())["jobs"]</code></pre>
         <p class="response">Indicative pricing for the hosted tier. Self-hosting the same engine is free (MIT): <a href="https://github.com/earnnova-dev/remote-jobs-api">remote-jobs-api</a>.</p>
 
         <div class="cta">
-            <p><b>Get a free key &rarr;</b> email <a href="mailto:earnnova@tten.no?subject=Remote%20Jobs%20API%20key">earnnova@tten.no</a> with the skills/boards you need. No card, 100 calls/month.</p>
+            <p><b>Get a free key &rarr;</b> create a free account at <a href="https://remote-jobs-api.tten.no/register">remote-jobs-api.tten.no</a> — your key is generated instantly on the dashboard. No card, 100 calls/month. (Or skip the key: the endpoint is open by default for light use.)</p>
             <p style="margin-top:0.6rem">Or self-host free: <a href="https://github.com/earnnova-dev/remote-jobs-api">github.com/earnnova-dev/remote-jobs-api</a></p>
         </div>
 
