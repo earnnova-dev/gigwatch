@@ -180,10 +180,16 @@ def cmd_list(args) -> int:
 
 def cmd_watch(args) -> int:
     interval = args.interval or cfg_interval(args.config)
-    print("watching every %ds (Ctrl-C to stop)" % interval)
+    catcher = bool(getattr(args, "digest_buffer", None))
+    print("watching every %ds (Ctrl-C to stop)%s" %
+          (interval, " [digest-buffer catcher]" if catcher else ""))
     while True:
         try:
-            cmd_scan(_args_with_interval(args))
+            if catcher:
+                # Catcher mode: keep the digest buffer fresh (no per-job alert).
+                _digest_catch_once(_args_with_interval(args))
+            else:
+                cmd_scan(_args_with_interval(args))
         except Exception as exc:  # noqa: BLE001 - never let a scan kill the loop
             print("[gigwatch] scan error: %s" % exc, file=sys.stderr)
         try:
@@ -240,6 +246,43 @@ def cfg_interval(config_path: str) -> int:
 
 def _args_with_interval(args):
     return args
+
+
+def _digest_catch_once(args) -> int:
+    """One "keep the buffer fresh" tick for the hosted-offering pairing.
+
+    Fetch + filter, park every NEW match into the digest buffer (catcher), and
+    mark it seen so ``scan``/``watch`` don't also alert it. It does NOT deliver
+    or flush: ``gigwatch digest`` (the deliverer) reads the buffer and sends one
+    consolidated alert per period. Without this catcher mode, the documented
+    ``watch`` + ``digest`` pairing was dead: a plain ``watch`` marks new matches
+    seen in the shared state file that ``digest`` gates its catch on, so the
+    daily digest silently never fired.
+    """
+    cfg = load_config(args.config)
+    buffer_path = args.digest_buffer or "gigwatch-digest.json"
+    buffer = load_buffer(buffer_path)
+
+    jobs, fetch_errors = _fetch_all(cfg, args.verbose)
+    scored = filter_jobs(jobs, cfg.filters)
+    state = load_state(cfg.state_file)
+    new_matches = [s for s in scored if s.job.id not in state]
+
+    added = add_pending(buffer, new_matches)
+
+    # Mark every match seen so scan/watch never double-alert the same job.
+    mark_seen(state, scored)
+    removed = prune(state, args.max_age_days)
+    if removed:
+        _log("pruned %d stale state entries" % removed, args.verbose)
+    save_state(cfg.state_file, state)
+
+    if added and getattr(args, "verbose", False):
+        print("digest-buffer: parked %d new match(es)" % added)
+    save_buffer(buffer_path, buffer)
+    for e in fetch_errors:
+        print("  [warn] " + e, file=sys.stderr)
+    return 0
 
 
 def cmd_digest(args) -> int:
@@ -430,6 +473,10 @@ def build_parser() -> argparse.ArgumentParser:
                     help="seconds between scans (default: poll_interval from config)")
     sp.add_argument("--max-age-days", type=int, default=90,
                     help="drop state entries older than this (0 = keep all)")
+    sp.add_argument("--digest-buffer", default=None, metavar="PATH",
+                    help="catcher mode: park new matches in this digest buffer "
+                         "(kept fresh for `gigwatch digest`) instead of alerting "
+                         "each one immediately (default: off = normal watch)")
     sp.set_defaults(func=cmd_watch)
 
     sp = sub.add_parser(

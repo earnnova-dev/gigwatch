@@ -938,3 +938,85 @@ def test_parser_accepts_serve():
     assert args2.port == 8765
     assert args2.refresh == 900
     assert args2.token is None
+
+
+# ---------- digest catch/deliver pairing (hosted-offering mode) ----------
+# Regression: the `digest` feature (the whole point of the hosted offering)
+# was dead under its documented pairing. Both `digest.py` and `cmd_digest`
+# document:
+#     cron: gigwatch watch   (keeps the buffer fresh)
+#     cron: gigwatch digest  (flushes -> one email per period)
+# but `watch` ran `cmd_scan`, which marks new matches SEEN in the shared
+# state file that `cmd_digest` gates its catch on. So `watch` consumed the
+# newness and `digest` parked nothing -> the daily digest silently never
+# fired. The fix adds a `watch --digest-buffer` catcher mode that parks new
+# matches in the buffer without an immediate per-job alert.
+
+def _stopwatch_sleep(_interval):
+    raise KeyboardInterrupt
+
+
+def test_watch_digest_buffer_parks_without_immediate_alert(monkeypatch, tmp_path):
+    """watch --digest-buffer must CATCH (park) new matches, not alert them."""
+    from gigwatch import cli
+    from gigwatch import digest as digest_mod
+    from gigwatch.config import Config, Filters, SourceConfig, AlertConfig
+    from gigwatch.digest import load_buffer
+
+    state_file = str(tmp_path / "state.json")
+    buffer_path = str(tmp_path / "buf.json")
+    cfg = Config(sources=[SourceConfig(type="remotive")],
+                 filters=Filters(keywords=["python"]),
+                 alerts=AlertConfig(console=False),
+                 state_file=state_file, poll_interval=900)
+    monkeypatch.setattr(cli, "load_config", lambda path: cfg)
+    monkeypatch.setattr(cli, "_fetch_all",
+                        lambda c, verbose=False: ([make_job(jid="j1")], []))
+    monkeypatch.setattr("time.sleep", _stopwatch_sleep)
+    alert_spy = []
+    monkeypatch.setattr(digest_mod, "send_all",
+                        lambda jobs, cfg_, subject=None: (alert_spy.append(jobs) or []))
+
+    rc = cli.cmd_watch(cli.build_parser().parse_args(
+        ["watch", "--interval", "900", "--digest-buffer", buffer_path]))
+    assert rc == 0
+    buf = load_buffer(buffer_path)
+    assert list(buf["jobs"]) == ["j1"]          # parked, not alerted
+    assert alert_spy == []                      # no immediate per-job alert
+
+
+def test_digest_pairing_delivers_after_watch(monkeypatch, tmp_path):
+    """The documented pairing: watch catches, digest delivers each job ONCE."""
+    from gigwatch import cli
+    from gigwatch import digest as digest_mod
+    from gigwatch.config import Config, Filters, SourceConfig, AlertConfig
+    from gigwatch.digest import load_buffer
+
+    state_file = str(tmp_path / "state.json")
+    buffer_path = str(tmp_path / "buf.json")
+    cfg = Config(sources=[SourceConfig(type="remotive")],
+                 filters=Filters(keywords=["python"]),
+                 alerts=AlertConfig(console=False),
+                 state_file=state_file, poll_interval=900)
+    monkeypatch.setattr(cli, "load_config", lambda path: cfg)
+    monkeypatch.setattr(cli, "_fetch_all",
+                        lambda c, verbose=False: ([make_job(jid="j1")], []))
+    monkeypatch.setattr("time.sleep", _stopwatch_sleep)
+    deliveries = []
+    monkeypatch.setattr(digest_mod, "send_all",
+                        lambda jobs, cfg_, subject=None:
+                        (deliveries.append([s.job.id for s in jobs]) or []))
+
+    # 1) watch catches the new job into the buffer (no alert)
+    rc = cli.cmd_watch(cli.build_parser().parse_args(
+        ["watch", "--interval", "900", "--digest-buffer", buffer_path]))
+    assert rc == 0
+    assert load_buffer(buffer_path)["jobs"] == {"j1": load_buffer(buffer_path)["jobs"]["j1"]}
+    assert deliveries == []                       # watch did not alert
+
+    # 2) a day later, digest flushes it (one consolidated delivery)
+    rc = cli.cmd_digest(cli.build_parser().parse_args(
+        ["digest", "--buffer", buffer_path, "--force"]))
+    assert rc == 0
+    assert deliveries == [["j1"]]                 # delivered exactly once
+    assert load_buffer(buffer_path)["jobs"] == {}  # buffer flushed
