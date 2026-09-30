@@ -16,9 +16,10 @@ from typing import Any, Dict, List, Optional
 class SourceConfig:
     """A single job/gig feed to watch."""
 
-    type: str                      # "remotive" | "wwr" | "remoteok" | "hn" | "rss" | "json"
-    url: Optional[str] = None      # feed url (rss/json)
+    type: str                      # "remotive" | "wwr" | "remoteok" | "hn" | "rss" | "json" | "gigwatch"
+    url: Optional[str] = None      # feed url (rss/json/gigwatch base)
     limit: Optional[int] = None    # max items to fetch per source
+    api_key: str = ""              # Bearer key (gigwatch hosted API)
     enabled: bool = True
 
     @classmethod
@@ -27,6 +28,7 @@ class SourceConfig:
             type=str(d.get("type", "remotive")).lower(),
             url=d.get("url"),
             limit=d.get("limit"),
+            api_key=str(d.get("api_key") or ""),
             enabled=bool(d.get("enabled", True)),
         )
 
@@ -124,7 +126,7 @@ def load_config(path: str) -> Config:
     if not cfg.sources:
         raise ValueError("config must define at least one source")
     for s in cfg.sources:
-        if s.type not in ("remotive", "wwr", "remoteok", "hn", "jobicy", "rss", "json"):
+        if s.type not in ("remotive", "wwr", "remoteok", "hn", "jobicy", "rss", "json", "gigwatch"):
             raise ValueError("unknown source type: %r" % s.type)
         if s.type in ("rss", "json") and not s.url:
             raise ValueError("source of type %r requires a url" % s.type)

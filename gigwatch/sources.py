@@ -517,6 +517,74 @@ def fetch_linkedin(keywords: str = "python", location: str = "United States",
         jobs = jobs[:limit]
     return [j for j in jobs if j.id and j.title]
 
+
+
+def fetch_gigwatch(limit: Optional[int] = None, api_key: str = "",
+                   base_url: str = "https://remote-jobs-api.tten.no",
+                   skills: str = "") -> List[Job]:
+    """Fetch jobs from the hosted GigWatch API (the unified feed).
+
+    This is the paid/normalized feed — the same data the SaaS dashboard
+    exposes, available as a first-class source for the self-hosted CLI so the
+    two are one product. Pass an API key to get your plan's rate limits and
+    fit-scoring; without a key the API's free open mode is used.
+    """
+    query = {"limit": limit or 100}
+    if skills:
+        query["skills"] = skills
+    url = "%s/v1/jobs?%s" % (base_url.rstrip("/"),
+                            "&".join("%s=%s" % (k, v) for k, v in query.items() if v is not None))
+    req = urllib.request.Request(url)
+    # The API sits behind a WAF that blocks the default Python User-Agent;
+    # identify the CLI explicitly.
+    req.add_header("User-Agent", "gigwatch-nova/0.6 (+https://github.com/earnnova-dev/gigwatch)")
+    if api_key:
+        req.add_header("Authorization", "Bearer " + api_key)
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            raw = r.read()
+    except urllib.error.HTTPError as e:
+        raise ValueError("gigwatch API error: HTTP %s" % e.code) from None
+    jobs = fetch_jobs_from_json(raw)
+    if limit:
+        jobs = jobs[:limit]
+    return [j for j in jobs if j.id and j.title]
+
+
+def fetch_jobs_from_json(raw: bytes) -> List[Job]:
+    """Parse a job-list JSON payload (GigWatch API / any {"jobs":[...]} shape)."""
+    data = json.loads(raw.decode("utf-8", "replace"))
+    if isinstance(data, dict):
+        for key in ("jobs", "data", "results", "items"):
+            if isinstance(data.get(key), list):
+                data = data[key]
+                break
+    if not isinstance(data, list):
+        raise ValueError("gigwatch API did not return a job list")
+    jobs: List[Job] = []
+    for raw_job in data:
+        if not isinstance(raw_job, dict):
+            continue
+        title = str(raw_job.get("title") or raw_job.get("name") or "").strip()
+        url = str(raw_job.get("url") or raw_job.get("link") or "").strip()
+        if not title and not url:
+            continue
+        jobs.append(Job(
+            id=str(raw_job.get("id") or url or title),
+            title=title,
+            company=str(raw_job.get("company") or raw_job.get("company_name") or ""),
+            url=url,
+            category=str(raw_job.get("category") or ""),
+            location=str(raw_job.get("location") or raw_job.get("country") or ""),
+            salary=str(raw_job.get("salary") or raw_job.get("min_salary") or ""),
+            tags=[str(t) for t in (raw_job.get("tags") or raw_job.get("skills") or [])],
+            published=str(raw_job.get("publication_date") or raw_job.get("published") or ""),
+            source="gigwatch",
+            description=_clean(str(raw_job.get("description") or "")),
+        ))
+    return jobs
+
+
 def fetch(source) -> List[Job]:
     """Dispatch to the right fetcher for a :class:`SourceConfig`."""
     if source.type == "remotive":
@@ -537,4 +605,10 @@ def fetch(source) -> List[Job]:
         return fetch_rss(source.url, source.limit)
     if source.type == "json":
         return fetch_json(source.url, source.limit)
+    if source.type == "gigwatch":
+        return fetch_gigwatch(
+            source.limit,
+            api_key=getattr(source, "api_key", "") or "",
+            base_url=getattr(source, "url", "") or "https://remote-jobs-api.tten.no",
+        )
     raise ValueError("unknown source type: %r" % source.type)
