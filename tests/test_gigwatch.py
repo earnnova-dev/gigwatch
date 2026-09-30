@@ -248,6 +248,54 @@ def test_load_config_accepts_new_sources(tmp_path):
     assert [s.type for s in cfg.sources] == ["wwr", "remoteok"]
 
 
+def test_gigwatch_source_round_trips_skills_config(tmp_path):
+    p = tmp_path / "c.json"
+    p.write_text(json.dumps({"sources": [
+        {"type": "gigwatch", "skills": "python,backend,api",
+         "api_key": "rja_live_x", "url": "https://remote-jobs-api.tten.no"}]}))
+    cfg = load_config(str(p))
+    s = cfg.sources[0]
+    assert s.type == "gigwatch"
+    assert s.skills == "python,backend,api"
+    assert s.api_key == "rja_live_x"
+
+
+def test_fetch_dispatch_forwards_skills_to_gigwatch(monkeypatch):
+    # The hosted feed uses ?skills= for fit-scoring; the dispatcher must pass a
+    # per-source skills value through to fetch_gigwatch (previously it was never
+    # forwarded, so a configured gigwatch source ignored its skills).
+    from gigwatch import sources as sm
+    captured = {}
+    def fake_gigwatch(limit=None, api_key="", base_url="", skills=""):
+        captured["skills"] = skills
+        captured["api_key"] = api_key
+        return [Job(id="1", title="Senior Python Backend Engineer", company="Acme",
+                    url="https://example.com/j/1", source="gigwatch")]
+    monkeypatch.setattr(sm, "fetch_gigwatch", fake_gigwatch)
+    from gigwatch.config import SourceConfig
+    from gigwatch.sources import fetch
+    got = fetch(SourceConfig(type="gigwatch", skills="python,backend,api",
+                             api_key="rja_live_x",
+                             url="https://remote-jobs-api.tten.no"))
+    assert captured["skills"] == "python,backend,api"
+    assert captured["api_key"] == "rja_live_x"
+    assert got and got[0].source == "gigwatch"
+
+
+def test_fetch_dispatch_gigwatch_without_skills_defaults_empty(monkeypatch):
+    from gigwatch import sources as sm
+    captured = {}
+    def fake_gigwatch(limit=None, api_key="", base_url="", skills=""):
+        captured["skills"] = skills
+        return [Job(id="1", title="Senior Python Backend Engineer", source="gigwatch",
+                    url="https://example.com/j/1", company="Acme")]
+    monkeypatch.setattr(sm, "fetch_gigwatch", fake_gigwatch)
+    from gigwatch.config import SourceConfig
+    from gigwatch.sources import fetch
+    fetch(SourceConfig(type="gigwatch"))
+    assert captured["skills"] == ""
+
+
 # ---------- report formatting (text / markdown / json) ----------
 
 def _scored(**kw):

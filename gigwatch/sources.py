@@ -610,5 +610,6 @@ def fetch(source) -> List[Job]:
             source.limit,
             api_key=getattr(source, "api_key", "") or "",
             base_url=getattr(source, "url", "") or "https://remote-jobs-api.tten.no",
+            skills=getattr(source, "skills", "") or "",
         )
     raise ValueError("unknown source type: %r" % source.type)

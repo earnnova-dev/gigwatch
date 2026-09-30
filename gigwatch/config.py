@@ -20,6 +20,7 @@ class SourceConfig:
     url: Optional[str] = None      # feed url (rss/json/gigwatch base)
     limit: Optional[int] = None    # max items to fetch per source
     api_key: str = ""              # Bearer key (gigwatch hosted API)
+    skills: str = ""                # comma-separated skills (gigwatch hosted ?skills= fit-scoring)
     enabled: bool = True
 
     @classmethod
@@ -29,6 +30,7 @@ class SourceConfig:
             url=d.get("url"),
             limit=d.get("limit"),
             api_key=str(d.get("api_key") or ""),
+            skills=str(d.get("skills") or ""),
             enabled=bool(d.get("enabled", True)),
         )
 
