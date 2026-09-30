@@ -555,6 +555,46 @@ def fetch_gigwatch(limit: Optional[int] = None, api_key: str = "",
     return [j for j in jobs if j.id and j.title]
 
 
+def _structured_salary(job: Dict[str, Any]) -> str:
+    """Build a human-readable salary string from the structured pay keys.
+
+    The hosted RJA feed carries pay as ``salary_min`` / ``salary_max`` /
+    ``salary_currency`` / ``salary_period``. Its pre-formatted ``salary``
+    string is *not* guaranteed for every job, so this is the fallback that
+    keeps pay visible for jobs whose ``salary`` field is empty.
+
+    Output matches the feed's own style, e.g. ``"EUR 190,000-230,000 / yearly"``
+    (a single bound, a currency-only value, or ``""`` when there is no pay).
+    """
+    lo = job.get("salary_min")
+    hi = job.get("salary_max")
+    if lo is None and hi is None:
+        return ""
+    cur = (str(job.get("salary_currency") or "")).strip()
+    period = (str(job.get("salary_period") or "")).strip()
+    # The feed's own pre-formatted string renders the *plural* period
+    # (year -> "yearly", month -> "monthly", hour -> "hourly"), so match it.
+    _PERIOD_PLURAL = {"year": "yearly", "month": "monthly", "hour": "hourly",
+                      "day": "daily", "week": "weekly"}
+    period = _PERIOD_PLURAL.get(period.lower(), period)
+
+    def _fmt(v):
+        try:
+            return f"{int(v):,}"
+        except (TypeError, ValueError):
+            return str(v)
+
+    if lo is not None and hi is not None:
+        range_txt = f"{_fmt(lo)}-{_fmt(hi)}"
+    elif lo is not None:
+        range_txt = f"{_fmt(lo)}+"
+    else:
+        range_txt = f"{_fmt(hi)}+"
+    prefix = (cur + " ") if cur else ""
+    suffix = (" / " + period) if period else ""
+    return f"{prefix}{range_txt}{suffix}"
+
+
 def fetch_jobs_from_json(raw: bytes) -> List[Job]:
     """Parse a job-list JSON payload (GigWatch API / any {"jobs":[...]} shape)."""
     data = json.loads(raw.decode("utf-8", "replace"))
@@ -580,7 +620,8 @@ def fetch_jobs_from_json(raw: bytes) -> List[Job]:
             url=url,
             category=str(raw_job.get("category") or ""),
             location=str(raw_job.get("location") or raw_job.get("country") or ""),
-            salary=str(raw_job.get("salary") or raw_job.get("min_salary") or ""),
+            salary=(str(raw_job.get("salary") or "").strip()
+                    or _structured_salary(raw_job)),
             tags=[str(t) for t in (raw_job.get("tags") or raw_job.get("skills") or [])],
             published=str(raw_job.get("publication_date") or raw_job.get("published") or ""),
             source="gigwatch",

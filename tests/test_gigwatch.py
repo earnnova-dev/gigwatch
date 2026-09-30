@@ -248,6 +248,56 @@ def test_load_config_accepts_new_sources(tmp_path):
     assert [s.type for s in cfg.sources] == ["wwr", "remoteok"]
 
 
+# ---------- fetch_jobs_from_json: structured-salary fallback (RJA feed) ----------
+
+def test_fetch_jobs_from_json_uses_structured_salary_when_plain_empty():
+    """The RJA feed (default ``gigwatch`` source) carries pay as
+    salary_min/salary_max/salary_currency/salary_period. The pre-formatted
+    ``salary`` string is NOT guaranteed, so a job with structured pay but an
+    empty ``salary`` must still get a readable salary (was: silently dropped).
+    """
+    payload = json.dumps({"jobs": [
+        {
+            "id": "rja-1", "title": "Senior Python Engineer", "company": "Acme",
+            "url": "https://example.com/rja/1", "location": "Worldwide",
+            "salary": "", "salary_min": 190000, "salary_max": 230000,
+            "salary_currency": "EUR", "salary_period": "year",
+        },
+        {
+            "id": "rja-2", "title": "Data Scientist", "company": "Globex",
+            "url": "https://example.com/rja/2", "salary": "",
+            "salary_min": 120000, "salary_max": 160000,
+            "salary_currency": "USD", "salary_period": "yearly",
+        },
+        {
+            "id": "rja-3", "title": "Support Engineer", "company": "Globex",
+            "url": "https://example.com/rja/3",  # no salary at all -> stays ""
+        },
+    ]}).encode("utf-8")
+    jobs = sources_mod.fetch_jobs_from_json(payload)
+    by_id = {j.id: j for j in jobs}
+    assert by_id["rja-1"].salary == "EUR 190,000-230,000 / yearly"
+    assert by_id["rja-2"].salary == "USD 120,000-160,000 / yearly"
+    assert by_id["rja-3"].salary == ""
+
+
+def test_fetch_jobs_from_json_keeps_preformatted_salary():
+    """Regression guard: a job that DOES carry the pre-formatted ``salary``
+    string keeps it verbatim (the structured fallback must not override it).
+    """
+    payload = json.dumps({"jobs": [
+        {
+            "id": "rja-10", "title": "Backend Engineer", "company": "Acme",
+            "url": "https://example.com/rja/10",
+            "salary": "EUR 90,000-110,000 / yearly",
+            "salary_min": 90000, "salary_max": 110000,
+            "salary_currency": "EUR", "salary_period": "year",
+        },
+    ]}).encode("utf-8")
+    jobs = sources_mod.fetch_jobs_from_json(payload)
+    assert jobs[0].salary == "EUR 90,000-110,000 / yearly"
+
+
 def test_gigwatch_source_round_trips_skills_config(tmp_path):
     p = tmp_path / "c.json"
     p.write_text(json.dumps({"sources": [
