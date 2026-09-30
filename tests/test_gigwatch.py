@@ -1068,3 +1068,65 @@ def test_digest_pairing_delivers_after_watch(monkeypatch, tmp_path):
     assert rc == 0
     assert deliveries == [["j1"]]                 # delivered exactly once
     assert load_buffer(buffer_path)["jobs"] == {}  # buffer flushed
+
+
+# ---------- fetch_gigwatch: skills query string must be URL-encoded ----------
+# Regression: fetch_gigwatch built the query string with a raw
+# "&".join("%s=%s" % ...) and inserted skills UNENCODED into the URL line.
+# A multi-word skill (e.g. "machine learning") put a raw space into the request
+# line, which urllib rejects (InvalidURL: "URL can't contain control
+# characters"), so ANY multi-word skill crashed the whole hosted source.
+# Single-word skills silently worked, which is why it survived.
+
+def _fake_urlopen_capture(monkeypatch):
+    """Capture the Request URL; return a canned {jobs:[...]} body."""
+    from gigwatch import sources as sm
+    captured = {}
+    class _Resp:
+        def __enter__(self):
+            return self
+        def __exit__(self, *a):
+            return False
+        def read(self):
+            return json.dumps({"jobs": [
+                {"id": "1", "title": "Senior ML Engineer", "company": "Acme",
+                 "url": "https://example.com/1", "location": "Remote",
+                 "salary": "$150k", "tags": ["python"]},
+            ]}).encode("utf-8")
+    def fake_urlopen(req, timeout=30):
+        captured["url"] = req.full_url
+        return _Resp()
+    monkeypatch.setattr(sm.urllib.request, "urlopen", fake_urlopen)
+    return captured
+
+
+def test_fetch_gigwatch_encodes_multi_word_skill(monkeypatch):
+    # A multi-word skill must NOT produce a raw space in the URL line.
+    from gigwatch import sources as sm
+    captured = _fake_urlopen_capture(monkeypatch)
+    jobs = sm.fetch_gigwatch(limit=10, skills="machine learning")
+    url = captured["url"]
+    assert " " not in url, "URL contains a raw space (invalid request line): %r" % url
+    # the skill is present, URL-encoded (space -> + or %20)
+    assert "skills=machine+learning" in url or "skills=machine%20learning" in url
+    assert "limit=10" in url
+    assert len(jobs) == 1 and jobs[0].source == "gigwatch"
+
+
+def test_fetch_gigwatch_single_word_skill_encodes(monkeypatch):
+    from gigwatch import sources as sm
+    captured = _fake_urlopen_capture(monkeypatch)
+    sm.fetch_gigwatch(limit=5, skills="python")
+    url = captured["url"]
+    assert " " not in url
+    assert "skills=python" in url
+
+
+def test_fetch_gigwatch_no_skill_omits_param(monkeypatch):
+    from gigwatch import sources as sm
+    captured = _fake_urlopen_capture(monkeypatch)
+    sm.fetch_gigwatch(limit=5)
+    url = captured["url"]
+    assert " " not in url
+    assert "skills" not in url
+    assert "limit=5" in url

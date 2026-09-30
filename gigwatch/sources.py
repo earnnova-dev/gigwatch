@@ -532,8 +532,12 @@ def fetch_gigwatch(limit: Optional[int] = None, api_key: str = "",
     query = {"limit": limit or 100}
     if skills:
         query["skills"] = skills
+    # Encode the query string properly: skills may be multi-word phrases
+    # (e.g. "machine learning"), and a raw space in the URL line is an
+    # invalid request (urllib raises InvalidURL). urlencode handles it.
     url = "%s/v1/jobs?%s" % (base_url.rstrip("/"),
-                            "&".join("%s=%s" % (k, v) for k, v in query.items() if v is not None))
+                            urllib.parse.urlencode(
+                                {k: v for k, v in query.items() if v is not None}))
     req = urllib.request.Request(url)
     # The API sits behind a WAF that blocks the default Python User-Agent;
     # identify the CLI explicitly.
