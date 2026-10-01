@@ -616,6 +616,60 @@ def test_parser_accepts_rank():
     assert args.format == "json"
 
 
+def test_rank_html_parser_choice():
+    from gigwatch.cli import build_parser
+    args = build_parser().parse_args(
+        ["rank", "--skills", "python", "--no-ai", "--format", "html"])
+    assert args.format == "html"
+
+
+def test_cmd_rank_html_emits_html_not_json(monkeypatch, capsys):
+    """Regression: ``gigwatch rank --format html`` used to fall through to the
+    JSON branch (the parser advertised ``html`` but ``cmd_rank`` never handled
+    it), silently emitting a JSON array instead of an HTML page."""
+    import gigwatch.cli as cli
+    from gigwatch.ranking import RankedJob
+
+    job = make_job()
+    scored = _scored()
+
+    class _Cfg:
+        profile = {"title": "Senior Python Backend Engineer",
+                   "skills": ["python", "backend"]}
+        filters = None
+
+    monkeypatch.setattr(cli, "load_config", lambda path: _Cfg())
+    monkeypatch.setattr(cli, "_fetch_all", lambda cfg, verbose: ([job], []))
+    monkeypatch.setattr(cli, "filter_jobs", lambda jobs, filters: [scored])
+    monkeypatch.setattr(
+        cli, "rank_jobs",
+        lambda jobs, profile, use_ai=False: [
+            RankedJob(job=scored.job, score=40.0,
+                      rationale="matches python", method="heuristic",
+                      matched_keywords=["python"])
+        ])
+
+    class _Args:
+        config = "config.json"
+        format = "html"
+        verbose = False
+        no_ai = True
+        skills = None
+        title = None
+        location = None
+        notes = None
+        profile = None
+
+    rc = cli.cmd_rank(_Args())
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert out.lstrip().lower().startswith("<!doctype html>")
+    assert out.strip().startswith("<!doctype")
+    assert not out.strip().startswith("[")          # not the JSON branch
+    assert "<th>Fit</th>" in out and "<th>Why</th>" in out and "<th>Engine</th>" in out
+    assert "Senior Python Backend Engineer" in out
+
+
 # ---------- HTML report format (v0.3.0) ----------
 
 def test_render_html_is_a_full_page():

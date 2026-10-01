@@ -373,6 +373,8 @@ def cmd_rank(args) -> int:
         print(_render_ranked_text(ranked))
     elif fmt == "markdown":
         print(_render_ranked_md(ranked))
+    elif fmt == "html":
+        print(_render_ranked_html(ranked))
     else:
         print(_render_ranked_json(ranked))
     return 0
@@ -421,6 +423,88 @@ def _render_ranked_json(ranked) -> str:
         obj["matched_keywords"] = list(r.matched_keywords)
         out.append(obj)
     return json.dumps(out, indent=2, ensure_ascii=False)
+
+
+def _render_ranked_html(ranked) -> str:
+    """Render ranked matches as a self-contained HTML page.
+
+    Mirrors :func:`gigwatch.report._render_html` (a single file with inline
+    CSS, no external assets) but adds the ranking-specific columns: Fit,
+    Why and the engine Method. Keeps ``--format html`` on ``rank`` consistent
+    with the same choice on ``scan``/``list`` instead of silently emitting
+    JSON.
+    """
+    from datetime import datetime, timezone
+    from gigwatch.ranking import RankedJob  # noqa: F401  (documented type)
+
+    import html as _html
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    rows: List[str] = []
+    for i, r in enumerate(ranked, 1):
+        j = r.job
+        title = _html.escape(j.title) or "-"
+        company = _html.escape(j.company) or "-"
+        salary = _html.escape(j.salary) or "-"
+        location = _html.escape(j.location) or "-"
+        score = _html.escape(str(r.score))
+        why = _html.escape(r.rationale) or "-"
+        method = _html.escape(r.method) or "-"
+        url = _html.escape(j.url, quote=True)
+        rows.append(
+            "<tr>"
+            "<td>%d</td>"
+            "<td><a href=\"%s\">%s</a></td>"
+            "<td>%s</td>"
+            "<td>%s</td>"
+            "<td>%s</td>"
+            "<td>%s</td>"
+            "<td>%s</td>"
+            "<td>%s</td>"
+            "</tr>" % (i, url, title, company, salary, location, score, why, method)
+        )
+    if not rows:
+        body = ("<p class='empty'>No jobs matched your filters, so there is "
+                "nothing to rank. Adjust <code>filters.keywords</code> or add "
+                "more sources.</p>")
+    else:
+        body = (
+            "<table>"
+            "<thead><tr>"
+            "<th>#</th><th>Title</th><th>Company</th><th>Salary</th>"
+            "<th>Location</th><th>Fit</th><th>Why</th><th>Engine</th>"
+            "</tr></thead>"
+            "<tbody>" + "".join(rows) + "</tbody>"
+            "</table>"
+        )
+    method_label = (ranked[0].method if ranked else "none")
+    return (
+        "<!doctype html>\n"
+        "<html lang='en'><head><meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+        "<title>GigWatch &mdash; %d ranked gig(s)</title>\n"
+        "<style>"
+        "body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;"
+        "margin:0;padding:24px;background:#0f1115;color:#e6e6e6}"
+        "h1{font-size:20px;margin:0 0 4px}"
+        ".meta{color:#8a93a3;font-size:13px;margin-bottom:16px}"
+        "table{border-collapse:collapse;width:100%%;font-size:14px}"
+        "th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #232833}"
+        "th{color:#8a93a3;font-weight:600;text-transform:uppercase;font-size:11px;"
+        "letter-spacing:.04em}"
+        "tr:hover td{background:#161b24}"
+        "a{color:#5aa9ff;text-decoration:none}"
+        "a:hover{text-decoration:underline}"
+        ".empty{color:#8a93a3}"
+        "code{background:#1a2029;padding:1px 5px;border-radius:4px}"
+        ".foot{margin-top:20px;color:#5b6472;font-size:12px}"
+        "</style></head><body>"
+        "<h1>GigWatch &mdash; ranked gigs</h1>"
+        "<div class='meta'>%d match(es) ranked via %s engine &middot; generated %s</div>\n"
+        "%s"
+        "<div class='foot'>Self-hosted gig watcher &middot; "
+        "<a href='https://github.com/earnnova-dev/gigwatch'>gigwatch-nova</a></div>"
+        "</body></html>"
+    ) % (len(ranked), len(ranked), method_label, now, body)
 
 
 def cmd_reset(args) -> int:
