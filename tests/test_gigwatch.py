@@ -120,6 +120,20 @@ def test_prune_zero_keeps_all():
     assert prune(state, max_age_days=0) == 0 and "x" in state
 
 
+def test_prune_boundary_is_utc_not_local():
+    # Regression: the first-seen timestamps are UTC (the "Z" suffix) but the
+    # buggy parse used time.mktime(), which reads the struct as *local* time.
+    # In a non-UTC zone (e.g. Europe/Oslo) that made every entry look older
+    # than it really is, so a job alerted on ~2 days ago could be pruned
+    # early and re-alerted. An entry just under the 90-day limit MUST be kept
+    # regardless of the host's timezone.
+    now = time.time()
+    just_under = now - (90 * 86400 - 3600)  # 1h under the 90-day limit
+    state = {"keep": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(just_under))}
+    removed = prune(state, max_age_days=90)
+    assert removed == 0 and "keep" in state
+
+
 # ---------- config ----------
 
 def test_load_config_minimal(tmp_path):

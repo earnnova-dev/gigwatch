@@ -7,6 +7,7 @@ notifies about jobs it hasn't seen before.
 
 from __future__ import annotations
 
+import calendar
 import json
 import os
 import time
@@ -56,7 +57,10 @@ def prune(state: Dict[str, str], max_age_days: int = 90) -> int:
     removed = 0
     for k in list(state.keys()):
         try:
-            ts = time.mktime(time.strptime(state[k], "%Y-%m-%dT%H:%M:%SZ"))
+            # first_seen values are UTC ("Z"); parse as UTC, not local time.
+            # (time.mktime misinterprets them as local, making entries age
+            # faster and risk re-alerting a job that is still within the limit.)
+            ts = calendar.timegm(time.strptime(state[k], "%Y-%m-%dT%H:%M:%SZ"))
         except (ValueError, OverflowError):
             continue
         if ts < cutoff:
