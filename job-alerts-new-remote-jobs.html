@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Alerts on New Remote Jobs — Stop Refreshing the Boards (2026)</title>
+<meta name="description" content="How to get notified the moment a new remote job is posted — without checking 5 boards by hand. The live data: 52% of 329 live listings were posted in the last 24 hours. A no-auth, no-dependency recipe to alert yourself on new postings.">
+<meta name="keywords" content="remote job alerts, get notified of new remote jobs, new remote job notifications, job board alerts, stop refreshing job boards, remote job monitor, job posting alert, remote jobs api, gigwatch">
+<style>
+  :root { --bg: #0f1117; --card: #1a1d27; --text: #e2e8f0; --muted: #94a3b8; --accent: #60a5fa; --green: #4ade80; --amber: #fbbf24; --red: #f87171; --border: #2d3348; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  .container { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; margin: 2rem 0 1rem; color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 2rem; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.92rem; }
+  th { text-align: left; padding: 0.75rem; border-bottom: 2px solid var(--border); color: var(--accent); }
+  td { padding: 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  code { background: var(--card); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: var(--green); }
+  pre { background: var(--card); padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; font-size: 0.85rem; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .cta { background: linear-gradient(135deg, #1e3a5f, #1a1d27); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+  .cta h3 { color: var(--green); margin-bottom: 0.5rem; }
+  .badge { display: inline-block; border-radius: 12px; padding: 0.2rem 0.6rem; font-size: 0.75rem; font-weight: 600; }
+  .b-fresh { background: #14331a; color: var(--green); border: 1px solid #2a5a34; }
+  .b-slow  { background: #33281a; color: var(--amber); border: 1px solid #5a4a2a; }
+  .b-stale { background: #331a1a; color: var(--red);  border: 1px solid #5a2a2a; }
+  .tip { background: #1c2a1c; border-left: 3px solid var(--green); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
+  .warn { background: #2a211a; border-left: 3px solid var(--amber); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; font-size: 0.9rem; }
+  .num { font-variant-numeric: tabular-nums; text-align: right; }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="container">
+<div style="background:#e94560;color:white;padding:1rem 1.5rem;border-radius:8px;margin-bottom:2rem;">
+    <strong>Get an alert the second a new remote job is posted</strong><br>
+    <a href="/api.html" style="color:white;text-decoration:underline;font-size:1.1rem;">Try the Live Aggregated Job API</a><br>
+    <span style="opacity:0.9">One endpoint, 5 boards, no auth — the feed the recipe below runs on.</span>
+</div>
+
+<h1>Stop refreshing the boards — get an alert when a new remote job is posted</h1>
+<p class="subtitle">The worst part of a job search is the polling: open 5 tabs, scroll, remember what you've seen, close, repeat tomorrow. The good news is that new jobs <em>are</em> landing constantly — so the right tool isn't "check more," it's "tell me when something new shows up." Here's the live data, and a no-auth, no-dependency recipe to do it yourself.</p>
+
+<div class="tip">
+<strong>TL;DR — the boards are moving, and you can get an alert instead of checking.</strong> In the live snapshot from <strong>2026-10-01</strong> (329 live listings via the <a href="/api.html">GigWatch API</a>), <strong>170 of 329 (52%)</strong> were posted in the last 24 hours and <strong>193 (59%)</strong> in the last 7 days. That's a fresh posting every few minutes across the five boards combined. A two-file script that polls the feed once an hour and messages you on any <em>new job id</em> is enough — no API key, no paid tier.
+</div>
+
+<h2>Why "refresh more" doesn't work</h2>
+<p>Most people don't miss jobs because the boards are empty — they miss them because they check once a day, by hand, and can't tell a new posting from one they already saw. The live recency table below is the snapshot behind that:</p>
+<table>
+<tr><th>Board</th><th class="num">Live listings</th><th class="num">New in 24h</th><th class="num">New in 7d</th><th class="num">% fresh (7d)</th><th>Alert-worthiness</th></tr>
+<tr><td><a href="https://jobicy.com">Jobicy</a></td><td class="num">120</td><td class="num">120</td><td class="num">120</td><td class="num">100%</td><td><span class="badge b-fresh">FRESH — alert on it</span></td></tr>
+<tr><td><a href="https://weworkremotely.com">We Work Remotely</a></td><td class="num">86</td><td class="num">50</td><td class="num">66</td><td class="num">77%</td><td><span class="badge b-fresh">FRESH — alert on it</span></td></tr>
+<tr><td><a href="https://remoteok.com">RemoteOK</a></td><td class="num">98</td><td class="num">0</td><td class="num">7</td><td class="num">7%</td><td><span class="badge b-slow">SLOW — check weekly</span></td></tr>
+<tr><td><a href="https://remotive.com">Remotive</a></td><td class="num">16</td><td class="num">0</td><td class="num">0</td><td class="num">0%</td><td><span class="badge b-stale">STALE — low signal</span></td></tr>
+<tr><td><a href="https://news.ycombinator.com">Hacker News (hiring)</a></td><td class="num">9</td><td class="num">0</td><td class="num">0</td><td class="num">0%</td><td><span class="badge b-stale">STALE — low signal</span></td></tr>
+</table>
+<p class="subtitle" style="font-size:0.85rem;margin-top:0.5rem;">Snapshot: 2026-10-01, 329 live listings. "New" = the listing's <code>published</code> timestamp within the window. Boards differ wildly in turnover — which is exactly why one alert rule ("new id appeared") beats five manual refreshes.</p>
+
+<h2>The no-auth recipe: alert yourself on new postings</h2>
+<p>Two moving parts: a <strong>stable job id</strong> so you can tell "new" from "already seen," and a <strong>feed that returns all boards in one call</strong>. The <a href="/api.html">GigWatch API</a> gives you both. Here's the whole thing:</p>
+<pre><code>GET https://remote-jobs-api.tten.no/v1/jobs?limit=500</code></pre>
+<p>Run it on a schedule (cron, GitHub Actions, or a 60-second loop), keep a small file of the job ids you've already seen, and alert on anything new:</p>
+<pre><code>import json, urllib.request, datetime, smtplib
+
+FEED = "https://remote-jobs-api.tten.no/v1/jobs?limit=500"
+SEEN = "seen_ids.json"
+
+def fetch():
+    req = urllib.request.Request(FEED, headers={"User-Agent": "job-alert/1.0"})
+    d = json.load(urllib.request.urlopen(req, timeout=30))
+    jobs = d.get("jobs", d)
+    return [j for j in jobs if j.get("id")]
+
+def load_seen():
+    try: return set(json.load(open(SEEN)))
+    except FileNotFoundError: return set()
+
+def main():
+    new = [j for j in fetch() if j["id"] not in load_seen()]
+    if new:
+        lines = "\n".join(
+            f"- {j['title']} @ {j.get('company','?')}  [{j.get('source','?')}]\n  {j.get('url','')}"
+            for j in new[:25])
+        # send to your email / Slack / Telegram / webhook here
+        print(f"{len(new)} new job(s):")
+        print(lines)
+    json.dump(sorted(load_seen() | {j['id'] for j in fetch()}), open(SEEN, "w"))
+
+if __name__ == "__main__":
+    main()</code></pre>
+<div class="warn">
+<strong>Two details that make this reliable.</strong> (1) Dedup on the <code>id</code> field, not the title — titles collide across boards, ids don't. (2) Persist <code>seen_ids.json</code> between runs so a posting that stays up for days alerts you exactly once. Filter to <code>source=jobicy</code> or <code>skills=python</code> in the query if you only want a slice of the feed.
+</div>
+
+<h2>What to alert on</h2>
+<p>Once you're getting new postings, rank them by <em>freshness</em> and <em>fit</em>:</p>
+<ul style="margin:0.5rem 0 0 1.4rem;">
+  <li><strong>Recency first.</strong> A job posted hours ago is where the applicant pool is thinnest. The feed's <code>published</code> field lets you sort new ones to the top.</li>
+  <li><strong>Board matters.</strong> Per the table above, Jobicy and We Work Remotely carry ~89% of the fresh signal right now — if you only alert on one, alert on those two.</li>
+  <li><strong>Skills, not just title.</strong> The feed supports <code>skills=python,backend</code> so a "python" posting on an ops board doesn't spam you. Match the criteria to what you'd actually apply for.</li>
+</ul>
+
+<div class="cta">
+  <h3>Want it done for you?</h3>
+  <p>GigWatch runs this exact loop for you — one endpoint, all five boards, sorted by how recent each listing is, with no account or API key to set up.</p>
+  <p style="margin:0.8rem 0;"><a href="/api.html">→ Try the live API</a> &nbsp;&nbsp; <a href="/live-demo.html">→ See it match live jobs</a> &nbsp;&nbsp; <a href="/">→ How GigWatch works</a></p>
+</div>
+
+<footer>
+  Data: <a href="/api.html">GigWatch API</a> live snapshot, 2026-10-01 (329 live listings). Recency computed from each listing's <code>published</code> timestamp; boards differ day to day — re-run to see the current turnover. Built by <a href="/">GigWatch</a>.
+</footer>
+</div>
+</body>
+</html>
