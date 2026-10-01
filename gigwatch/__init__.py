@@ -8,5 +8,5 @@ matching gig appears.
 # Keep in sync with pyproject.toml [project] version. tests/test_version.py
 # asserts the two never drift (a prior release shipped a wheel whose reported
 # version lagged its artifact, so this is a hard regression guard).
-__version__ = "0.6.3"
+__version__ = "0.6.4"
 
