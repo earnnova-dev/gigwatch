@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Remote Job API — One Endpoint for Every Remote Job Board (2026)</title>
+  <meta name="description" content="A remote job API gives you structured JSON from every remote job board through a single endpoint. Compare the 5 major remote-job data sources (Remotive, RemoteOK, Jobicy, We Work Remotely, Hacker News), then get them all normalized in one call.">
+  <meta name="keywords" content="remote job API, remote jobs API, remote jobs feed, remote job data, API for remote jobs, remote job scraping alternative, remote job board API">
+  <link rel="canonical" href="https://earnnova-dev.github.io/gigwatch/remote-job-api.html">
+  <style>
+    :root{--bg:#0d1117;--fg:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--card:#161b22;--border:#30363d;--ok:#3fb950}
+    *{box-sizing:border-box}
+    body{margin:0;font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--fg)}
+    .wrap{max-width:860px;margin:0 auto;padding:40px 22px 80px}
+    h1{font-size:2rem;line-height:1.25;margin:.2em 0}
+    h2{font-size:1.4rem;margin:2em 0 .6em;border-bottom:1px solid var(--border);padding-bottom:.3em}
+    h3{font-size:1.1rem;margin:1.4em 0 .4em}
+    p{margin:.7em 0}
+    a{color:var(--accent);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .lead{font-size:1.12rem;color:#c9d1d9}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:1em 0}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:1em 0}
+    .tag{display:inline-block;background:#1f6feb22;color:var(--accent);border:1px solid var(--accent);border-radius:999px;padding:1px 10px;font-size:.8rem;margin-right:6px}
+    .tag.ok{background:#3fb95022;color:var(--ok);border-color:var(--ok)}
+    pre{background:#010409;border:1px solid var(--border);border-radius:8px;padding:14px;overflow:auto;font-size:.85rem;line-height:1.5}
+    code{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace}
+    p code,li code{background:#161b22;padding:2px 6px;border-radius:5px;font-size:.85em}
+    table{border-collapse:collapse;width:100%;margin:1em 0;font-size:.92rem}
+    th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top}
+    th{background:#161b22}
+    .cta{background:linear-gradient(135deg,#1f6feb22,#3fb95018);border:1px solid var(--accent);border-radius:12px;padding:24px;text-align:center}
+    .cta a.btn{display:inline-block;background:var(--accent);color:#0d1117;font-weight:600;padding:10px 20px;border-radius:8px;margin-top:8px}
+    .muted{color:var(--muted)}
+    .foot{margin-top:3em;color:var(--muted);font-size:.85rem;border-top:1px solid var(--border);padding-top:1.2em}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p class="muted">Job-data reference &middot; 2026 &middot; <a href="https://earnnova-dev.github.io/gigwatch/remote-job-apis.html">Free no-auth endpoints</a> &middot; <a href="https://earnnova-dev.github.io/remote-jobs-export/">Export to CSV/JSON/SQLite</a></p>
+  <h1>Remote Job API: one endpoint for every remote job board</h1>
+  <p class="lead">A <strong>remote job API</strong> returns structured, machine-readable job data from remote job boards as JSON. Instead of scraping 5+ sites with brittle HTML selectors, you call an endpoint and get a normalized feed you can filter by location, salary, and source. Below: the 5 major remote-job data sources that actually work in 2026, what each gives you, and a single endpoint that returns all five at once.</p>
+
+  <h2>Why use a remote job API (vs. scraping)</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Stability.</strong> Job boards change their HTML and block scrapers constantly; a feed endpoint with a stable schema does not.</li>
+      <li><strong>Normalization.</strong> Each board uses different field names for salary, location, and tags. A good API gives you one consistent shape.</li>
+      <li><strong>Speed.</strong> One request returns the whole feed; no per-board pagination, retries, or rate-limit juggling.</li>
+      <li><strong>Filtering.</strong> Query params like <code>location</code>, <code>min_salary</code>, and <code>source</code> let you narrow server-side instead of post-processing.</li>
+    </ul>
+  </div>
+
+  <h2>The 5 major remote-job data sources (2026)</h2>
+  <p>These are the boards that dominate remote hiring and the shape of the data you get from each. All five are available, pre-normalized, from the single endpoint in the next section.</p>
+  <table>
+    <thead>
+      <tr><th>Board</th><th>Focus</th><th>Free data access</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Remotive</strong></td><td>Full-time remote (dev, design, product, ops)</td><td>JSON + RSS feed</td><td>One of the largest dedicated remote boards; strong salary data.</td></tr>
+      <tr><td><strong>RemoteOK</strong></td><td>Remote + contract, all roles</td><td>JSON + RSS</td><td>High volume, fast-moving listings.</td></tr>
+      <tr><td><strong>Jobicy</strong></td><td>Remote-friendly, broad categories</td><td>JSON endpoint</td><td>Good for location-tagged remote roles.</td></tr>
+      <tr><td><strong>We Work Remotely</strong> (WWR)</td><td>Full-time remote, senior-weighted</td><td>RSS + JSON</td><td>The original remote board; long tail of quality listings.</td></tr>
+      <tr><td><strong>Hacker News (Who is hiring)</strong></td><td>Tech companies, self-posted</td><td>Public job listings</td><td>Raw, unfiltered — the best source for direct-to-company roles.</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Each of these also exposes its own free, no-API-key endpoint (Remotive, RemoteOK, Jobicy, WWR, HN). If you want the raw per-board feeds with working <code>curl</code>/<code>Python</code> examples, see the <a href="https://earnnova-dev.github.io/gigwatch/remote-job-apis.html">free remote job board APIs</a> reference.</p>
+
+  <h2>Get all 5 in one call: Remote Jobs API</h2>
+  <p>If you would rather not wire up and maintain five separate feeds, <a href="https://remote-jobs-api.tten.no"><strong>Remote Jobs API</strong></a> returns all of the above through a single normalized endpoint. It is live right now, no scraping, and the free tier needs no API key.</p>
+  <p>The endpoint is in <strong>open mode</strong>, so this works immediately:</p>
+  <pre>curl "https://remote-jobs-api.tten.no/v1/jobs?limit=3"</pre>
+  <p>Every job comes back with a consistent shape:</p>
+  <pre>{
+  "id": "remotive_abc123",
+  "title": "Senior Backend Engineer",
+  "company": "Acme",
+  "location": "Anywhere / Remote",
+  "salary": "$120,000 - $150,000",
+  "salary_min": 120000,
+  "salary_max": 150000,
+  "salary_currency": "USD",
+  "category": "engineering",
+  "tags": ["python", "remote", "full-time"],
+  "published": "2026-10-03T09:00:00Z",
+  "source": "remotive",
+  "url": "https://remotive.com/job/abc123",
+  "fit_score": 0.87
+}</pre>
+
+  <h3>Filter server-side</h3>
+  <p>Query params narrow the feed before it is returned, so you do not post-process thousands of rows:</p>
+  <pre># Only remote engineering roles in Germany, min salary 80k
+curl "https://remote-jobs-api.tten.no/v1/jobs?location=germany&amp;min_salary=80000&amp;limit=20"
+
+# Only Remotive listings
+curl "https://remote-jobs-api.tten.no/v1/jobs?source=remotive"
+
+# Count how many match (open-mode, no key needed)
+curl "https://remote-jobs-api.tten.no/v1/jobs?location=spain&amp;min_salary=60000"</pre>
+
+  <h3>In Python</h3>
+  <pre>import requests
+
+r = requests.get(
+    "https://remote-jobs-api.tten.no/v1/jobs",
+    params={"location": "remote", "min_salary": 70000, "limit": 50},
+    timeout=20,
+)
+for job in r.json()["jobs"]:
+    print(job["title"], job["company"], job["salary"], job["source"])</pre>
+
+  <h2>What is in the feed</h2>
+  <div class="grid">
+    <div class="card"><span class="tag ok">Live</span><span class="tag">340 jobs</span><br><span class="muted">jobs currently aggregated and live across the boards</span></div>
+    <div class="card"><span class="tag ok">5 sources</span><br><span class="muted">Remotive, RemoteOK, Jobicy, We Work Remotely, Hacker News — one schema</span></div>
+    <div class="card"><span class="tag ok">No key</span><br><span class="muted">free tier works in open mode — call it today, no signup to test</span></div>
+    <div class="card"><span class="tag ok">Filterable</span><br><span class="muted">location, min_salary, source — server-side, before you download</span></div>
+  </div>
+
+  <h2>Free vs. paid</h2>
+  <table>
+    <thead><tr><th>Plan</th><th>Price</th><th>Calls</th><th>Best for</th></tr></thead>
+    <tbody>
+      <tr><td>Free</td><td>$0</td><td>100/mo</td><td>Testing the feed, one-off pulls, prototypes</td></tr>
+      <tr><td>Pro</td><td>$19/mo</td><td>10,000/mo</td><td>Personal dashboards, small tools, weekly pulls</td></tr>
+      <tr><td>Team</td><td>$49/mo</td><td>100,000/mo</td><td>Products, job-market analytics, frequent polling</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cta">
+    <h3>Try the live feed now (no key needed)</h3>
+    <p class="muted">Open mode returns the full normalized feed from all 5 boards. Pull 3 jobs and see the shape in one call.</p>
+    <a class="btn" href="https://remote-jobs-api.tten.no/v1/jobs?limit=3" target="_blank" rel="noopener">Pull 3 jobs via API</a>
+    <p class="muted" style="margin-top:14px"><a href="https://remote-jobs-api.tten.no/">remote-jobs-api.tten.no</a> &middot; free tier + 10k calls/mo on Pro ($19)</p>
+  </div>
+
+  <h2>Related</h2>
+  <ul>
+    <li><a href="https://earnnova-dev.github.io/gigwatch/remote-job-apis.html">Free remote job board APIs (no auth) — per-board <code>curl</code> + Python</a></li>
+    <li><a href="https://earnnova-dev.github.io/remote-jobs-export/">Export remote job data to CSV / JSON / SQLite</a></li>
+    <li><a href="https://earnnova-dev.github.io/gigwatch/">gigwatch — job-feed monitoring for your own roles</a></li>
+  </ul>
+
+  <div class="foot">
+    <p>Job counts and availability are live as of the time of writing and change as boards update. This page is a curated reference and product listing; the per-board data and the normalized endpoint are served from <code>remote-jobs-api.tten.no</code>.</p>
+  </div>
+</div>
+</body>
+</html>
