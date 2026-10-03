@@ -62,8 +62,8 @@ are hosted SaaS that scrape your sessions and cost monthly. GigWatch is:
 - **Batched digests** — `gigwatch digest` catches every new match the moment
   it appears but delivers **one** consolidated alert per period (default:
   daily) instead of a ping per scan. The mode that powers a hosted offering:
-  run `watch` on a short interval to keep the buffer fresh, `digest` on a
-  long interval to flush it.
+  run `watch --digest-buffer gigwatch-digest.json` on a short interval to keep
+  the buffer fresh, `digest` on a long interval to flush it.
 - **Self-contained hosted server** — `gigwatch serve` boots a live,
   shareable dashboard (auto-refreshing HTML) plus machine-readable
   `/api/jobs` (JSON) and `/feed` (RSS) endpoints on one port, with a
@@ -128,7 +128,7 @@ per period:
 
 ```bash
 # Catch: keep the buffer fresh (e.g. every 15 min)
-*/15 * * * * cd /opt/gigwatch && /usr/bin/python3 -m gigwatch watch --interval 900
+*/15 * * * * cd /opt/gigwatch && /usr/bin/python3 -m gigwatch watch --digest-buffer gigwatch-digest.json --interval 900
 
 # Deliver: one email per day with everything new since the last digest
 0 9 * * * cd /opt/gigwatch && /usr/bin/python3 -m gigwatch digest --period 86400
