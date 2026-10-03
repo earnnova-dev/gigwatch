@@ -10,17 +10,16 @@ the feeds you care about, tell it what you do, and let it ping you when
 something relevant lands.
 
 ```
-$ gigwatch scan
-scanned 17 job(s) from 1 source(s); 4 match filter; 2 new
-GigWatch: 2 new matching gig(s)
-
-1. Senior Python Backend Engineer
-   company: Acme Digital
-   salary:  $120k-$150k
-   where:   Remote (Worldwide)
-   matched: python, backend
-   score:   9.0
-   https://remotive.com/remote-jobs/...
+$ gigwatch list
+458 job(s) fetched, 28 match your filters (dry run, state untouched)
+ 1. [score 6.0] Senior Backend Developer (Python)
+    company: Proxify AB
+    where:   Anywhere in the World
+    matched: python, backend
+    https://weworkremotely.com/remote-jobs/proxify-ab-senior-backend-developer-python-10
+ 2. [score 6.0] Lead Python Backend Engineer, Reef Technologies
+    matched: python, backend
+    https://www.python.org/jobs/8122/
 ```
 
 
