@@ -47,9 +47,10 @@ are hosted SaaS that scrape your sessions and cost monthly. GigWatch is:
 
 ## Features
 
--**Multiple feed sources** — Remotive, We Work Remotely, RemoteOK, Jobicy, LinkedIn, and
+-**Multiple feed sources** — Remotive, We Work Remotely, RemoteOK, Jobicy, and
   Hacker News "Who is Hiring?" (built-in, no auth), any RSS/Atom feed, or any
-  JSON endpoint returning a list of job objects.
+  JSON endpoint returning a list of job objects. (LinkedIn is on the roadmap, not
+  a built-in source yet.)
 - **AI job ranking** — `gigwatch rank` scores every match 0-100 against a
   profile you write (role, skills, location, notes) and explains *why*. Uses
   an LLM when `OPENAI_API_KEY` is set (any OpenAI-compatible endpoint);
